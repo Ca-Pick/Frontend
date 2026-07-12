@@ -118,3 +118,169 @@ src/components/
 - **아이콘**: MUI Icons 사용
 - **폰트**: theme.typography에서 설정
 
+---
+
+# Typography 스타일 추가 가이드
+
+## 개요
+
+이 프로젝트의 typography 시스템은 Material-UI의 TypeScript 기반 테마 시스템을 사용합니다. 새로운 글꼴 스타일을 추가하려면 네 개의 파일을 수정해야 합니다.
+
+## 추가 단계
+
+### 1단계: `src/theme/typography.ts` - 스타일 정의
+
+해당하는 스타일 그룹 객체에 새로운 스타일을 추가합니다.
+
+#### Heading 스타일 추가 예시
+```typescript
+export const headingStyles = {
+  // ... 기존 스타일들
+  h4_b: {
+    fontSize: 24,
+    lineHeight: 1.3,
+    fontWeight: fontWeights.bold,
+  },
+};
+```
+
+#### Title 스타일 추가 예시
+```typescript
+export const titleStyles = {
+  // ... 기존 스타일들
+  t1_b: {
+    fontSize: 24,
+    lineHeight: 1.4,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: '-0.6px',
+  },
+};
+```
+
+#### Body/Label 스타일 추가 예시
+```typescript
+export const bodyStyles = {
+  b2_m: {
+    fontSize: 14,
+    lineHeight: 1.45,
+    fontWeight: fontWeights.medium,
+    letterSpacing: '-0.35px',
+  },
+  // ... 기존 스타일들
+};
+```
+
+**주의사항:**
+- `letterSpacing`은 필요한 경우에만 추가
+- `lineHeight`는 십진수 형식 (1.4 = 140%)
+- `fontSize`는 픽셀 단위 (숫자)
+
+### 2단계: `src/theme/typography.ts` - typographyConfig에 추가
+
+`typographyConfig` 객체에 새로운 스타일을 spread 연산자로 추가합니다.
+
+```typescript
+export const typographyConfig = {
+  fontFamily,
+  // ... 기존 variants
+  
+  // Heading variants
+  h4_b: { ...headingStyles.h4_b },
+  
+  // Title variants
+  t1_b: { ...titleStyles.t1_b },
+  
+  // Body variants
+  b2_m: { ...bodyStyles.b2_m },
+} as const;
+```
+
+### 3단계: `src/theme/theme.d.ts` - TypeScript 타입 정의
+
+두 개의 인터페이스에 새로운 variant를 추가합니다.
+
+```typescript
+declare module '@mui/material/styles' {
+  interface TypographyVariants {
+    // ... 기존 variant들
+    h4_b: React.CSSProperties;
+    t1_b: React.CSSProperties;
+    b2_m: React.CSSProperties;
+  }
+
+  interface TypographyPropsVariantOverrides {
+    // ... 기존 variant들
+    h4_b: true;
+    t1_b: true;
+    b2_m: true;
+  }
+}
+```
+
+### 4단계: `src/theme/index.ts` - MuiTypography variants에 추가
+
+테마의 `MuiTypography.variants` 배열에 새로운 variant를 추가합니다.
+
+```typescript
+components: {
+  MuiTypography: {
+    variants: [
+      // ... 기존 variants
+      { props: { variant: 'h4_b' as const }, style: { ...headingStyles.h4_b } },
+      { props: { variant: 't1_b' as const }, style: { ...titleStyles.t1_b } },
+      { props: { variant: 'b2_m' as const }, style: { ...bodyStyles.b2_m } },
+    ] as unknown as any,
+  },
+}
+```
+
+## 명명 규칙
+
+| 그룹 | 접두사 | 사이즈 | 가중치 | 예시 |
+|------|--------|--------|--------|------|
+| Heading | h | 1-3 | _b (bold), _m (medium), _r (normal) | h1_b, h2_m |
+| Title | t | 1-4 | _b (bold), _m (medium), _r (normal), _l (light) | t1_b, t2_r |
+| Body | b, body | 2-3 | _b (bold), _m (medium), _r (normal) | b2_m, body_b3_r |
+| Label | label | 1-4 | 고정 (semibold) | label_1, label_4 |
+
+## 사용 예시
+
+```tsx
+import { Typography } from '@mui/material';
+
+<Typography variant='t1_b'>
+  제목 텍스트
+</Typography>
+
+<Typography variant='b2_m'>
+  본문 텍스트
+</Typography>
+```
+
+## Font Weights
+
+```typescript
+{
+  thin: 100,
+  extralight: 200,
+  light: 300,
+  normal: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800,
+  black: 900,
+}
+```
+
+## Typography 체크리스트
+
+새로운 typography 스타일을 추가할 때 다음을 확인하세요:
+
+- [ ] `typography.ts`에 스타일 정의 추가
+- [ ] `typography.ts`의 `typographyConfig`에 variant 추가
+- [ ] `theme.d.ts`의 `TypographyVariants` 인터페이스에 추가
+- [ ] `theme.d.ts`의 `TypographyPropsVariantOverrides` 인터페이스에 추가
+- [ ] `index.ts`의 `MuiTypography.variants` 배열에 추가
+- [ ] TypeScript 컴파일 오류 확인 (`npm run type-check`)
+

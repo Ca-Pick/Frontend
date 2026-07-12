@@ -60,14 +60,18 @@ const theme = createTheme({
         { props: { variant: 't1_lm' as const }, style: { ...titleStyles.t1_lm } },
         { props: { variant: 't1_l' as const }, style: { ...titleStyles.t1_l } },
         { props: { variant: 't1_r' as const }, style: { ...titleStyles.t1_r } },
+        { props: { variant: 't1_b' as const }, style: { ...titleStyles.t1_b } },
         { props: { variant: 't2_b' as const }, style: { ...titleStyles.t2_b } },
         { props: { variant: 't2_r' as const }, style: { ...titleStyles.t2_r } },
         { props: { variant: 't2_m' as const }, style: { ...titleStyles.t2_m } },
         { props: { variant: 't3_b' as const }, style: { ...titleStyles.t3_b } },
         { props: { variant: 't3_m' as const }, style: { ...titleStyles.t3_m } },
         { props: { variant: 't3_r' as const }, style: { ...titleStyles.t3_r } },
+        { props: { variant: 't4_b' as const }, style: { ...titleStyles.t4_b } },
         { props: { variant: 't4_m' as const }, style: { ...titleStyles.t4_m } },
         // Body variants
+        { props: { variant: 'b2_b' as const }, style: { ...bodyStyles.b2_b } },
+        { props: { variant: 'b2_m' as const }, style: { ...bodyStyles.b2_m } },
         { props: { variant: 'body_b3_b' as const }, style: { ...bodyStyles.body_b3_b } },
         { props: { variant: 'body_b3_m' as const }, style: { ...bodyStyles.body_b3_m } },
         { props: { variant: 'body_b3_r' as const }, style: { ...bodyStyles.body_b3_r } },
@@ -122,7 +126,21 @@ const theme = createTheme({
           },
         },
         {
-          props: { size: 'xlarge' },
+          props: { size: 'xlarge', variant: 'contained' },
+          style: {
+            height: '48px',
+            padding: '14px 24px',
+            borderRadius: borderRadius.xl,
+            fontSize: bodyStyles.label_1.fontSize,
+            fontWeight: bodyStyles.label_1.fontWeight,
+            lineHeight: bodyStyles.label_1.lineHeight,
+            '& .MuiSvgIcon-root': {
+              fontSize: '22px',
+            },
+          },
+        },
+        {
+          props: { size: 'xlarge', variant: 'outlined' },
           style: {
             height: '48px',
             padding: '14px 24px',
@@ -138,8 +156,8 @@ const theme = createTheme({
       ],
       styleOverrides: {
         root: {
-          flex: '0 0 auto',  
-          display: 'inline-flex', 
+          flex: '0 0 auto',
+          display: 'inline-flex',
           textTransform: 'none',
           boxShadow: 'none',
           width: 'auto',
@@ -147,35 +165,6 @@ const theme = createTheme({
           '&:hover': {
             boxShadow: 'none',
           },
-        },
-        sizeSmall: {
-          padding: '4px 10px',
-          borderRadius: `${borderRadius.small}px`,
-          fontSize: `${bodyStyles.label_4.fontSize}px`,
-          fontWeight: `${bodyStyles.label_4.fontWeight}`,
-          lineHeight: `${bodyStyles.label_4.lineHeight}`,
-        },
-        sizeMedium: {
-          padding: '6px 16px',
-          borderRadius: `${borderRadius.medium}px`,
-          fontSize: `${bodyStyles.label_3.fontSize}px`,
-          fontWeight: `${bodyStyles.label_3.fontWeight}`,
-          lineHeight: `${bodyStyles.label_3.lineHeight}`,
-        },
-        sizeLarge: {
-          padding: '8px 22px',
-          borderRadius: `${borderRadius.large}px`,
-          fontSize: `${bodyStyles.label_2.fontSize}px`,
-          fontWeight: `${bodyStyles.label_2.fontWeight}`,
-          lineHeight: `${bodyStyles.label_2.lineHeight}`,
-        },
-        sizeXlarge: {
-          height: '48px',
-          padding: '14px 24px',
-          borderRadius: `${borderRadius.xl}px`,
-          fontSize: `${bodyStyles.label_1.fontSize}px`,
-          fontWeight: `${bodyStyles.label_1.fontWeight}`,
-          lineHeight: `${bodyStyles.label_1.lineHeight}`,
         },
       },
     },
@@ -186,7 +175,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            borderRadius: borderRadius.medium,
+            borderRadius: borderRadius['3xl'],
+            backgroundColor: '#EEE',
+          },
+          '& .MuiOutlinedInput-input::placeholder': {
+            fontSize: titleStyles.t3_b.fontSize,
+            fontWeight: titleStyles.t3_b.fontWeight,
+            lineHeight: titleStyles.t3_b.lineHeight,
+            color: '#9E9E9E',
+            opacity: 1,
           },
         },
       },
@@ -256,6 +253,7 @@ const theme = createTheme({
             border: `1px solid ${colors.primary.main}`,
             color: colors.text.primary,
             backgroundColor: 'transparent',
+            cursor: 'pointer',
             '&:hover': {
               backgroundColor: colors.primary._states.hover,
             },

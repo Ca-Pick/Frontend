@@ -74,6 +74,12 @@ export const titleStyles = {
     lineHeight: 1.4,
     fontWeight: fontWeights.normal,
   },
+  t1_b: {
+    fontSize: 24,
+    lineHeight: 1.4,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: '-0.6px',
+  },
   t2_b: {
     fontSize: 20,
     lineHeight: 1.4,
@@ -92,7 +98,7 @@ export const titleStyles = {
   t3_b: {
     fontSize: 18,
     lineHeight: 1.4,
-    fontWeight: fontWeights.bold,
+    fontWeight: fontWeights.semibold,
   },
   t3_m: {
     fontSize: 18,
@@ -104,6 +110,12 @@ export const titleStyles = {
     lineHeight: 1.4,
     fontWeight: fontWeights.normal,
   },
+  t4_b: {
+    fontSize: 16,
+    lineHeight: 1.4,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: '-0.4px',
+  },
   t4_m: {
     fontSize: 16,
     lineHeight: 1.4,
@@ -113,6 +125,18 @@ export const titleStyles = {
 
 // Body/Label Styles
 export const bodyStyles = {
+  b2_b: {
+    fontSize: 14,
+    lineHeight: 1.45,
+    fontWeight: fontWeights.bold,
+    letterSpacing: '-0.35px',
+  },
+  b2_m: {
+    fontSize: 14,
+    lineHeight: 1.45,
+    fontWeight: fontWeights.medium,
+    letterSpacing: '-0.35px',
+  },
   body_b3_b: {
     fontSize: 13,
     lineHeight: 1.45,
@@ -180,15 +204,19 @@ export const typographyConfig = {
   t1_lm: { ...titleStyles.t1_lm },
   t1_l: { ...titleStyles.t1_l },
   t1_r: { ...titleStyles.t1_r },
+  t1_b: { ...titleStyles.t1_b },
   t2_b: { ...titleStyles.t2_b },
   t2_r: { ...titleStyles.t2_r },
   t2_m: { ...titleStyles.t2_m },
   t3_b: { ...titleStyles.t3_b },
   t3_m: { ...titleStyles.t3_m },
   t3_r: { ...titleStyles.t3_r },
+  t4_b: { ...titleStyles.t4_b },
   t4_m: { ...titleStyles.t4_m },
 
   // Body variants
+  b2_b: { ...bodyStyles.b2_b },
+  b2_m: { ...bodyStyles.b2_m },
   body_b3_b: { ...bodyStyles.body_b3_b },
   body_b3_m: { ...bodyStyles.body_b3_m },
   body_b3_r: { ...bodyStyles.body_b3_r },
