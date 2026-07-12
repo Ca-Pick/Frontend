@@ -103,9 +103,7 @@ function InstagramEmbdeSection() {
           </IconButton>
         </Box>
       </Box>
-      <Box sx={{height: '10px'}}>
-        <CarouselIndicators />
-      </Box>
+      <CarouselIndicators />
     </Box>
   );
 }
