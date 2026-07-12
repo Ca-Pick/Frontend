@@ -129,22 +129,22 @@ export const bodyStyles = {
     fontWeight: fontWeights.normal,
   },
   label_1: {
-    fontSize: 12,
+    fontSize: 16,
     lineHeight: 1.4,
     fontWeight: fontWeights.semibold,
   },
   label_2: {
-    fontSize: 12,
+    fontSize: 15,
     lineHeight: 1.4,
     fontWeight: fontWeights.semibold,
   },
   label_3: {
-    fontSize: 11,
+    fontSize: 14,
     lineHeight: 1.4,
     fontWeight: fontWeights.medium,
   },
   label_4: {
-    fontSize: 11,
+    fontSize: 13,
     lineHeight: 1.4,
     fontWeight: fontWeights.medium,
   },
@@ -153,38 +153,47 @@ export const bodyStyles = {
 // MUI Typography Config
 export const typographyConfig = {
   fontFamily,
-  h1: {
-    ...headingStyles.h1_b,
-  },
-  h2: {
-    ...headingStyles.h2_b,
-  },
-  h3: {
-    ...headingStyles.h3_b,
-  },
-  h4: {
-    ...titleStyles.t1_r,
-  },
-  h5: {
-    ...titleStyles.t2_r,
-  },
-  h6: {
-    ...titleStyles.t3_r,
-  },
-  body1: {
-    ...bodyStyles.body_b3_r,
-  },
-  body2: {
-    ...bodyStyles.label_3,
-  },
-  button: {
-    ...titleStyles.t3_m,
-    textTransform: 'none',
-  },
-  caption: {
-    ...bodyStyles.label_4,
-  },
-  overline: {
-    ...bodyStyles.label_1,
-  },
-};
+  // 기본 variants
+  h1: { ...headingStyles.h1_b },
+  h2: { ...headingStyles.h2_b },
+  h3: { ...headingStyles.h3_b },
+  h4: { ...titleStyles.t1_r },
+  h5: { ...titleStyles.t2_r },
+  h6: { ...titleStyles.t3_r },
+  body1: { ...bodyStyles.body_b3_r },
+  body2: { ...bodyStyles.label_3 },
+  button: { ...titleStyles.t3_m, textTransform: 'none' },
+  caption: { ...bodyStyles.label_4 },
+  overline: { ...bodyStyles.label_1 },
+
+  // Heading variants
+  h1_b: { ...headingStyles.h1_b },
+  h1_m: { ...headingStyles.h1_m },
+  h1_r: { ...headingStyles.h1_r },
+  h2_b: { ...headingStyles.h2_b },
+  h2_m: { ...headingStyles.h2_m },
+  h2_r: { ...headingStyles.h2_r },
+  h3_b: { ...headingStyles.h3_b },
+  h3_m: { ...headingStyles.h3_m },
+
+  // Title variants
+  t1_lm: { ...titleStyles.t1_lm },
+  t1_l: { ...titleStyles.t1_l },
+  t1_r: { ...titleStyles.t1_r },
+  t2_b: { ...titleStyles.t2_b },
+  t2_r: { ...titleStyles.t2_r },
+  t2_m: { ...titleStyles.t2_m },
+  t3_b: { ...titleStyles.t3_b },
+  t3_m: { ...titleStyles.t3_m },
+  t3_r: { ...titleStyles.t3_r },
+  t4_m: { ...titleStyles.t4_m },
+
+  // Body variants
+  body_b3_b: { ...bodyStyles.body_b3_b },
+  body_b3_m: { ...bodyStyles.body_b3_m },
+  body_b3_r: { ...bodyStyles.body_b3_r },
+  label_1: { ...bodyStyles.label_1 },
+  label_2: { ...bodyStyles.label_2 },
+  label_3: { ...bodyStyles.label_3 },
+  label_4: { ...bodyStyles.label_4 },
+} as const;

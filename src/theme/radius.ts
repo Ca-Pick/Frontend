@@ -1,9 +1,7 @@
 // Border Radius Tokens
 export const radius = {
-  borderRadius: 4,
   none: 0,
   'radius-small': 6,
-  borderRadius: 4,
   'radius-medium': 8,
   'radius-large': 12,
   'radius-xlarge': 16,

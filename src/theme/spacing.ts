@@ -19,20 +19,18 @@ export const spacing = {
 // Export as array for MUI spacing
 export const spacingArray = [
   0,
-  spacing['0.5'],   // 1 (4px)
-  spacing['1'],     // 2 (8px)
-  spacing['1.5'],   // 3 (12px)
-  spacing['2'],     // 4 (16px)
-  spacing['3'],     // 5 (24px)
-  spacing['4'],     // 6 (32px)
-  spacing['5'],     // 7 (40px)
-  spacing['6'],     // 8 (48px)
-  spacing['7'],     // 9 (56px)
-  spacing['8'],     // 10 (64px)
-  spacing['9'],     // 11 (72px)
-  spacing['10'],    // 12 (80px)
-  spacing['11'],    // 13 (88px)
-  spacing['12'],    // 14 (96px)
+  spacing['1'],     // 1 (8px)
+  spacing['2'],     // 2 (16px)
+  spacing['3'],     // 3 (24px)
+  spacing['4'],     // 4 (32px)
+  spacing['5'],     // 5 (40px)
+  spacing['6'],     // 6 (48px)
+  spacing['7'],     // 7 (56px)
+  spacing['8'],     // 8 (64px)
+  spacing['9'],     // 9 (72px)
+  spacing['10'],    // 10 (80px)
+  spacing['11'],    // 11 (88px)
+  spacing['12'],    // 12 (96px)
 ];
 
 // For convenience

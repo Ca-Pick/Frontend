@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
 import { borderRadius } from './radius';
-import { spacingArray, spacingMultiplier } from './spacing';
-import { typographyConfig } from './typography';
+import { spacingArray } from './spacing';
+import { typographyConfig, headingStyles, titleStyles, bodyStyles } from './typography';
 
 const theme = createTheme({
   spacing: spacingArray,
@@ -20,10 +20,6 @@ const theme = createTheme({
       main: colors.secondary.main,
       dark: colors.secondary.dark,
       contrastText: colors.secondary.contrastText,
-    },
-    background: {
-      default: colors.background.default,
-      paper: colors.background.paper,
     },
     text: {
       primary: colors.text.primary,
@@ -48,172 +44,138 @@ const theme = createTheme({
       contrastText: colors.info.contrastText,
     },
   },
-  typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      fontSize: '2.5rem',
-      fontWeight: 500,
-    },
-    h2: {
-      fontSize: '2rem',
-      fontWeight: 500,
-    },
-    h3: {
-      fontSize: '1.75rem',
-      fontWeight: 500,
-    },
-    h4: {
-      fontSize: '1.5rem',
-      fontWeight: 500,
-    },
-    h5: {
-      fontSize: '1.25rem',
-      fontWeight: 500,
-    },
-    h6: {
-      fontSize: '1rem',
-      fontWeight: 500,
-    },
-    body1: {
-      fontSize: '1rem',
-      lineHeight: 1.5,
-    },
-    body2: {
-      fontSize: '0.875rem',
-      lineHeight: 1.43,
-    },
-    button: {
-      textTransform: 'none',
-      fontWeight: 500,
-    },
-  },
   components: {
+    MuiTypography: {
+      variants: [
+        // Heading variants
+        { props: { variant: 'h1_b' as const }, style: { ...headingStyles.h1_b } },
+        { props: { variant: 'h1_m' as const }, style: { ...headingStyles.h1_m } },
+        { props: { variant: 'h1_r' as const }, style: { ...headingStyles.h1_r } },
+        { props: { variant: 'h2_b' as const }, style: { ...headingStyles.h2_b } },
+        { props: { variant: 'h2_m' as const }, style: { ...headingStyles.h2_m } },
+        { props: { variant: 'h2_r' as const }, style: { ...headingStyles.h2_r } },
+        { props: { variant: 'h3_b' as const }, style: { ...headingStyles.h3_b } },
+        { props: { variant: 'h3_m' as const }, style: { ...headingStyles.h3_m } },
+        // Title variants
+        { props: { variant: 't1_lm' as const }, style: { ...titleStyles.t1_lm } },
+        { props: { variant: 't1_l' as const }, style: { ...titleStyles.t1_l } },
+        { props: { variant: 't1_r' as const }, style: { ...titleStyles.t1_r } },
+        { props: { variant: 't2_b' as const }, style: { ...titleStyles.t2_b } },
+        { props: { variant: 't2_r' as const }, style: { ...titleStyles.t2_r } },
+        { props: { variant: 't2_m' as const }, style: { ...titleStyles.t2_m } },
+        { props: { variant: 't3_b' as const }, style: { ...titleStyles.t3_b } },
+        { props: { variant: 't3_m' as const }, style: { ...titleStyles.t3_m } },
+        { props: { variant: 't3_r' as const }, style: { ...titleStyles.t3_r } },
+        { props: { variant: 't4_m' as const }, style: { ...titleStyles.t4_m } },
+        // Body variants
+        { props: { variant: 'body_b3_b' as const }, style: { ...bodyStyles.body_b3_b } },
+        { props: { variant: 'body_b3_m' as const }, style: { ...bodyStyles.body_b3_m } },
+        { props: { variant: 'body_b3_r' as const }, style: { ...bodyStyles.body_b3_r } },
+        { props: { variant: 'label_1' as const }, style: { ...bodyStyles.label_1 } },
+        { props: { variant: 'label_2' as const }, style: { ...bodyStyles.label_2 } },
+        { props: { variant: 'label_3' as const }, style: { ...bodyStyles.label_3 } },
+        { props: { variant: 'label_4' as const }, style: { ...bodyStyles.label_4 } },
+      ] as unknown as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    },
     MuiButton: {
       defaultProps: {
-        size: 'md',
+        size: 'medium',
       },
       variants: [
-        // Contained variant
         {
-          props: { variant: 'contained', size: 'sm' },
+          props: { size: 'small' },
           style: {
             padding: '4px 10px',
-            fontSize: 13,
-            height: 27,
-            minHeight: 27,
+            borderRadius: borderRadius.small,
+            fontSize: bodyStyles.label_4.fontSize,
+            fontWeight: bodyStyles.label_4.fontWeight,
+            lineHeight: bodyStyles.label_4.lineHeight,
+            '& .MuiSvgIcon-root': {
+              fontSize: '18px',
+            },
           },
         },
         {
-          props: { variant: 'contained', size: 'md' },
+          props: { size: 'medium' },
           style: {
             padding: '6px 16px',
-            fontSize: 14,
-            height: 32,
-            minHeight: 32,
+            borderRadius: borderRadius.medium,
+            fontSize: bodyStyles.label_3.fontSize,
+            fontWeight: bodyStyles.label_3.fontWeight,
+            lineHeight: bodyStyles.label_3.lineHeight,
+            '& .MuiSvgIcon-root': {
+              fontSize: '20px',
+            },
           },
         },
         {
-          props: { variant: 'contained', size: 'lg' },
+          props: { size: 'large' },
           style: {
             padding: '8px 22px',
-            fontSize: 15,
-            height: 38,
-            minHeight: 38,
+            borderRadius: borderRadius.large,
+            fontSize: bodyStyles.label_2.fontSize,
+            fontWeight: bodyStyles.label_2.fontWeight,
+            lineHeight: bodyStyles.label_2.lineHeight,
+            '& .MuiSvgIcon-root': {
+              fontSize: '22px',
+            },
           },
         },
         {
-          props: { variant: 'contained', size: 'xl' },
+          props: { size: 'xlarge' },
           style: {
+            height: '48px',
             padding: '14px 24px',
-            fontSize: 16,
-            height: 48,
-            minHeight: 48,
-          },
-        },
-        // Outlined variant
-        {
-          props: { variant: 'outlined', size: 'sm' },
-          style: {
-            padding: '4px 10px',
-            fontSize: 13,
-            height: 27,
-            minHeight: 27,
-          },
-        },
-        {
-          props: { variant: 'outlined', size: 'md' },
-          style: {
-            padding: '6px 16px',
-            fontSize: 14,
-            height: 32,
-            minHeight: 32,
-          },
-        },
-        {
-          props: { variant: 'outlined', size: 'lg' },
-          style: {
-            padding: '8px 22px',
-            fontSize: 15,
-            height: 38,
-            minHeight: 38,
-          },
-        },
-        {
-          props: { variant: 'outlined', size: 'xl' },
-          style: {
-            padding: '14px 24px',
-            fontSize: 16,
-            height: 48,
-            minHeight: 48,
-          },
-        },
-        // Text variant
-        {
-          props: { variant: 'text', size: 'sm' },
-          style: {
-            padding: '4px 10px',
-            fontSize: 13,
-            height: 27,
-            minHeight: 27,
-          },
-        },
-        {
-          props: { variant: 'text', size: 'md' },
-          style: {
-            padding: '6px 16px',
-            fontSize: 14,
-            height: 32,
-            minHeight: 32,
-          },
-        },
-        {
-          props: { variant: 'text', size: 'lg' },
-          style: {
-            padding: '8px 22px',
-            fontSize: 15,
-            height: 38,
-            minHeight: 38,
-          },
-        },
-        {
-          props: { variant: 'text', size: 'xl' },
-          style: {
-            padding: '14px 24px',
-            fontSize: 16,
-            height: 48,
-            minHeight: 48,
+            borderRadius: borderRadius.xl,
+            fontSize: bodyStyles.label_1.fontSize,
+            fontWeight: bodyStyles.label_1.fontWeight,
+            lineHeight: bodyStyles.label_1.lineHeight,
+            '& .MuiSvgIcon-root': {
+              fontSize: '22px',
+            },
           },
         },
       ],
       styleOverrides: {
         root: {
-          borderRadius: borderRadius.medium,
+          flex: '0 0 auto',  
+          display: 'inline-flex', 
           textTransform: 'none',
-          fontWeight: 600,
           boxShadow: 'none',
+          width: 'auto',
+          minWidth: 0,
           '&:hover': {
             boxShadow: 'none',
           },
+        },
+        sizeSmall: {
+          padding: '4px 10px',
+          borderRadius: `${borderRadius.small}px`,
+          fontSize: `${bodyStyles.label_4.fontSize}px`,
+          fontWeight: `${bodyStyles.label_4.fontWeight}`,
+          lineHeight: `${bodyStyles.label_4.lineHeight}`,
+        },
+        sizeMedium: {
+          padding: '6px 16px',
+          borderRadius: `${borderRadius.medium}px`,
+          fontSize: `${bodyStyles.label_3.fontSize}px`,
+          fontWeight: `${bodyStyles.label_3.fontWeight}`,
+          lineHeight: `${bodyStyles.label_3.lineHeight}`,
+        },
+        sizeLarge: {
+          padding: '8px 22px',
+          borderRadius: `${borderRadius.large}px`,
+          fontSize: `${bodyStyles.label_2.fontSize}px`,
+          fontWeight: `${bodyStyles.label_2.fontWeight}`,
+          lineHeight: `${bodyStyles.label_2.lineHeight}`,
+        },
+        sizeXlarge: {
+          height: '48px',
+          padding: '14px 24px',
+          borderRadius: `${borderRadius.xl}px`,
+          fontSize: `${bodyStyles.label_1.fontSize}px`,
+          fontWeight: `${bodyStyles.label_1.fontWeight}`,
+          lineHeight: `${bodyStyles.label_1.lineHeight}`,
         },
       },
     },
@@ -236,6 +198,90 @@ const theme = createTheme({
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         },
       },
+    },
+    MuiSvgIcon: {
+      defaultProps: {
+        fontSize: 'inherit',
+      },
+      styleOverrides: {
+        root: {
+          fontSize: '24px',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '100px',
+          backgroundColor: colors.secondary._states.hover,
+          padding: spacingArray[5],
+          color: colors.secondary.light,
+          '&:hover': {
+            backgroundColor: colors.secondary._states.hover,
+          },
+          '& .MuiSvgIcon-root': {
+            color: colors.secondary.light,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      defaultProps: {
+        size: 'medium',
+      },
+      styleOverrides: {
+        root: {
+          ...bodyStyles.label_4,
+          padding: '0 8px',
+          minWidth: '47px',
+          textAlign: 'center',
+        },
+        label: {
+          padding: 0,
+          margin: 0,
+          marginLeft: 0,
+          marginRight: 0,
+        },
+        sizeMedium: {
+          height: '32px',
+        },
+        sizeSmall: {
+          height: '24px',
+        },
+      },
+      variants: [
+        {
+          props: { variant: 'filled', color: 'primary' },
+          style: {
+            border: `1px solid ${colors.primary.main}`,
+            color: colors.text.primary,
+            backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: colors.primary._states.hover,
+            },
+            '&.MuiChip-clickable:focus': {
+              backgroundColor: colors.primary._states.focus,
+            },
+            '&.MuiChip-filled': {
+              backgroundColor: colors.primary.main,
+              color: colors.primary.contrastText,
+            },
+          },
+        },
+        {
+          props: { variant: 'static' },
+          style: {
+            height: '24px',
+            backgroundColor: 'rgba(255, 239, 239, 0.70)',
+            color: colors.primary.main,
+            border: 'none',
+            cursor: 'default',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 239, 239, 0.70)',
+            },
+          },
+        },
+      ],
     },
   },
 });

@@ -3,9 +3,14 @@
 
 export const colors = {
   divider: 'rgba(0, 0, 0, 0.12)',
+  background: '#FBF8F3',
+  color: '#ffffff',
 
   interaction: {
-    hover: '#2196F3',
+    main: '#2196F3',
+    dark: '#1976D2',
+    light: '#64B5F6',
+    hover: 'rgba(33, 150, 243, 0.04)',
     selected: 'rgba(33, 150, 243, 0.08)',
     focus: 'rgba(33, 150, 243, 0.12)',
     focusvisible: 'rgba(33, 150, 243, 0.3)',
@@ -66,6 +71,9 @@ export const colors = {
 
   error: {
     contrastText: '#FFFFFF',
+    main: '#D32F2F',
+    dark: '#C62828',
+    light: '#EF5350',
     _states: {
       hover: 'rgba(211, 47, 47, 0.04)',
       selected: 'rgba(211, 47, 47, 0.08)',
@@ -76,6 +84,9 @@ export const colors = {
 
   warning: {
     contrastText: '#FFFFFF',
+    main: '#EF6C00',
+    dark: '#E65100',
+    light: '#FF9800',
     _states: {
       hover: 'rgba(239, 108, 0, 0.04)',
       selected: 'rgba(239, 108, 0, 0.08)',
@@ -86,6 +97,9 @@ export const colors = {
 
   info: {
     contrastText: '#FFFFFF',
+    main: '#0288D1',
+    dark: '#01579B',
+    light: '#03A9F4',
     _states: {
       hover: 'rgba(2, 136, 209, 0.04)',
       selected: 'rgba(2, 136, 209, 0.08)',
@@ -96,6 +110,9 @@ export const colors = {
 
   success: {
     contrastText: '#FFFFFF',
+    main: '#2E7D32',
+    dark: '#1B5E20',
+    light: '#4CAF50',
     _states: {
       hover: 'rgba(46, 125, 50, 0.04)',
       selected: 'rgba(46, 125, 50, 0.08)',
@@ -158,6 +175,12 @@ export const colors = {
         24: '#FFFFFF',
       },
     },
+    table: {
+      border: '#E0E0E0',
+    },
+    avatar: {
+      fill: '#BDBDBD'
+    },
     input: {
       standard: {
         enabledBorder: 'rgba(0, 0, 0, 0.42)',
@@ -174,6 +197,8 @@ export const colors = {
     },
     switch: {
       slideFill: '#000000',
+      knowFillDisabled: '#F5F5F5',
+      knowFillEnabled: '#FAFAFA',
     },
     rating: {
       enabledBorder: 'rgba(0, 0, 0, 0.23)',
@@ -186,6 +211,7 @@ export const colors = {
       defaultCloseFill: '#000000',
       defaultHoverFill: 'rgba(0, 0, 0, 0.12)',
       defaultFocusFill: 'rgba(0, 0, 0, 0.2)',
+      defaultEnabledBorder: '#BDBDBD',
     },
     tooltip: {
       fill: 'rgba(97, 97, 97, 0.9)',
@@ -193,6 +219,10 @@ export const colors = {
     backdrop: {
       fill: 'rgba(0, 0, 0, 0.5)',
     },
+    appBar: {
+      defaultFill: '#F5F5F5',
+    },
+    breadcrumbs: { collapseFill: '#F5F5F5' },
     alert: {
       error: {
         color: '#5F2120',
@@ -210,14 +240,17 @@ export const colors = {
         color: '#1E4620',
         background: '#EDF7ED',
       },
+      stepper: {
+        connector: '#BDBDBD'
+      },
     },
   },
-
-  background: {
-    default: '#FFFFFF',
-    paper: '#FFFFFF',
-    root: '#FBF4E7',
+  _native: { 
+    scrollbar_bg: '#EEEEEE' 
   },
+  gray: {
+    550: '#AEAEAE'
+  }
 };
 
 // Export specific color groups for convenience
