@@ -1,26 +1,13 @@
-import { Box, Stack, Typography } from '@mui/material';
-import { colors } from '../../theme/colors';
+import { Box } from '@mui/material';
+import { OrderStep1 } from './section/OrderStep1';
+import { OrderStep2 } from './section/OrderStep2';
+
 
 export function OrderCreate() {
   return (
-    <Stack sx={{ width: '100%' }}>
-      <Box
-        sx={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '24px',
-          minHeight: 400,
-        }}
-      >
-        <Typography
-          variant="h2"
-          sx={{ color: colors.text.secondary, textAlign: 'center' }}
-        >
-          주문서 작성
-        </Typography>
-      </Box>
-    </Stack>
+    <Box sx={{ width: '100%' }}>
+      <OrderStep1 />
+      <OrderStep2 />
+    </Box>
   );
 }
