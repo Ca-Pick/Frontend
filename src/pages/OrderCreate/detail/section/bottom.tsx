@@ -1,4 +1,4 @@
-﻿import { Box, Typography, Button, Chip, Grid } from "@mui/material";
+﻿import { Box, Typography, Button, Chip } from "@mui/material";
 import { colors } from "../../../../theme/colors";
 import { borderRadius } from "../../../../theme/radius";
 import AddIcon from "@mui/icons-material/Add";
@@ -81,8 +81,6 @@ export function BottomSection({ activeTab, onTabChange }: BottomSectionProps) {
                     Instagram으로 문의하기
                 </Button>
             </Box>
-
-            <Box sx={{ pb: 8 }} />
         </Box>
     );
 }
@@ -192,13 +190,27 @@ function InfoSection() {
                     </Box>
                 </Box>
 
-<Grid container spacing={2} sx={{ width: '100%' }}>
-  {[1, 2, 3, 4].map((index) => (
-    <Grid item xs={12} sm={6} key={index}>
-      <SavedInstagramEmbed />
-    </Grid>
-  ))}
-</Grid>
+<Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, 1fr)",
+                        gap: 2,
+                        width: "100%",
+                    }}
+                >
+                    {[1, 2, 3, 4].map((index) => (
+                        <Box
+                            key={index}
+                            sx={{
+                                minWidth: 0,
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <SavedInstagramEmbed />
+                        </Box>
+                    ))}
+                </Box>
             </Box>
         </Box>
     );

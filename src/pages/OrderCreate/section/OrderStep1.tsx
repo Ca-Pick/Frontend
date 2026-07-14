@@ -80,7 +80,12 @@ export function OrderStep1() {
             gap: '4px'
           }}>
           <Typography variant="t1_b" color="textPrimary">어느 지역에서 구매하시나요?</Typography>
-          <Typography variant="b2_m" sx={{ color: '#757575' }}>위치를 선택하면 추천을 시작해요.</Typography>
+          <Typography
+            variant="b2_m"
+            sx={{ color: '#757575' }}
+          >
+            위치를 선택하면 추천을 시작해요.
+          </Typography>
         </Box>
       </Box>
       <Box
@@ -111,10 +116,6 @@ export function OrderStep1() {
       <CarouselIndicators />
       <StepNavigation
         onNext={() => console.log('다음 클릭')}
-      />
-      <StepNavigation
-        onNext={() => console.log('다음')}
-        onPrev={() => console.log('이전')}
       />
     </Box>
   );

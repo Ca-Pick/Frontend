@@ -1,16 +1,47 @@
-import { Box, Typography, TextField, Button, InputAdornment } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { colors } from '../../../theme/colors';
 import { QuestionChips } from '../../../components/QuestionChips';
 import { useState } from 'react';
 import CarouselIndicators from '../../../components/CarouselIndicators';
 import { StepNavigation } from '../../../components/StepNavigation';
-import SearchIcon from '@mui/icons-material/Search';
+import { TagSearch } from '../../../components/TagSearch';
 
-export function OrderStep2() {
+interface OrderStep2Props {
+  onComplete?: () => void;
+}
+
+export function OrderStep2({ onComplete }: OrderStep2Props) {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [resultChips, setResultChips] = useState<string[]>(['개성있는', '귀여운']);
+    const [selectedChips, setSelectedChips] = useState<string[]>([]);
+
     const handleChipSelect = (chip: string) => {
         console.log('선택된 칩:', chip);
         setSelectedOption(chip);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+        // 실제 검색 로직은 여기에 추가
+    };
+
+    const handleSearch = () => {
+        console.log('검색:', searchQuery);
+    };
+
+    const handleResultChipClick = (chip: string) => {
+        setSelectedChips(prev => {
+            if (prev.includes(chip)) {
+                return prev.filter(c => c !== chip);
+            }
+            return [...prev, chip];
+        });
+    };
+
+    const handleSelectedChipDelete = (chip: string) => {
+        setSelectedChips(prev => prev.filter(c => c !== chip));
     };
     return (
         <Box sx={{
@@ -130,34 +161,21 @@ export function OrderStep2() {
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: '4px',
+                                gap: 1,
                             }}>
                             <Typography variant="t1_b" color="textPrimary">특별히 원하는 장식이 있나요?</Typography>
                             <Typography variant="t3_b" x={{ color: '#9E9E9E' }}>검색해서 추가해보세요!</Typography>
                         </Box>
                     </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2,
-                            height: '131px'
-                        }}>
-                        <TextField 
-  placeholder="태그 검색"
-  variant='outlined'
-  fullWidth
-  slotProps={{
-    input: {
-      endAdornment: (
-        <InputAdornment position="end">
-          <SearchIcon sx={{ color: '#000', cursor: 'pointer' }} />
-        </InputAdornment>
-      ),
-    },
-  }}
-/>
-                    </Box>
+                    <TagSearch
+                        searchQuery={searchQuery}
+                        onSearchChange={handleSearchChange}
+                        onSearch={handleSearch}
+                        resultChips={resultChips}
+                        selectedChips={selectedChips}
+                        onResultChipClick={handleResultChipClick}
+                        onSelectedChipDelete={handleSelectedChipDelete}
+                    />
                 </Box>
                 <Box
                     sx={{
@@ -166,7 +184,14 @@ export function OrderStep2() {
                         gap: 4
                     }}>
                     <CarouselIndicators />
-                    <Button variant="contained" color="primary" size="xlarge">완료</Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="xlarge"
+                      onClick={onComplete}
+                    >
+                      완료
+                    </Button>
                 </Box>
             </Box>
         </Box>

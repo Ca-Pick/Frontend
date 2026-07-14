@@ -13,7 +13,7 @@ export function ProductDetail({ productId, onBack }: ProductDetailProps) {
   const [activeTab, setActiveTab] = useState<'info' | 'location' | 'other'>('info');
 
   return (
-    <Box sx={{ width: '100%', bgcolor: '#fbf8f3', pb: 12 }}>
+    <Box sx={{ width: '100%', bgcolor: '#fbf8f3' }}>
       <TopSection activeTab={activeTab} onTabChange={setActiveTab} onBack={onBack} />
       <BottomSection activeTab={activeTab} onTabChange={setActiveTab} />
     </Box>
