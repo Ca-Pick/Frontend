@@ -1,0 +1,38 @@
+import { Box, Typography, Button } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
+const imgSavedCake = "/src/assets/images/cake.svg";
+
+export function NoSaved() {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                height: '589px',
+                padding: '10px 10px 150px 10px',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}
+        >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, alignItems: 'center' }}>
+                <Box
+                    component="img"
+                    src={imgSavedCake}
+                    sx={{
+                        objectFit: 'cover',
+                    }}
+                />
+                <Typography variant="t2_b" color='textPrimary'>
+                    아직 좋아요한 케이크가 없어요!
+                </Typography>
+            </Box>
+            <Button
+                variant="text"
+                color="primary"
+                size="large"
+                endIcon={<ChevronRightIcon />}>
+                케이크 보러가기</Button>
+        </Box>
+    );
+}
