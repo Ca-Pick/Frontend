@@ -1,45 +1,24 @@
-import { useEffect } from 'react';
 import { Box } from '@mui/material';
 
 interface InstagramEmbedProps {
   url: string;
   width?: string;
+  height?: string;
 }
 
-export function InstagramEmbed({ url, width = '100%' }: InstagramEmbedProps) {
-  useEffect(() => {
-    if (window.instgrm) return;
-
-    const script = document.createElement('script');
-    script.src = 'https://www.instagram.com/embed.js';
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
-  useEffect(() => {
-    if (window.instgrm?.Embeds.process) {
-      window.instgrm.Embeds.process();
-    }
-  }, [url]);
+export function InstagramEmbed({ url, width = '100%', height = '380' }: InstagramEmbedProps) {
+  const postId = url.split('/p/')[1]?.split('/')[0];
 
   return (
     <Box sx={{ width, maxWidth: '100%', overflow: 'hidden' }}>
-      <blockquote
-        className="instagram-media"
-        data-instgrm-permalink={url}
-        data-instgrm-version="14"
-        style={{
-          background: '#FFF',
-          border: 0,
-          borderRadius: '3px',
-          boxShadow: '0 0 1px 0 rgba(0,0,0,0.5), 0 1px 10px 0 rgba(0,0,0,0.15)',
-          margin: '0',
-          maxWidth: '100%',
-          minWidth: '100%',
-          width: '100%',
-          padding: 0,
-          boxSizing: 'border-box',
-        }}
+      <iframe
+        src={`https://www.instagram.com/p/${postId}/embed`}
+        width="100%"
+        height={height}
+        frameBorder="0"
+        scrolling="no"
+        allowtransparency="true"
+        style={{ width: '100%', maxWidth: '100%', display: 'block' }}
       />
     </Box>
   );
