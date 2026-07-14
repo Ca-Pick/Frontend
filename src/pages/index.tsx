@@ -10,6 +10,7 @@ type TabType = 'home' | 'order' | 'saved' | 'mypage';
 
 export default function MainPage() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
+  const [isDetailView, setIsDetailView] = useState(false);
 
   return (
     <Stack
@@ -23,12 +24,12 @@ export default function MainPage() {
     >
       {/* 탭 콘텐츠 */}
       {activeTab === 'home' && <Home />}
-      {activeTab === 'order' && <OrderCreate />}
+      {activeTab === 'order' && <OrderCreate onDetailViewChange={setIsDetailView} />}
       {activeTab === 'saved' && <Saved />}
       {activeTab === 'mypage' && <MyPage />}
 
-      {/* 하단 탭 네비게이션 */}
-      <BottomTabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+      {/* 하단 탭 네비게이션 - 상세 페이지에서는 숨김 */}
+      {!isDetailView && <BottomTabNavigation activeTab={activeTab} onTabChange={setActiveTab} />}
     </Stack>
   );
 }

@@ -46,7 +46,7 @@ export function StepNavigation({
       }}
     >
       <Button
-        size="xlarge" variant="contained" color="secondary"
+        size="xlarge" variant="contained" color="grey"
         onClick={onPrev}
         disabled={prevDisabled}
       >
