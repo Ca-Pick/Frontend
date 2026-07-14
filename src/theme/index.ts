@@ -4,6 +4,12 @@ import { borderRadius } from './radius';
 import { spacingArray } from './spacing';
 import { typographyConfig, headingStyles, titleStyles, bodyStyles } from './typography';
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    grey: true;
+  }
+}
+
 const theme = createTheme({
   spacing: spacingArray,
   typography: typographyConfig,
@@ -17,7 +23,7 @@ const theme = createTheme({
     },
     secondary: {
       light: colors.secondary.light,
-      main: colors.secondary.main,
+      main: colors.secondary.lighter,
       dark: colors.secondary.dark,
       contrastText: colors.secondary.contrastText,
     },
@@ -70,6 +76,8 @@ const theme = createTheme({
         { props: { variant: 't4_b' as const }, style: { ...titleStyles.t4_b } },
         { props: { variant: 't4_m' as const }, style: { ...titleStyles.t4_m } },
         // Body variants
+        { props: { variant: 'b1_m' as const }, style: { ...bodyStyles.b1_m } },
+        { props: { variant: 'b2_r' as const }, style: { ...bodyStyles.b2_r } },
         { props: { variant: 'b2_b' as const }, style: { ...bodyStyles.b2_b } },
         { props: { variant: 'b2_m' as const }, style: { ...bodyStyles.b2_m } },
         { props: { variant: 'body_b3_b' as const }, style: { ...bodyStyles.body_b3_b } },
@@ -86,6 +94,25 @@ const theme = createTheme({
         size: 'medium',
       },
       variants: [
+        {
+          props: { variant: 'contained', color: 'grey' },
+          style: {
+            backgroundColor: '#EEE',
+            color: colors.secondary.main,
+            '&:hover': {
+              backgroundColor: '#E0E0E0',
+              color: colors.secondary.main,
+            },
+            '&:active': {
+              backgroundColor: '#BDBDBD',
+              color: '#837C78',
+            },
+            '&.Mui-disabled': {
+              backgroundColor: '#EEE',
+              color: colors.secondary.main,
+            },
+          },
+        },
         {
           props: { size: 'small' },
           style: {
@@ -207,17 +234,34 @@ const theme = createTheme({
       },
     },
     MuiIconButton: {
+      defaultProps: {
+        size: 'medium',
+      },
       styleOverrides: {
         root: {
           borderRadius: '100px',
-          backgroundColor: colors.secondary._states.hover,
-          padding: spacingArray[5],
-          color: colors.secondary.light,
-          '&:hover': {
-            backgroundColor: colors.secondary._states.hover,
-          },
+          backgroundColor: colors.action.hover,
+          padding: spacingArray[1],
           '& .MuiSvgIcon-root': {
-            color: colors.secondary.light,
+            color: colors.action.enabel,
+          },
+          '&:hover': {
+            backgroundColor: colors.action.hover,
+            '& .MuiSvgIcon-root': {
+              color: colors.action.active,
+            },
+          },
+          '&.Mui-focusVisible': {
+            backgroundColor: colors.text._states.focus,
+            '& .MuiSvgIcon-root': {
+              color: colors.action.active,
+            },
+          },
+          '&:active': {
+            backgroundColor: colors.text._states.focus,
+            '& .MuiSvgIcon-root': {
+              color: colors.action.active,
+            },
           },
         },
       },
@@ -238,6 +282,10 @@ const theme = createTheme({
           margin: 0,
           marginLeft: 0,
           marginRight: 0,
+        },
+        deleteIcon: {
+          margin: 0,
+          marginLeft: '4px',
         },
         sizeMedium: {
           height: '32px',

@@ -22,6 +22,8 @@ declare module '@mui/material/styles' {
     t3_r: React.CSSProperties;
     t4_b: React.CSSProperties;
     t4_m: React.CSSProperties;
+    b1_m: React.CSSProperties;
+    b2_r: React.CSSProperties;
     b2_b: React.CSSProperties;
     b2_m: React.CSSProperties;
     body_b3_b: React.CSSProperties;
@@ -54,6 +56,8 @@ declare module '@mui/material/styles' {
     t3_r: true;
     t4_b: true;
     t4_m: true;
+    b1_m: true;
+    b2_r: true;
     b2_b: true;
     b2_m: true;
     body_b3_b: true;
