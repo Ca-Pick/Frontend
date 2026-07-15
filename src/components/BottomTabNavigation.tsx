@@ -1,8 +1,10 @@
 import { Box, Typography } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import { colors } from '../theme/colors';
-import { LiSmile, LiHeart, LiSearch } from './Icons';
 
-const imgLiHouse = "https://www.figma.com/api/mcp/asset/93165c89-1e7e-4894-a6a3-19e3a1a41af1";
+const cherryBtn = "/src/assets/images/cherry.svg";
 
 interface TabItemProps {
   icon?: string | React.ReactNode;
@@ -28,21 +30,14 @@ function TabItem({ icon, label, isActive = false, onClick }: TabItemProps) {
         },
       }}
     >
-      <Box sx={{ width: 24, height: 24 }}>
+      <Box sx={{ width: 24, height: 24, pointerEvents: 'none' }}>
         {typeof icon === 'string' ? (
           <Box component="img" src={icon} sx={{ width: '100%', height: '100%' }} />
         ) : (
           icon
         )}
       </Box>
-      <Typography
-        variant="caption"
-        sx={{
-          color: colors.text.primary,
-          fontWeight: 500,
-          fontSize: '13px',
-        }}
-      >
+      <Typography variant="label_4" sx={{ color: '#000' }}>
         {label}
       </Typography>
     </Box>
@@ -60,8 +55,11 @@ export function BottomTabNavigation({ activeTab = 'home', onTabChange }: BottomT
   return (
     <Box
       sx={{
-        borderTop: `1px solid ${colors.divider}`,
-        backgroundColor: colors.common.white._states.main,
+        position: 'sticky',
+        bottom: 0,
+        zIndex: 100,
+        borderTop: `1px solid ${colors._components.table.border}`,
+        backgroundColor: '#F5F5F5',
         padding: '8px 40px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -69,10 +67,10 @@ export function BottomTabNavigation({ activeTab = 'home', onTabChange }: BottomT
         height: 72,
       }}
     >
-      <TabItem icon={imgLiHouse} label="홈" isActive={activeTab === 'home'} onClick={() => onTabChange?.('home')} />
-      <TabItem icon={<LiSearch />} label="주문서 작성" isActive={activeTab === 'order'} onClick={() => onTabChange?.('order')} />
-      <TabItem icon={<LiHeart />} label="저장함" isActive={activeTab === 'saved'} onClick={() => onTabChange?.('saved')} />
-      <TabItem icon={<LiSmile />} label="마이" isActive={activeTab === 'mypage'} onClick={() => onTabChange?.('mypage')} />
+      <TabItem icon={<HomeIcon />} label="홈" isActive={activeTab === 'home'} onClick={() => onTabChange?.('home')} />
+      <TabItem icon={<SearchIcon />} label="검색" isActive={activeTab === 'order'} onClick={() => onTabChange?.('order')} />
+      <TabItem icon={cherryBtn} label="저장" isActive={activeTab === 'saved'} onClick={() => onTabChange?.('saved')} />
+      <TabItem icon={<SentimentSatisfiedAltIcon />} label="마이" isActive={activeTab === 'mypage'} onClick={() => onTabChange?.('mypage')} />
     </Box>
   );
 }
