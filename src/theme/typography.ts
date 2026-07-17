@@ -121,6 +121,12 @@ export const titleStyles = {
     lineHeight: 1.4,
     fontWeight: fontWeights.medium,
   },
+  t4_r: {
+    fontSize: 16,
+    lineHeight: 1.4,
+    fontWeight: fontWeights.normal,
+    letterSpacing: '-0.4px',
+  },
 };
 
 // Body/Label Styles
@@ -225,6 +231,7 @@ export const typographyConfig = {
   t3_r: { ...titleStyles.t3_r },
   t4_b: { ...titleStyles.t4_b },
   t4_m: { ...titleStyles.t4_m },
+  t4_r: { ...titleStyles.t4_r },
 
   // Body variants
   b1_m: { ...bodyStyles.b1_m },

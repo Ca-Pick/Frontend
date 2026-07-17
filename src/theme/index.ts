@@ -1,12 +1,14 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
-import { borderRadius } from './radius';
 import { spacingArray } from './spacing';
 import { typographyConfig, headingStyles, titleStyles, bodyStyles } from './typography';
 
 declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     grey: true;
+  }
+  interface ButtonPropsSizeOverrides {
+    xlarge: true;
   }
 }
 
@@ -75,6 +77,7 @@ const theme = createTheme({
         { props: { variant: 't3_r' as const }, style: { ...titleStyles.t3_r } },
         { props: { variant: 't4_b' as const }, style: { ...titleStyles.t4_b } },
         { props: { variant: 't4_m' as const }, style: { ...titleStyles.t4_m } },
+        { props: { variant: 't4_r' as const }, style: { ...titleStyles.t4_r } },
         // Body variants
         { props: { variant: 'b1_m' as const }, style: { ...bodyStyles.b1_m } },
         { props: { variant: 'b2_r' as const }, style: { ...bodyStyles.b2_r } },
@@ -114,10 +117,36 @@ const theme = createTheme({
           },
         },
         {
+          props: { variant: 'contained', color: 'secondary' },
+          style: {
+            backgroundColor: colors.secondary.lighter,
+            color: colors.secondary.contrastText,
+            '&:hover': {
+              backgroundColor: colors.secondary.light,
+            },
+            '&:active': {
+              backgroundColor: colors.secondary.main,
+            },
+            '&.Mui-disabled': {
+              backgroundColor: colors.action.disabledBackground,
+              color: colors.action.disabled,
+            },
+          },
+        },
+        {
+          props: { variant: 'text', color: 'secondary' },
+          style: {
+            color: colors.secondary.main,
+            '&:hover': {
+              backgroundColor: colors.secondary._states.hover,
+            },
+          },
+        },
+        {
           props: { size: 'small' },
           style: {
             padding: '4px 10px',
-            borderRadius: borderRadius.small,
+            borderRadius: '6px',
             fontSize: bodyStyles.label_4.fontSize,
             fontWeight: bodyStyles.label_4.fontWeight,
             lineHeight: bodyStyles.label_4.lineHeight,
@@ -130,7 +159,7 @@ const theme = createTheme({
           props: { size: 'medium' },
           style: {
             padding: '6px 16px',
-            borderRadius: borderRadius.medium,
+            borderRadius: '6px',
             fontSize: bodyStyles.label_3.fontSize,
             fontWeight: bodyStyles.label_3.fontWeight,
             lineHeight: bodyStyles.label_3.lineHeight,
@@ -143,7 +172,7 @@ const theme = createTheme({
           props: { size: 'large' },
           style: {
             padding: '8px 22px',
-            borderRadius: borderRadius.large,
+            borderRadius: '8px',
             fontSize: bodyStyles.label_2.fontSize,
             fontWeight: bodyStyles.label_2.fontWeight,
             lineHeight: bodyStyles.label_2.lineHeight,
@@ -157,7 +186,7 @@ const theme = createTheme({
           style: {
             height: '48px',
             padding: '14px 24px',
-            borderRadius: borderRadius.xl,
+            borderRadius: '12px',
             fontSize: bodyStyles.label_1.fontSize,
             fontWeight: bodyStyles.label_1.fontWeight,
             lineHeight: bodyStyles.label_1.lineHeight,
@@ -171,7 +200,7 @@ const theme = createTheme({
           style: {
             height: '48px',
             padding: '14px 24px',
-            borderRadius: borderRadius.xl,
+            borderRadius: '12px',
             fontSize: bodyStyles.label_1.fontSize,
             fontWeight: bodyStyles.label_1.fontWeight,
             lineHeight: bodyStyles.label_1.lineHeight,
@@ -202,7 +231,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            borderRadius: borderRadius['3xl'],
+            borderRadius: '32px',
             backgroundColor: '#EEE',
           },
           '& .MuiOutlinedInput-input::placeholder': {
@@ -218,7 +247,6 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: borderRadius.large,
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         },
       },

@@ -32,20 +32,3 @@ export const spacingArray = [
   spacing['11'],    // 11 (88px)
   spacing['12'],    // 12 (96px)
 ];
-
-// For convenience
-export const spacingMultiplier = {
-  xs: spacing['0.5'],
-  sm: spacing['1'],
-  md: spacing['2'],
-  lg: spacing['3'],
-  xl: spacing['4'],
-  '2xl': spacing['5'],
-  '3xl': spacing['6'],
-  '4xl': spacing['7'],
-  '5xl': spacing['8'],
-  '6xl': spacing['9'],
-  '7xl': spacing['10'],
-  '8xl': spacing['11'],
-  '9xl': spacing['12'],
-};
