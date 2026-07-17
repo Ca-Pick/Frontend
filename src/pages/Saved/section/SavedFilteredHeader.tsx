@@ -1,5 +1,4 @@
 import { Box, Typography, Chip, Button } from '@mui/material';
-import { colors } from '../../../theme/colors';
 import { BackButton } from '../../../components/BackButton';
 
 interface SavedFilteredHeaderProps {
@@ -57,11 +56,10 @@ export function SavedFilteredHeader({ onBack, tags, onRemoveTag, onEditTags, loc
         </Box>
       <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography variant="label_3" sx={{ color: '#757575' }}>
-          게시물 {embedCount}개
+          총 {embedCount}개
         </Typography>
         <Button
           variant="text"
-          size="small"
           color="secondary"
           onClick={onEditTags}
         >

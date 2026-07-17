@@ -4,9 +4,8 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSavedItems, toggleLike } from '../../api/saved';
 import { SavedHeader } from './section/SavedHeader';
-import { SavedGrid } from './section/SavedGrid';
-import { SavedFilteredHeader } from './section/SavedFilteredHeader';
-import SavedInstagramEmbed from '../../components/SavedInstagramEmbed';
+import SavedInstagramEmbed, { EMBED_COUNT } from '../../components/SavedInstagramEmbed';
+import { NoSaved } from './section/NoSaved';
 
 export function Saved() {
   const [selectedTags, setSelectedTags] = useState<string[]>(['생일', '생일']);
@@ -53,20 +52,22 @@ export function Saved() {
     // TODO: Navigate to detail page
   };
 
+  const savedCount = EMBED_COUNT; // 테스트할 때 이 값을 변경하면 됨
+
+  if (savedCount > 0) {
+    return (
+      <Box sx={{ width: '100%', backgroundColor: colors.background }}>
+        <SavedHeader count={savedCount} />
+        <Box sx={{ px: 4}}>
+        <SavedInstagramEmbed /></Box>
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ width: '100%', backgroundColor: colors.background }}>
-      <SavedHeader
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-        onBack={() => console.log('Back clicked')}
-      />
-      <SavedFilteredHeader
-        onBack={() => console.log('Back clicked')}
-        tags={selectedTags}
-        onRemoveTag={handleRemoveTag}
-        onEditTags={() => console.log('Edit tags clicked')}
-      />
-      <SavedInstagramEmbed />
+    <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: '100vh', pt: 1 }}>
+      <SavedHeader count={savedCount} />
+      <NoSaved />
     </Box>
   );
 }

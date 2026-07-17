@@ -64,9 +64,10 @@ const InstagramCarousel = ({ currentIndex, onDetailClick }: { currentIndex: numb
 
 interface SavedInstagramEmbedProps {
   onDetailClick?: () => void;
+  showCarousel?: boolean;
 }
 
-function SavedInstagramEmbed({ onDetailClick }: SavedInstagramEmbedProps) {
+function SavedInstagramEmbed({ onDetailClick, showCarousel = true }: SavedInstagramEmbedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalItems = INSTAGRAM_URLS.length;
 
@@ -120,7 +121,7 @@ function SavedInstagramEmbed({ onDetailClick }: SavedInstagramEmbedProps) {
           <ChevronRightIcon />
         </IconButton>
       </Box>
-      <InstagramCarousel currentIndex={currentIndex} onDetailClick={onDetailClick} />
+      {showCarousel && <InstagramCarousel currentIndex={currentIndex} onDetailClick={onDetailClick} />}
     </Box>
   );
 }
