@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material';
 import { colors } from '../../../theme/colors';
-import { borderRadius } from '../../../theme/radius';
 import CarouselIndicators from '../../../components/CarouselIndicators';
 import { StepNavigation } from '../../../components/StepNavigation';
 
@@ -25,7 +24,7 @@ const CircleButton: React.FC<CircleButtonProps> = ({ label, selected = false, on
       alignItems: 'center',
       gap: 1,
       aspectRatio: '1/1',
-      borderRadius: borderRadius.pill,
+      borderRadius: '999px',
       backgroundColor: selected ? colors.primary._states.selected : '#EAE7E2',
       cursor: 'pointer',
       transition: 'all 0.2s ease',
@@ -43,12 +42,19 @@ const CircleButton: React.FC<CircleButtonProps> = ({ label, selected = false, on
   </Box>
 );
 
-export function OrderStep1() {
+interface OrderStep1Props {
+  onNext?: () => void;
+  onCarouselChange?: (index: number) => void;
+  selectedLocation?: string;
+  onLocationChange?: (location: string) => void;
+}
+
+export function OrderStep1({ onNext, onCarouselChange, selectedLocation = '', onLocationChange }: OrderStep1Props) {
   return (
     <Box
       sx={{
         width: '100%',
-        height: '645px',
+        height: 'calc(100vh - 72px)',
         backgroundColor: colors.background,
         px: 4,
         pt: 12,
@@ -97,25 +103,29 @@ export function OrderStep1() {
       >
         <CircleButton
           label="강남"
-          onClick={() => console.log('clicked')}
+          selected={selectedLocation === '강남'}
+          onClick={() => onLocationChange?.('강남')}
         />
         <CircleButton
           label="성수"
-          selected={true}
-          onClick={() => console.log('clicked')}
+          selected={selectedLocation === '성수'}
+          onClick={() => onLocationChange?.('성수')}
         />
         <CircleButton
           label="홍대/상수"
-          onClick={() => console.log('clicked')}
+          selected={selectedLocation === '홍대/상수'}
+          onClick={() => onLocationChange?.('홍대/상수')}
         />
         <CircleButton
           label="잠실/송파"
-          onClick={() => console.log('clicked')}
+          selected={selectedLocation === '잠실/송파'}
+          onClick={() => onLocationChange?.('잠실/송파')}
         />
       </Box>
-      <CarouselIndicators />
+      <CarouselIndicators current={0} total={4} onChange={onCarouselChange} />
       <StepNavigation
-        onNext={() => console.log('다음 클릭')}
+        onNext={() => onNext?.()}
+        nextDisabled={!selectedLocation}
       />
     </Box>
   );

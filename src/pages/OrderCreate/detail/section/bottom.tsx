@@ -1,6 +1,5 @@
 ﻿import { Box, Typography, Button, Chip } from "@mui/material";
 import { colors } from "../../../../theme/colors";
-import { borderRadius } from "../../../../theme/radius";
 import AddIcon from "@mui/icons-material/Add";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import SavedInstagramEmbed from "../../../../components/SavedInstagramEmbed";
@@ -66,7 +65,7 @@ export function BottomSection({ activeTab, onTabChange }: BottomSectionProps) {
                         borderRadius: '14px',
                     }}
                 >
-                                                <Box component="img" src={cherryBtn} />
+                    <Box component="img" src={cherryBtn} />
 
                 </Box>
 
@@ -74,9 +73,9 @@ export function BottomSection({ activeTab, onTabChange }: BottomSectionProps) {
                     variant="contained"
                     color="primary"
                     size="xlarge"
-                fullWidth
+                    fullWidth
                     startIcon={<InstagramIcon />}
-                    sx={{flex: 1}}
+                    sx={{ flex: 1 }}
                 >
                     Instagram으로 문의하기
                 </Button>
@@ -190,27 +189,7 @@ function InfoSection() {
                     </Box>
                 </Box>
 
-<Box
-                    sx={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(2, 1fr)",
-                        gap: 2,
-                        width: "100%",
-                    }}
-                >
-                    {[1, 2, 3, 4].map((index) => (
-                        <Box
-                            key={index}
-                            sx={{
-                                minWidth: 0,
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <SavedInstagramEmbed />
-                        </Box>
-                    ))}
-                </Box>
+<SavedInstagramEmbed />
             </Box>
         </Box>
     );
@@ -237,7 +216,6 @@ function LocationSection() {
                     sx={{
                         width: "100%",
                         height: "180px",
-                        borderRadius: borderRadius.small,
                         objectFit: "cover",
                     }}
                 />

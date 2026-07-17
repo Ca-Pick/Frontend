@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { colors } from '../../../theme/colors';
 import { useState } from 'react';
 import { TopSection } from './section/top';
 import { BottomSection } from './section/bottom';

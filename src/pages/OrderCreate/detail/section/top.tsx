@@ -1,6 +1,5 @@
 import { Box, Typography, IconButton } from "@mui/material";
 import { colors } from "../../../../theme/colors";
-import { borderRadius } from "../../../../theme/radius";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { InstagramEmbed } from '../../../../components/InstagramEmbed';
@@ -47,8 +46,8 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
                     zIndex: 2,
                     padding: '24px 18px 24px 17px',
                     bgcolor: colors.background,
-                    borderTopLeftRadius: borderRadius["2xl"],
-                    borderTopRightRadius: borderRadius["2xl"],
+                    borderTopLeftRadius: '24px',
+                    borderTopRightRadius: '24px',
                     borderBottom: `1px solid ${colors.divider}`
                 }}
             >
