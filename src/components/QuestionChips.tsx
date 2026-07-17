@@ -7,6 +7,7 @@ interface QuestionChipsProps {
   title: string;
   chips: string[];
   onChipSelect?: (selectedChip: string) => void;
+  selectedValue?: string;
 }
 
 export function QuestionChips({
@@ -14,8 +15,9 @@ export function QuestionChips({
   title,
   chips,
   onChipSelect,
+  selectedValue,
 }: QuestionChipsProps) {
-  const [selectedChip, setSelectedChip] = useState<string | null>(null);
+  const [selectedChip, setSelectedChip] = useState<string | null>(selectedValue ?? null);
 
   const handleChipClick = (chip: string) => {
     setSelectedChip(chip);
@@ -41,9 +43,8 @@ export function QuestionChips({
             label={chip}
             onClick={() => handleChipClick(chip)}
             sx={{
-              cursor: 'pointer',
               borderColor: colors.primary.main,
-              color: selectedChip === chip ? colors.primary.contrastText : colors.primary.main,
+              color: selectedChip === chip ? colors.primary.contrastText : colors.text.primary,
               backgroundColor: selectedChip === chip ? colors.primary.main : 'transparent',
               '&:hover': {
                 backgroundColor: selectedChip === chip ? colors.primary.dark : colors.primary._states.hover,
