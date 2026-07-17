@@ -1,6 +1,5 @@
-import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { LiArrowLeft } from './Icons';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface BackButtonProps {
   onClick: () => void;
@@ -26,7 +25,7 @@ export function BackButton({
           alignItems: 'center',
           padding: 0,
           minWidth: 'auto',
-          color: 'rgba(0, 0, 0, 0.0)',
+          color: '#000',
           textTransform: 'none',
           '&:hover': {
             backgroundColor: 'transparent',
@@ -34,7 +33,7 @@ export function BackButton({
           },
         }}
       >
-        <LiArrowLeft />
+        <ArrowBackIcon sx={{ fontSize: 24 }} />
       </Button>
       <Typography variant="t2_b" sx={{ color: "#000" }}>{label}</Typography>
     </Box>

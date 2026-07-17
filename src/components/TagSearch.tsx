@@ -5,7 +5,7 @@ interface TagSearchProps {
   searchQuery: string;
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSearch: () => void;
-  resultChips: string[];
+  allChips: string[];
   selectedChips: string[];
   onResultChipClick: (chip: string) => void;
   onSelectedChipDelete: (chip: string) => void;
@@ -15,18 +15,22 @@ export function TagSearch({
   searchQuery,
   onSearchChange,
   onSearch,
-  resultChips,
+  allChips,
   selectedChips,
   onResultChipClick,
   onSelectedChipDelete,
 }: TagSearchProps) {
+  const isMinimumLength = searchQuery.length >= 2;
+  const filteredChips = isMinimumLength
+    ? allChips.filter(chip => chip.includes(searchQuery))
+    : [];
+  const hasResults = filteredChips.length > 0;
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
-        height: '131px',
+        gap: 1,
       }}
     >
       <TextField
@@ -45,82 +49,87 @@ export function TagSearch({
           },
         }}
       />
-      {searchQuery ? (
+      {/* 검색 결과 섹션 */}
+      {isMinimumLength && (
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             gap: 2,
+            maxHeight: '96px',
+            overflowY: 'auto',
+            borderRadius: '4px'
           }}
         >
-          {/* 검색 결과 칩 */}
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 1,
-              flexWrap: 'wrap',
-            }}
-          >
-            {resultChips.map((chip) => (
-              <Chip
-                key={chip}
-                label={chip}
-                variant="filled"
-                color={selectedChips.includes(chip) ? 'primary' : 'default'}
-                onClick={() => onResultChipClick(chip)}
-                sx={{
-                  cursor: 'pointer',
-                  ...(selectedChips.includes(chip) && {
-                    '& .MuiChip-deleteIcon': {
-                      display: 'flex',
-                    },
-                  }),
-                }}
-                deleteIcon={selectedChips.includes(chip) ? undefined : null}
-              />
-            ))}
-          </Box>
-          {/* 선택된 칩 */}
-          {selectedChips.length > 0 && (
+          {hasResults ? (
             <Box
               sx={{
                 display: 'flex',
                 gap: 1,
                 flexWrap: 'wrap',
-                pt: 1,
+                padding: '16px 15px',
+                background: 'rgba(255, 255, 255, 0.80)',
+                borderRadius: '16px',
+                boxShadow: '0 1px 12px 0 rgba(0, 0, 0, 0.08), 0 1px 1px 0 rgba(0, 0, 0, 0.04), 0 2px 1px -1px rgba(0, 0, 0, 0.04)',
+                border: '1px solid #eee'
               }}
             >
-              {selectedChips.map((chip) => (
+              {filteredChips
+                .filter(chip => !selectedChips.includes(chip))
+                .map((chip) => (
                 <Chip
                   key={chip}
                   label={chip}
                   variant="filled"
-                  color="primary"
-                  onDelete={() => onSelectedChipDelete(chip)}
+                  color="default"
+                  onClick={() => onResultChipClick(chip)}
+                  sx={{ cursor: 'pointer' }}
                 />
               ))}
             </Box>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '16px 15px',
+                background: 'rgba(255, 255, 255, 0.80)',
+                borderRadius: '16px',
+                boxShadow: '0 1px 12px 0 rgba(0, 0, 0, 0.08), 0 1px 1px 0 rgba(0, 0, 0, 0.04), 0 2px 1px -1px rgba(0, 0, 0, 0.04)',
+                border: '1px solid #eee'
+              }}
+            >
+              <Typography variant="t4_b" sx={{color: '#000'}}>
+                원하는 태그가 없습니다.
+              </Typography>
+              <Typography variant="b3_b" sx={{ color: '#757575' }}>
+                다른 태그를 검색해주세요.
+              </Typography>
+            </Box>
           )}
         </Box>
-      ) : (
+      )}
+
+      {/* 선택된 칩 - 항상 표시 */}
+      {selectedChips.length > 0 && (
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
             gap: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 4,
-            backgroundColor: '#F5F5F5',
-            borderRadius: '8px',
+            flexWrap: 'wrap',
           }}
         >
-          <Typography variant="t3_b" color="textPrimary">
-            원하는 태그가 없습니다.
-          </Typography>
-          <Typography variant="t4_m" sx={{ color: '#9E9E9E' }}>
-            다른 태그를 검색해주세요.
-          </Typography>
+          {selectedChips.map((chip) => (
+            <Chip
+              key={chip}
+              label={chip}
+              variant="filled"
+              color="primary"
+              onDelete={() => onSelectedChipDelete(chip)}
+            />
+          ))}
         </Box>
       )}
     </Box>
