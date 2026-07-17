@@ -6,6 +6,7 @@ import { fetchSavedItems, toggleLike } from '../../api/saved';
 import { SavedHeader } from './section/SavedHeader';
 import { SavedGrid } from './section/SavedGrid';
 import { SavedFilteredHeader } from './section/SavedFilteredHeader';
+import SavedInstagramEmbed from '../../components/SavedInstagramEmbed';
 
 export function Saved() {
   const [selectedTags, setSelectedTags] = useState<string[]>(['생일', '생일']);
@@ -53,7 +54,7 @@ export function Saved() {
   };
 
   return (
-    <Stack sx={{ width: '100%', height: '100vh', backgroundColor: colors.background }}>
+    <Box sx={{ width: '100%', backgroundColor: colors.background }}>
       <SavedHeader
         sortBy={sortBy}
         onSortChange={setSortBy}
@@ -65,23 +66,7 @@ export function Saved() {
         onRemoveTag={handleRemoveTag}
         onEditTags={() => console.log('Edit tags clicked')}
       />
-      <Box
-        sx={{
-          flex: 1,
-          px: 2,
-          py: 1,
-          overflowY: 'auto',
-          backgroundColor: 'white',
-        }}
-      >
-        <SavedGrid
-          items={items}
-          isLoading={isLoading}
-          error={error}
-          onLike={handleLike}
-          onDetailClick={handleDetailClick}
-        />
-      </Box>
-    </Stack>
+      <SavedInstagramEmbed />
+    </Box>
   );
 }

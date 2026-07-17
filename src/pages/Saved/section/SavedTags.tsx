@@ -14,7 +14,7 @@ export function SavedTags({ tags, onRemoveTag, onEditTags }: SavedTagsProps) {
         선택된 태그
       </Typography>
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', gap: 1, maxWidth: '280px', flexWrap: 'wrap' }}>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           {tags.map((tag, idx) => (
             <Chip
               key={idx}
