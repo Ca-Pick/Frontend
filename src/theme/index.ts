@@ -1,4 +1,3 @@
-/// <reference path="./theme.d.ts" />
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
 import { spacingArray } from './spacing';
