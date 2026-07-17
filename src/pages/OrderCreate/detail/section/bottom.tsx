@@ -3,8 +3,7 @@ import { colors } from "../../../../theme/colors";
 import AddIcon from "@mui/icons-material/Add";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import SavedInstagramEmbed from "../../../../components/SavedInstagramEmbed";
-
-const cherryBtn = "/src/assets/images/cherry.svg";
+import cherryBtn from "../../../../assets/images/cherry.svg";
 
 interface BottomSectionProps {
     activeTab: "info" | "location" | "other";

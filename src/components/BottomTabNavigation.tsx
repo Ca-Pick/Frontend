@@ -3,8 +3,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import { colors } from '../theme/colors';
-
-const cherryBtn = "/src/assets/images/cherry.svg";
+import cherryBtn from '../assets/images/cherry.svg';
 
 interface TabItemProps {
   icon?: string | React.ReactNode;

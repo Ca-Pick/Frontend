@@ -1,9 +1,8 @@
 import { Box, Typography, Button } from '@mui/material';
 import { colors } from '../../../theme/colors';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-const imgCake = "/src/assets/images/cake.svg";
-const imgLogo = "/src/assets/logos/logo_sm.svg";
+import imgCake from '../../../assets/images/cake.svg';
+import imgLogo from '../../../assets/logos/logo_sm.svg';
 
 export function HeroSection() {
   return (

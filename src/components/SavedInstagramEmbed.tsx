@@ -9,8 +9,7 @@ import { InstagramEmbed } from '../components/InstagramEmbed';
 import CarouselIndicators from '../components/CarouselIndicators'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-
-const cherryBtn = "/src/assets/images/cherry.svg";
+import cherryBtn from '../assets/images/cherry.svg';
 
 export const INSTAGRAM_URLS = [
   "https://www.instagram.com/p/DFxF4K8yG6D/",

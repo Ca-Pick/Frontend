@@ -10,8 +10,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CarouselIndicators from '../../../components/CarouselIndicators'
 import { InstagramEmbed } from '../../../components/InstagramEmbed';
-
-const cherryBtn = "/src/assets/images/cherry.svg";
+import cherryBtn from '../../../assets/images/cherry.svg';
 
 // 더미 데이터
 const INSTAGRAM_URLS = [

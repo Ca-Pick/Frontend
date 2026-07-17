@@ -1,6 +1,5 @@
 import { Box, Typography, Button } from '@mui/material';
-
-const imglogoText = "/src/assets/images/logo_text.svg";
+import imglogoText from '../../../assets/logos/logo_text.svg';
 
 export function LoginForm() {
     return (

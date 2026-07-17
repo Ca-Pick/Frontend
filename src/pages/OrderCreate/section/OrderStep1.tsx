@@ -2,8 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { colors } from '../../../theme/colors';
 import CarouselIndicators from '../../../components/CarouselIndicators';
 import { StepNavigation } from '../../../components/StepNavigation';
-
-const imgMap = "/src/assets/images/order_map.svg";
+import imgMap from '../../../assets/images/order_map.svg';
 
 interface CircleButtonProps {
   label: string;

@@ -1,7 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-const imgSavedCake = "/src/assets/images/cake.svg";
+import imgSavedCake from '../../../assets/images/cake.svg';
 
 export function NoSaved() {
     return (
