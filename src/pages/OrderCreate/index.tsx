@@ -26,18 +26,17 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
 
   const handleDetailView = () => {
     setView('saved');
-    onDetailViewChange?.(true);
+    onDetailViewChange?.(false);
   };
 
   const handleBackFromDetail = () => {
-    setView('steps');
-    setCurrentStep(1);
+    setView('saved');
     onDetailViewChange?.(false);
   };
 
   const handleBackFromSaved = () => {
     setView('steps');
-    setCurrentStep(1);
+    setCurrentStep(4);
     onDetailViewChange?.(false);
   };
 
@@ -47,11 +46,12 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
 
   const handleEditTags = () => {
     setView('steps');
-    setCurrentStep(4);
+    setCurrentStep(1);
   };
 
   const handleDetailFromSaved = () => {
     setView('detail');
+    onDetailViewChange?.(true);
   };
 
   const handleStepNext = () => {
@@ -67,12 +67,11 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
   };
 
   if (view === 'detail') {
-    return <ProductDetail onBack={handleBackFromDetail} />;
+    return <ProductDetail onBack={handleBackFromDetail} selectedTags={selectedTags} location={selectedLocation} recipient={selectedRecipient} cakeType={selectedCakeType} color={selectedColor} mood={selectedMood} />;
   }
 
   if (view === 'saved') {
     return (
-      <>
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2, pb: 2, backgroundColor: colors.background,
  }}>
         <SavedFilteredHeader
@@ -91,8 +90,6 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
           <SavedInstagramEmbed onDetailClick={handleDetailFromSaved} />
         </Box>
       </Box>
-      <BottomTabNavigation />
-      </>
     );
   }
 

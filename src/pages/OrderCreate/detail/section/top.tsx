@@ -22,18 +22,25 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
                     py: 2,
                     bgcolor: "#ffffff",
                     borderBottom: `1px solid ${colors.divider}`,
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    justifyContent: 'center'
                 }}
             >
-                <IconButton onClick={onBack}>
-                    <ArrowBackIcon />
-                </IconButton>
+                <Box sx={{
+                    position: 'absolute',
+                    left: '16px',
+                    top: '14px'
+                }}>
+                    <IconButton onClick={onBack}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                </Box>
                 <InstagramEmbed url="https://www.instagram.com/p/DFxF4K8yG6D/" />
             </Box>
             <Box
                 sx={{
                     height: "60px",
-                    mt: -5,
+                    mt: -6,
                     position: "relative",
                     zIndex: 1,
                 }}
@@ -41,7 +48,7 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
 
             <Box
                 sx={{
-                    mt: -4,
+                    mt: -5,
                     position: "relative",
                     zIndex: 2,
                     padding: '24px 18px 24px 17px',
@@ -65,10 +72,6 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
                     </Box>
                 </Box>
             </Box>
-
-
-
-
         </>
     );
 }
