@@ -32,7 +32,7 @@ export function InstagramEmbed({ url, width = '100%', height = '380' }: Instagra
         height={height}
         frameBorder="0"
         scrolling="no"
-        allowtransparency="true"
+        allowTransparency="true"
         style={{ width: '100%', maxWidth: '100%', display: 'block' }}
       />
     </Box>

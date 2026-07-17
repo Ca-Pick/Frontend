@@ -1,3 +1,4 @@
+/// <reference path="./theme.d.ts" />
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
 import { spacingArray } from './spacing';
@@ -343,7 +344,7 @@ const theme = createTheme({
           },
         },
         {
-          props: { variant: 'static' },
+          props: { variant: 'outlined' },
           style: {
             height: '24px',
             backgroundColor: 'rgba(255, 239, 239, 0.70)',
