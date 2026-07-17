@@ -7,7 +7,8 @@ export function Home() {
     <Box sx={{ width: '100%' }}>
       <HeroSection />
       <InstagramEmbdeSection />
-      <Box sx={{ flex: 1 }} />
+      <InstagramEmbdeSection />
+      <InstagramEmbdeSection />
     </Box>
   );
 }

@@ -18,8 +18,6 @@ export default function MainPage() {
         width: 375,
         backgroundColor: 'white',
         margin: '0 auto',
-        overflow: 'hidden',
-        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
       }}
     >
       {/* 탭 콘텐츠 */}

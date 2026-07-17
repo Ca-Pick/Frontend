@@ -1,7 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
 import { colors } from '../../../theme/colors';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { borderRadius } from '../../../theme/radius';
 
 const imgCake = "/src/assets/images/cake.svg";
 const imgLogo = "/src/assets/logos/logo_sm.svg";
@@ -79,8 +78,8 @@ export function HeroSection() {
           left: 0,
           width: '100%',
           height: '24px',
-          borderTopLeftRadius: borderRadius['2xl'],
-          borderTopRightRadius: borderRadius['2xl'],
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
           boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.04), 0 0 4px 3px rgba(51, 51, 51, 0.02)',
           backgroundColor: colors.color
         }}
