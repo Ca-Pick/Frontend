@@ -7,7 +7,11 @@ import { SavedHeader } from './section/SavedHeader';
 import SavedInstagramEmbed, { EMBED_COUNT } from '../../components/SavedInstagramEmbed';
 import { NoSaved } from './section/NoSaved';
 
-export function Saved() {
+interface SavedProps {
+  onTabChange?: (tab: 'order') => void;
+}
+
+export function Saved({ onTabChange }: SavedProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>(['생일', '생일']);
   const [sortBy, setSortBy] = useState<'popular' | 'recent'>('popular');
   const [localLikeState, setLocalLikeState] = useState<Record<string, boolean>>({});
@@ -67,7 +71,7 @@ export function Saved() {
   return (
     <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: '100vh', pt: 1 }}>
       <SavedHeader count={savedCount} />
-      <NoSaved />
+      <NoSaved onNavigateToOrder={() => onTabChange?.('order')} />
     </Box>
   );
 }

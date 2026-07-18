@@ -3,8 +3,8 @@ import { colors } from "../../../../theme/colors";
 import AddIcon from "@mui/icons-material/Add";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import SavedInstagramEmbed from "../../../../components/SavedInstagramEmbed";
-
-const cherryBtn = "/src/assets/images/cherry.svg";
+import { HeartToggle } from "../../../../components/HeartToggle";
+import { useState } from "react";
 
 interface BottomSectionProps {
     activeTab: "info" | "location" | "other";
@@ -49,8 +49,26 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
             </Box>
             <Box>
                 {activeTab === "info" && <InfoSection tags={selectedTags} orderInfo={orderInfoArray} />}
-                {activeTab === "location" && <LocationSection />}
-                {activeTab === "other" && <OtherSection />}
+                {activeTab === "location" &&
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
+                        <LocationSection />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="xlarge"
+                            fullWidth
+                            startIcon={<InstagramIcon />}
+                        >
+                            Instagram으로 문의하기
+                        </Button>
+                        <Box sx={{ height: "1px", bgcolor: colors.divider }} />
+                        <OtherSection />
+                    </Box>
+                }
+                {activeTab === "other" &&
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
+                        <OtherSection />
+                    </Box>}
             </Box>
 
             <Box
@@ -69,7 +87,6 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                     sx={{
                         width: "43px",
                         height: "48px",
-                        padding: '6px 9px',
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -77,7 +94,7 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                         borderRadius: '14px',
                     }}
                 >
-                    <Box component="img" src={cherryBtn} />
+                    <HeartToggle />
                 </Box>
 
                 <Button
@@ -102,6 +119,8 @@ interface InfoSectionProps {
 
 function InfoSection({ tags = [], orderInfo = [] }: InfoSectionProps) {
     const allTags = [...orderInfo, ...tags];
+    const [showMoreTags, setShowMoreTags] = useState(false);
+    const displayedTags = showMoreTags ? allTags : allTags.slice(0, 5);
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
@@ -110,7 +129,7 @@ function InfoSection({ tags = [], orderInfo = [] }: InfoSectionProps) {
                     태그 정보
                 </Typography>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                    {allTags.map((tag) => (
+                    {displayedTags.map((tag) => (
                         <Chip
                             key={tag}
                             label={tag}
@@ -118,9 +137,14 @@ function InfoSection({ tags = [], orderInfo = [] }: InfoSectionProps) {
                         />
                     ))}
                 </Box>
-                {allTags.length >= 6 && (
+                {allTags.length >= 6 && !showMoreTags && (
                     <Box sx={{ display: "flex" }}>
-                        <Button variant="text" size="small" sx={{ display: "flex", alignItems: "center", gap: 1, width: 'fit-content', p: 0 }}>
+                        <Button
+                            variant="text"
+                            size="small"
+                            sx={{ display: "flex", alignItems: "center", gap: 1, width: 'fit-content', p: 0 }}
+                            onClick={() => setShowMoreTags(true)}
+                        >
                             <AddIcon sx={{ fontSize: "16px", color: "#616161" }} />
                             <Typography variant="label_3" sx={{ color: "#616161" }}>
                                 태그 더보기
@@ -129,12 +153,8 @@ function InfoSection({ tags = [], orderInfo = [] }: InfoSectionProps) {
                     </Box>
                 )}
             </Box>
-
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-
             <LocationSection />
-
-
             <Button
                 variant="contained"
                 color="primary"
@@ -145,7 +165,6 @@ function InfoSection({ tags = [], orderInfo = [] }: InfoSectionProps) {
                 Instagram으로 문의하기
             </Button>
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-
             <OtherSection />
         </Box>
     );
@@ -183,10 +202,10 @@ function LocationSection() {
 function OtherSection() {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: 'flex-start' }}>
-                    <Typography variant="t2_b" sx={{ color: "black" }}>
-                        이 가게의 다른 케이크
-                    </Typography>
-                <SavedInstagramEmbed showCarousel={false} />
-            </Box>
+            <Typography variant="t2_b" sx={{ color: "black" }}>
+                이 가게의 다른 케이크
+            </Typography>
+            <SavedInstagramEmbed showCarousel={false} />
+        </Box>
     );
 }

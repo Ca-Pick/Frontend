@@ -3,7 +3,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const imgSavedCake = "/src/assets/images/cake.svg";
 
-export function NoSaved() {
+interface NoSavedProps {
+    onNavigateToOrder?: () => void;
+}
+
+export function NoSaved({ onNavigateToOrder }: NoSavedProps) {
     return (
         <Box
             sx={{
@@ -31,7 +35,8 @@ export function NoSaved() {
                 variant="text"
                 color="primary"
                 size="large"
-                endIcon={<ChevronRightIcon />}>
+                endIcon={<ChevronRightIcon />}
+                onClick={onNavigateToOrder}>
                 케이크 보러가기</Button>
         </Box>
     );

@@ -312,8 +312,12 @@ const theme = createTheme({
           marginRight: 0,
         },
         deleteIcon: {
+          width: '18px',
+          height: '18px',
           margin: 0,
           marginLeft: '4px',
+          color: 'white',
+          opacity: 0.8,
         },
         sizeMedium: {
           height: '32px',

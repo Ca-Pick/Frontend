@@ -1,5 +1,6 @@
 import { Box, Typography, TextField, InputAdornment, Chip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface TagSearchProps {
   searchQuery: string;
@@ -128,6 +129,7 @@ export function TagSearch({
               variant="filled"
               color="primary"
               onDelete={() => onSelectedChipDelete(chip)}
+              deleteIcon={<CloseIcon />}
             />
           ))}
         </Box>

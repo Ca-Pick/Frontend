@@ -1,5 +1,6 @@
 import { Box, Typography, Chip, Button } from '@mui/material';
 import { BackButton } from '../../../components/BackButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface SavedFilteredHeaderProps {
   onBack?: () => void;
@@ -29,26 +30,24 @@ export function SavedFilteredHeader({ onBack, tags, onRemoveTag, onEditTags, loc
         <BackButton onClick={onBack}/>
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%', alignItems: 'flex-start' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', alignItems: 'flex-start' }}>
       <Typography variant="t4_b" sx={{ color: '#616161'}}>
         선택된 태그
       </Typography>
       <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', maxHeight: '78px',
             overflowY: 'auto', }}>
-          {orderInfoArray.map((info, idx) => (
+          {/* {orderInfoArray.map((info, idx) => (
             <Chip
               key={idx}
               label={info}
               variant="filled"
               color="primary"
-              onDelete={() => onRemoveTag?.(tag, idx)}
             />
-          ))}
+          ))} */}
           {tags.map((tag, idx) => (
             <Chip
               key={`tag-${idx}`}
               label={tag}
-              onDelete={() => onRemoveTag?.(tag, idx)}
               color="primary"
               variant="filled"
             />
