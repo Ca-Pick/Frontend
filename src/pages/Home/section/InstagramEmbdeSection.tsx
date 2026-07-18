@@ -10,7 +10,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CarouselIndicators from '../../../components/CarouselIndicators'
 import { InstagramEmbed } from '../../../components/InstagramEmbed';
-import cherryBtn from '../../../assets/images/cherry.svg';
+import { HeartToggle } from '../../../components/HeartToggle';
 
 // 더미 데이터
 const INSTAGRAM_URLS = [
@@ -70,7 +70,7 @@ function InstagramEmbdeSection() {
             <Chip label="#인기" variant="static" />
             <Chip label="#인기" variant="static" />
           </Box>
-          <Box component="img" src={cherryBtn} />
+          <HeartToggle onClick={(isFilled) => console.log(isFilled)} />
           <IconButton
             onClick={handlePrevious}
             sx={{

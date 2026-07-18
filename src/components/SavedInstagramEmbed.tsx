@@ -9,7 +9,7 @@ import { InstagramEmbed } from '../components/InstagramEmbed';
 import CarouselIndicators from '../components/CarouselIndicators'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import cherryBtn from '../assets/images/cherry.svg';
+import { HeartToggle } from './HeartToggle';
 
 export const INSTAGRAM_URLS = [
   "https://www.instagram.com/p/DFxF4K8yG6D/",
@@ -28,22 +28,22 @@ const InstagramCarousel = ({ currentIndex, onDetailClick }: { currentIndex: numb
     pb: 1,
     backgroundColor: '#Fff',
     boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.05), 0 0 4px 3px rgba(51, 51, 51, 0.05)',
-   borderRadius: '16px',
+    borderRadius: '16px',
     border: '1px solid #E0E0E0',
     position: 'relative',
     overflow: 'hidden'
   }}>
-      <Box sx={{
-        display: 'flex',
-        transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        transform: `translateX(-${currentIndex * 100}%)`,
-      }}>
-        {INSTAGRAM_URLS.map((url) => (
-          <Box key={url} sx={{ minWidth: '100%' }}>
-            <InstagramEmbed url={url} width="100%" />
-          </Box>
-        ))}
-      </Box>
+    <Box sx={{
+      display: 'flex',
+      transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      transform: `translateX(-${currentIndex * 100}%)`,
+    }}>
+      {INSTAGRAM_URLS.map((url) => (
+        <Box key={url} sx={{ minWidth: '100%' }}>
+          <InstagramEmbed url={url} width="100%" />
+        </Box>
+      ))}
+    </Box>
 
     <Box sx={{
       display: 'flex',
@@ -53,7 +53,9 @@ const InstagramCarousel = ({ currentIndex, onDetailClick }: { currentIndex: numb
       px: 2,
       py: 1,
     }}>
-      <Box component="img" src={cherryBtn} sx={{ padding: '6px 9px', border: `1px solid ${colors.divider}`, borderRadius: '6px' }} />
+      <Box sx={{ width: '41px', height: '37px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: `1px solid ${colors.divider}`, borderRadius: '6px' }} >
+        <HeartToggle />
+      </Box>
       <Button size="large" variant="contained" color="secondary" fullWidth onClick={onDetailClick} sx={{ flex: 1 }}>
         상세보기
       </Button>
@@ -63,9 +65,10 @@ const InstagramCarousel = ({ currentIndex, onDetailClick }: { currentIndex: numb
 
 interface SavedInstagramEmbedProps {
   onDetailClick?: () => void;
+  showCarousel?: boolean;
 }
 
-function SavedInstagramEmbed({ onDetailClick }: SavedInstagramEmbedProps) {
+function SavedInstagramEmbed({ onDetailClick, showCarousel = true }: SavedInstagramEmbedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalItems = INSTAGRAM_URLS.length;
 
@@ -119,7 +122,7 @@ function SavedInstagramEmbed({ onDetailClick }: SavedInstagramEmbedProps) {
           <ChevronRightIcon />
         </IconButton>
       </Box>
-      <InstagramCarousel currentIndex={currentIndex} onDetailClick={onDetailClick} />
+      {showCarousel && <InstagramCarousel currentIndex={currentIndex} onDetailClick={onDetailClick} />}
     </Box>
   );
 }

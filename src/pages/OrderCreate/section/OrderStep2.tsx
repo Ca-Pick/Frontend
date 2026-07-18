@@ -91,6 +91,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                             number={1}
                             title="누구를 위한 케이크인가요?"
                             chips={['친구', '가족', '동료', '연인']}
+                            selectedValue={selectedRecipient}
                             onChipSelect={(chip) => {
                                 handleChipSelect(chip);
                                 onRecipientChange?.(chip);
@@ -100,6 +101,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                             number={2}
                             title="어떤 형태의 케이크를 원하시나요?"
                             chips={['기본', '도시락', '입체형']}
+                            selectedValue={selectedCakeType}
                             onChipSelect={(chip) => {
                                 handleChipSelect(chip);
                                 onCakeTypeChange?.(chip);
@@ -146,6 +148,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                             number={3}
                             title="원하는 색감이 있나요?"
                             chips={['파스텔', '비비드', '모노톤', '상관없음']}
+                            selectedValue={selectedColor}
                             onChipSelect={(chip) => {
                                 handleChipSelect(chip);
                                 onColorChange?.(chip);
@@ -155,6 +158,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                             number={4}
                             title="원하는 분위기가 있나요?"
                             chips={['화려', '심플', '귀여운', '개성있는']}
+                            selectedValue={selectedMood}
                             onChipSelect={(chip) => {
                                 handleChipSelect(chip);
                                 onMoodChange?.(chip);
@@ -210,7 +214,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                                     gap: 1,
                                 }}>
                                 <Typography variant="t1_b" color="textPrimary">특별히 원하는 장식이 있나요?</Typography>
-                                <Typography variant="t3_b" x={{ color: '#9E9E9E' }}>검색해서 추가해보세요!</Typography>
+                                <Typography variant="t3_b" sx={{ color: '#9E9E9E' }}>검색해서 추가해보세요!</Typography>
                             </Box>
                         </Box>
                         <TagSearch

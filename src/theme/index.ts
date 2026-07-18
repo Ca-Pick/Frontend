@@ -312,8 +312,12 @@ const theme = createTheme({
           marginRight: 0,
         },
         deleteIcon: {
+          width: '18px',
+          height: '18px',
           margin: 0,
           marginLeft: '4px',
+          color: 'white',
+          opacity: 0.8,
         },
         sizeMedium: {
           height: '32px',
@@ -345,14 +349,22 @@ const theme = createTheme({
         {
           props: { variant: 'outlined' },
           style: {
+            color: colors.text.primary,
+            borderColor: colors.primary.main,
+            cursor: 'pointer',
+            '&.MuiChip-filled': {
+              backgroundColor: colors.primary.main,
+              color: colors.primary.contrastText,
+            },
+          },
+        },
+        {
+          props: { variant: 'static' },
+          style: {
             height: '24px',
             backgroundColor: 'rgba(255, 239, 239, 0.70)',
             color: colors.primary.main,
             border: 'none',
-            cursor: 'default',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 239, 239, 0.70)',
-            },
           },
         },
       ],
