@@ -87,7 +87,7 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
           embedCount={SEARCH_DUMMY_DATA.data.cakes.length}
         />
         <Box sx={{ px: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <SavedInstagramEmbed onDetailClick={handleDetailFromSaved} cakes={SEARCH_DUMMY_DATA.data.cakes} />
+          <SavedInstagramEmbed onDetailClick={handleDetailFromSaved} cakes={[...SEARCH_DUMMY_DATA.data.cakes].sort((a, b) => b.cakeDetailCount - a.cakeDetailCount)} showChips={true} />
         </Box>
       </Box>
     );

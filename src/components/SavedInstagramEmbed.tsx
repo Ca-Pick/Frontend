@@ -2,7 +2,8 @@ import { useState } from 'react';
 import {
   Box,
   Button,
-  IconButton
+  IconButton,
+  Chip
 } from '@mui/material';
 import { colors } from "../theme/colors";
 import { InstagramEmbed } from '../components/InstagramEmbed';
@@ -30,9 +31,10 @@ interface InstagramCarouselProps {
   currentIndex: number;
   onDetailClick?: () => void;
   cakes: typeof FALLBACK_CAKES | any[];
+  showChips?: boolean;
 }
 
-const InstagramCarousel = ({ currentIndex, onDetailClick, cakes }: InstagramCarouselProps) => (
+const InstagramCarousel = ({ currentIndex, onDetailClick, cakes, showChips = false }: InstagramCarouselProps) => (
   <Box sx={{
     width: '100%',
     display: 'flex',
@@ -58,6 +60,16 @@ const InstagramCarousel = ({ currentIndex, onDetailClick, cakes }: InstagramCaro
       ))}
     </Box>
 
+    {showChips && cakes.length > 0 && cakes[0]?.cakeDetailTags && (
+      <Box sx={{
+        px:2, display: 'flex', maxWidth: '279px', alignItems: 'flex-start', alignContent: 'flex-start', gap: 1, flexWrap: 'wrap'
+      }}>
+        {cakes[0].cakeDetailTags.map((tag: string) => (
+          <Chip key={tag} label={`#${tag}`} variant="static" color="primary"/>
+        ))}
+      </Box>
+    )}
+
     <Box sx={{
       display: 'flex',
       gap: 1,
@@ -80,9 +92,10 @@ interface SavedInstagramEmbedProps {
   onDetailClick?: () => void;
   showCarousel?: boolean;
   cakes?: typeof FALLBACK_CAKES | any[];
+  showChips?: boolean;
 }
 
-function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLBACK_CAKES }: SavedInstagramEmbedProps) {
+function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLBACK_CAKES, showChips = false }: SavedInstagramEmbedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dotCount = showCarousel ? Math.ceil(cakes.length / 2) : cakes.length;
 
@@ -117,7 +130,7 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLB
       flexDirection: 'column',
       position: 'relative',
     }}>
-      {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} />}
+      {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} showChips={showChips} />}
       <Box sx={{
         height: '40px',
         display: 'flex',
@@ -148,7 +161,7 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLB
           <ChevronRightIcon />
         </IconButton>
       </Box>
-      {showCarousel && bottomCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={bottomCake} />}
+      {showCarousel && bottomCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={bottomCake} showChips={showChips} />}
     </Box>
   );
 }
