@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { IconButton, Snackbar, Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import filledHeartSvg from '../assets/images/fiiledheart.svg';
+import cherrySvg from '../assets/images/cherry.svg';
 
 interface HeartToggleProps {
   onClick?: (isFilled: boolean) => void;
@@ -41,7 +43,7 @@ export function HeartToggle({ onClick }: HeartToggleProps) {
         }}
       >
         <img
-          src={isFilled ? '/src/assets/images/fiiledheart.svg' : '/src/assets/images/cherry.svg'}
+          src={isFilled ? filledHeartSvg : cherrySvg}
           alt="heart toggle"
           style={{ width: 24, height: 24 }}
         />
