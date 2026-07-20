@@ -16,11 +16,11 @@ export function SavedHeader({ count = 0 }: SavedHeaderProps) {
         <Typography variant="t2_b" sx={{ color: '#000' }}>
           저장함
         </Typography>
-        {count > 0 && (
+        {/* {count > 0 && (
           <Typography variant="label_3" sx={{ color: '#757575' }}>
             총 {count}개
           </Typography>
-        )}
+        )} */}
       </Box>
     </Box>
   );

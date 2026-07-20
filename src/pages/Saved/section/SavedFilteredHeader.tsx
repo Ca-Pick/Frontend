@@ -49,7 +49,7 @@ export function SavedFilteredHeader({ onBack, tags, onRemoveTag, onEditTags, loc
               key={`tag-${idx}`}
               label={tag}
               color="primary"
-              variant="filled"
+              variant="static"
             />
           ))}
         </Box>
