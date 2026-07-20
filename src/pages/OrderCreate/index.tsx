@@ -1,4 +1,4 @@
-import { BottomNavigation, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { useState } from 'react';
 import { OrderStep1 } from './section/OrderStep1';
 import { OrderStep2 } from './section/OrderStep2';
@@ -6,7 +6,7 @@ import { ProductDetail } from './detail/index';
 import { SavedFilteredHeader } from '../Saved/section/SavedFilteredHeader';
 import SavedInstagramEmbed, { EMBED_COUNT } from '../../components/SavedInstagramEmbed';
 import { colors } from '../../theme/colors';
-import { BottomTabNavigation } from '../../components/BottomTabNavigation';
+import { SEARCH_DUMMY_DATA } from '../../constants/searchDummyData';
 
 type OrderView = 'steps' | 'detail' | 'saved';
 
@@ -76,7 +76,7 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
  }}>
         <SavedFilteredHeader
           onBack={handleBackFromSaved}
-          tags={selectedTags}
+          tags={SEARCH_DUMMY_DATA.data.tags}
           onRemoveTag={handleRemoveTag}
           onEditTags={handleEditTags}
           location={selectedLocation}
@@ -84,10 +84,10 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
           cakeType={selectedCakeType}
           color={selectedColor}
           mood={selectedMood}
-          embedCount={EMBED_COUNT}
+          embedCount={SEARCH_DUMMY_DATA.data.cakes.length}
         />
         <Box sx={{ px: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <SavedInstagramEmbed onDetailClick={handleDetailFromSaved} />
+          <SavedInstagramEmbed onDetailClick={handleDetailFromSaved} cakes={SEARCH_DUMMY_DATA.data.cakes} />
         </Box>
       </Box>
     );

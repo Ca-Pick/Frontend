@@ -15,10 +15,20 @@ interface BottomSectionProps {
     cakeType?: string;
     color?: string;
     mood?: string;
+    cakelists?: Array<{ cakeId: number; instagramEmbed: string }>;
+    instagramEmbed?: string;
+    instagramUrl?: string;
+    price?: string;
+    schedule?: string;
 }
 
-export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, recipient, cakeType, color, mood }: BottomSectionProps) {
-    const orderInfoArray = [location, recipient, cakeType, color, mood].filter(Boolean);
+export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, cakelists, instagramEmbed, instagramUrl, price, schedule }: BottomSectionProps) {
+    const handleInstagramClick = () => {
+        if (instagramUrl) {
+            window.open(instagramUrl, '_blank');
+        }
+    };
+
     return (
         <Box sx={{ backgroundColor: '#fff' }}>
             <Box
@@ -48,26 +58,17 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                 ))}
             </Box>
             <Box>
-                {activeTab === "info" && <InfoSection tags={selectedTags} orderInfo={orderInfoArray} />}
+                {activeTab === "info" && <InfoSection tags={selectedTags} location={location} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} />}
                 {activeTab === "location" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
-                        <LocationSection />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            size="xlarge"
-                            fullWidth
-                            startIcon={<InstagramIcon />}
-                        >
-                            Instagram으로 문의하기
-                        </Button>
+                        <LocationSection location={location} />
                         <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-                        <OtherSection />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} />
                     </Box>
                 }
                 {activeTab === "other" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
-                        <OtherSection />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} />
                     </Box>}
             </Box>
 
@@ -104,6 +105,7 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                     fullWidth
                     startIcon={<InstagramIcon />}
                     sx={{ flex: 1 }}
+                    onClick={handleInstagramClick}
                 >
                     Instagram으로 문의하기
                 </Button>
@@ -115,12 +117,22 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
 interface InfoSectionProps {
     tags?: string[];
     orderInfo?: string[];
+    price?: string;
+    schedule?: string;
+    location?: string;
+    instagramUrl?: string;
+    cakelists?: Array<{ cakeId: number; instagramEmbed: string }>;
 }
 
-function InfoSection({ tags = [], orderInfo = [] }: InfoSectionProps) {
+function InfoSection({ tags = [], orderInfo = [], location, instagramUrl, cakelists }: InfoSectionProps) {
     const allTags = [...orderInfo, ...tags];
     const [showMoreTags, setShowMoreTags] = useState(false);
     const displayedTags = showMoreTags ? allTags : allTags.slice(0, 5);
+    const handleInstagramClick = () => {
+        if (instagramUrl) {
+            window.open(instagramUrl, '_blank');
+        }
+    };
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
@@ -154,34 +166,30 @@ function InfoSection({ tags = [], orderInfo = [] }: InfoSectionProps) {
                 )}
             </Box>
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-            <LocationSection />
-            <Button
-                variant="contained"
-                color="primary"
-                size="xlarge"
-                fullWidth
-                startIcon={<InstagramIcon />}
-            >
-                Instagram으로 문의하기
-            </Button>
+            <LocationSection location={location} />
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-            <OtherSection />
+
+            <OtherSection cakelists={cakelists} />
         </Box>
     );
 }
 
-function LocationSection() {
+interface LocationSectionProps {
+    location?: string;
+}
+
+function LocationSection({ location }: LocationSectionProps) {
     const imgMap = "https://www.figma.com/api/mcp/asset/71f041b9-f48e-4b06-9b62-3fa074e58e4d";
 
     return (
-        <Box sx={{ display: "flex", gap: 4 }}>
-            <Typography variant="t2_b" sx={{ color: "black", whiteSpace: 'nowrap' }}>
+        <Box sx={{ display: "flex", gap: 4, alignItems: 'flex-start' }}>
+            <Typography variant="t2_b" sx={{ color: "black", whiteSpace: 'nowrap', textAlign: 'left' }}>
                 위치
             </Typography>
             <Box sx={{ display: "flex", flexDirection: 'column', gap: 2, alignItems: "flex-start" }}>
 
-                <Typography variant="b2_r" sx={{ color: "black" }}>
-                    서울 서대문구 연희로12길 10-4 1층 FAUCET
+                <Typography variant="b2_r" sx={{ color: "black", textAlign: 'left' }}>
+                    {location || "서울 서대문구 연희로12길 10-4 1층 FAUCET"}
                 </Typography>
 
                 <Box
@@ -199,13 +207,26 @@ function LocationSection() {
     );
 }
 
-function OtherSection() {
+interface OtherSectionProps {
+    cakelists?: Array<{ cakeId: number; instagramEmbed: string }>;
+}
+
+function OtherSection({ cakelists }: OtherSectionProps) {
+    const formattedCakes = cakelists && cakelists.length > 0
+        ? cakelists.map(cake => ({
+            cakeId: cake.cakeId,
+            instagramEmbed: cake.instagramEmbed,
+            saved: false,
+            cakedetailtags: []
+          }))
+        : undefined;
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: 'flex-start' }}>
             <Typography variant="t2_b" sx={{ color: "black" }}>
                 이 가게의 다른 케이크
             </Typography>
-            <SavedInstagramEmbed showCarousel={false} />
+            <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} />
         </Box>
     );
 }
