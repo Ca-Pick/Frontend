@@ -17,9 +17,22 @@ export const INSTAGRAM_URLS = [
   "https://www.instagram.com/p/DY1O9Vlsp1G/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
 ];
 
+const FALLBACK_CAKES = INSTAGRAM_URLS.map((url, index) => ({
+  cakeId: index + 1,
+  instagramEmbed: url,
+  saved: false,
+  cakedetailtags: []
+}));
+
 export const EMBED_COUNT = INSTAGRAM_URLS.length * 2;
 
-const InstagramCarousel = ({ currentIndex, onDetailClick }: { currentIndex: number; onDetailClick?: () => void }) => (
+interface InstagramCarouselProps {
+  currentIndex: number;
+  onDetailClick?: () => void;
+  cakes: typeof FALLBACK_CAKES | any[];
+}
+
+const InstagramCarousel = ({ currentIndex, onDetailClick, cakes }: InstagramCarouselProps) => (
   <Box sx={{
     width: '100%',
     display: 'flex',
@@ -38,9 +51,9 @@ const InstagramCarousel = ({ currentIndex, onDetailClick }: { currentIndex: numb
       transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
       transform: `translateX(-${currentIndex * 100}%)`,
     }}>
-      {INSTAGRAM_URLS.map((url) => (
-        <Box key={url} sx={{ minWidth: '100%' }}>
-          <InstagramEmbed url={url} width="100%" />
+      {cakes.map((cake) => (
+        <Box key={cake.cakeId} sx={{ minWidth: '100%' }}>
+          <InstagramEmbed url={cake.instagramEmbed} width="100%" />
         </Box>
       ))}
     </Box>
@@ -66,11 +79,12 @@ const InstagramCarousel = ({ currentIndex, onDetailClick }: { currentIndex: numb
 interface SavedInstagramEmbedProps {
   onDetailClick?: () => void;
   showCarousel?: boolean;
+  cakes?: typeof FALLBACK_CAKES | any[];
 }
 
-function SavedInstagramEmbed({ onDetailClick, showCarousel = true }: SavedInstagramEmbedProps) {
+function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLBACK_CAKES }: SavedInstagramEmbedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const totalItems = INSTAGRAM_URLS.length;
+  const dotCount = showCarousel ? Math.ceil(cakes.length / 2) : cakes.length;
 
   const handlePrev = () => {
     if (currentIndex > 0) {
@@ -79,7 +93,7 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true }: SavedInstag
   };
 
   const handleNext = () => {
-    if (currentIndex < totalItems - 1) {
+    if (currentIndex < dotCount - 1) {
       setCurrentIndex(currentIndex + 1);
     }
   };
@@ -88,6 +102,14 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true }: SavedInstag
     setCurrentIndex(index);
   };
 
+  // dot별로 표시할 케이크 결정
+  const topCake = showCarousel
+    ? (currentIndex * 2 < cakes.length ? [cakes[currentIndex * 2]] : [])
+    : (currentIndex < cakes.length ? [cakes[currentIndex]] : []);
+  const bottomCake = showCarousel
+    ? ((currentIndex * 2 + 1) < cakes.length ? [cakes[currentIndex * 2 + 1]] : [])
+    : [];
+
   return (
     <Box sx={{
       width: '100%',
@@ -95,7 +117,7 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true }: SavedInstag
       flexDirection: 'column',
       position: 'relative',
     }}>
-      <InstagramCarousel currentIndex={currentIndex} onDetailClick={onDetailClick} />
+      {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} />}
       <Box sx={{
         height: '40px',
         display: 'flex',
@@ -106,23 +128,27 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true }: SavedInstag
       }}>
         <IconButton
           onClick={handlePrev}
+          disabled={currentIndex === 0}
           sx={{
             backgroundColor: 'transparent',
+            opacity: currentIndex === 0 ? 0.5 : 1,
           }}
         >
           <ChevronLeftIcon />
         </IconButton>
-        <CarouselIndicators current={currentIndex} total={INSTAGRAM_URLS.length} onChange={handleCarouselChange} />
+        <CarouselIndicators current={currentIndex} total={dotCount} onChange={handleCarouselChange} />
         <IconButton
           onClick={handleNext}
+          disabled={currentIndex === dotCount - 1}
           sx={{
             backgroundColor: 'transparent',
+            opacity: currentIndex === dotCount - 1 ? 0.5 : 1,
           }}
         >
           <ChevronRightIcon />
         </IconButton>
       </Box>
-      {showCarousel && <InstagramCarousel currentIndex={currentIndex} onDetailClick={onDetailClick} />}
+      {showCarousel && bottomCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={bottomCake} />}
     </Box>
   );
 }

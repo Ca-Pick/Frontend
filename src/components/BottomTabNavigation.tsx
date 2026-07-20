@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
@@ -52,6 +53,26 @@ interface BottomTabNavigationProps {
 }
 
 export function BottomTabNavigation({ activeTab = 'home', onTabChange }: BottomTabNavigationProps) {
+  const navigate = useNavigate();
+
+  const handleTabClick = (tab: TabType) => {
+    onTabChange?.(tab);
+    switch (tab) {
+      case 'home':
+        navigate('/');
+        break;
+      case 'order':
+        navigate('/order');
+        break;
+      case 'saved':
+        navigate('/saved');
+        break;
+      case 'mypage':
+        navigate('/mypage');
+        break;
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -67,10 +88,10 @@ export function BottomTabNavigation({ activeTab = 'home', onTabChange }: BottomT
         height: 72,
       }}
     >
-      <TabItem icon={<HomeIcon />} label="홈" isActive={activeTab === 'home'} onClick={() => onTabChange?.('home')} />
-      <TabItem icon={<SearchIcon />} label="검색" isActive={activeTab === 'order'} onClick={() => onTabChange?.('order')} />
-      <TabItem icon={cherryBtn} label="저장" isActive={activeTab === 'saved'} onClick={() => onTabChange?.('saved')} />
-      <TabItem icon={<SentimentSatisfiedAltIcon />} label="마이" isActive={activeTab === 'mypage'} onClick={() => onTabChange?.('mypage')} />
+      <TabItem icon={<HomeIcon />} label="홈" isActive={activeTab === 'home'} onClick={() => handleTabClick('home')} />
+      <TabItem icon={<SearchIcon />} label="검색" isActive={activeTab === 'order'} onClick={() => handleTabClick('order')} />
+      <TabItem icon={cherryBtn} label="저장" isActive={activeTab === 'saved'} onClick={() => handleTabClick('saved')} />
+      <TabItem icon={<SentimentSatisfiedAltIcon />} label="마이" isActive={activeTab === 'mypage'} onClick={() => handleTabClick('mypage')} />
     </Box>
   );
 }

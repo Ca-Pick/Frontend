@@ -21,7 +21,7 @@ export function TagSearch({
   onResultChipClick,
   onSelectedChipDelete,
 }: TagSearchProps) {
-  const isMinimumLength = searchQuery.length >= 2;
+  const isMinimumLength = searchQuery.length >= 1;
   const filteredChips = isMinimumLength
     ? allChips.filter(chip => chip.includes(searchQuery))
     : [];
@@ -35,16 +35,20 @@ export function TagSearch({
       }}
     >
       <TextField
-        placeholder="태그 검색"
+        placeholder={`태그 검색`}
         variant="outlined"
         fullWidth
+        disabled={selectedChips.length >= 10}
         value={searchQuery}
         onChange={onSearchChange}
         slotProps={{
           input: {
             endAdornment: (
               <InputAdornment position="end">
-                <SearchIcon sx={{ color: '#000', cursor: 'pointer' }} onClick={onSearch} />
+                <Typography variant="t4_r" sx={{ color: '#9E9E9E', mr: 1 }}>
+                  {selectedChips.length}/10
+                </Typography>
+                <SearchIcon sx={{ color: '#000', cursor: selectedChips.length >= 10 ? 'not-allowed' : 'pointer' }} onClick={onSearch} />
               </InputAdornment>
             ),
           },
@@ -81,8 +85,8 @@ export function TagSearch({
                 <Chip
                   key={chip}
                   label={chip}
-                  variant="filled"
-                  color="default"
+                  variant="outlined"
+                  color="primary"
                   onClick={() => onResultChipClick(chip)}
                   sx={{ cursor: 'pointer' }}
                 />
