@@ -36,7 +36,7 @@ export const SEARCH_DUMMY_DATA = {
         "instagramEmbed": "https://www.instagram.com/p/DVnW9tCkZHs/",
         "saved": false,
        "cakeDetailTags": [
-          "null"
+          
         ],
         "cakeDetailCount": 0,
       }

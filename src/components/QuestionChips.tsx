@@ -47,7 +47,8 @@ export function QuestionChips({
               color: selectedChip === chip ? colors.primary.contrastText : colors.text.primary,
               backgroundColor: selectedChip === chip ? colors.primary.main : 'transparent',
               '&:hover': {
-                backgroundColor: selectedChip === chip ? colors.primary.dark : colors.primary._states.hover,
+                backgroundColor: colors.primary._states.hover,
+                color: colors.text.primary
               },
             }}
           />

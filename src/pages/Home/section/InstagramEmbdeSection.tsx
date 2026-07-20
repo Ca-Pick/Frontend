@@ -123,15 +123,16 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
               left: 3.789,
               top: '50%',
               transform: 'translateY(-50%)',
-              backgroundColor: colors.secondary._states.hover,
+              backgroundColor: 'rgba(255, 255, 255, 0.60)',
               borderRadius: '50%',
               padding: '5px',
+              color: colors.secondary.main,
               '&:hover': {
-                backgroundColor: colors.secondary._states.selected,
+                backgroundColor: 'rgba(125, 125, 125, 0.60)',
               },
             }}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon sx={{ color: `${colors.secondary.main} !important` }}/>
           </IconButton>
           <IconButton
             onClick={handleNext}
@@ -140,15 +141,16 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
               right: 4.211,
               top: '50%',
               transform: 'translateY(-50%)',
-              backgroundColor: colors.secondary._states.hover,
+              backgroundColor: 'rgba(255, 255, 255, 0.60)',
               borderRadius: '50%',
               padding: '5px',
+              color: colors.secondary.main,
               '&:hover': {
-                backgroundColor: colors.secondary._states.selected,
+                backgroundColor: 'rgba(125, 125, 125, 0.60)',
               },
             }}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon sx={{ color: `${colors.secondary.main} !important` }}/>
           </IconButton>
         </Box>
       </Box>

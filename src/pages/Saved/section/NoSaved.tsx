@@ -12,7 +12,7 @@ export function NoSaved({ onNavigateToOrder }: NoSavedProps) {
             sx={{
                 display: 'flex',
                 height: '589px',
-                padding: '10px 10px 150px 10px',
+                padding: '60px 10px 150px 10px',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center'
