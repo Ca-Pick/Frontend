@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import { Stack } from '@mui/material';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { Home } from './Home';
 import { OrderCreate } from './OrderCreate';
 import { Saved } from './Saved';
@@ -8,8 +9,35 @@ import { BottomTabNavigation } from '../components/BottomTabNavigation';
 
 type TabType = 'home' | 'order' | 'saved' | 'mypage';
 
+function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boolean; onDetailViewChange: (isDetail: boolean) => void }) {
+  const location = useLocation();
+
+  const getActiveTabFromPath = (): TabType => {
+    const path = location.pathname;
+    if (path === '/') return 'home';
+    if (path.startsWith('/order')) return 'order';
+    if (path === '/saved') return 'saved';
+    if (path === '/mypage') return 'mypage';
+    return 'home';
+  };
+
+  const activeTab = getActiveTabFromPath();
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
+        <Route path="/saved" element={<Saved onTabChange={() => {}} />} />
+        <Route path="/mypage" element={<MyPage />} />
+      </Routes>
+
+      {!isDetailView && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
+    </>
+  );
+}
+
 export default function MainPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('home');
   const [isDetailView, setIsDetailView] = useState(false);
 
   return (
@@ -20,14 +48,7 @@ export default function MainPage() {
         margin: '0 auto',
       }}
     >
-      {/* 탭 콘텐츠 */}
-      {activeTab === 'home' && <Home />}
-      {activeTab === 'order' && <OrderCreate onDetailViewChange={setIsDetailView} />}
-      {activeTab === 'saved' && <Saved onTabChange={setActiveTab} />}
-      {activeTab === 'mypage' && <MyPage />}
-
-      {/* 하단 탭 네비게이션 - 상세 페이지에서는 숨김 */}
-      {!isDetailView && <BottomTabNavigation activeTab={activeTab} onTabChange={setActiveTab} />}
+      <LayoutWrapper isDetailView={isDetailView} onDetailViewChange={setIsDetailView} />
     </Stack>
   );
 }

@@ -8,9 +8,11 @@ interface TopSectionProps {
     activeTab: "info" | "location" | "other";
     onTabChange: (tab: "info" | "location" | "other") => void;
     onBack?: () => void;
+    name?: string;
+    instagramEmbed?: string;
 }
 
-export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) {
+export function TopSection({ activeTab, onTabChange, onBack, name, instagramEmbed }: TopSectionProps) {
     return (
         <>
             <Box
@@ -18,7 +20,7 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
                     position: 'relative',
                     display: "flex",
                     alignItems: "flex-start",
-                    px: 2,
+                    px: 8,
                     py: 2,
                     bgcolor: "#ffffff",
                     borderBottom: `1px solid ${colors.divider}`,
@@ -35,12 +37,12 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
                         <ArrowBackIcon />
                     </IconButton>
                 </Box>
-                <InstagramEmbed url="https://www.instagram.com/p/DFxF4K8yG6D/" />
+                <InstagramEmbed url={instagramEmbed || "https://www.instagram.com/p/DFxF4K8yG6D/"} />
             </Box>
             <Box
                 sx={{
                     height: "60px",
-                    mt: -6,
+                    mt: -10,
                     position: "relative",
                     zIndex: 1,
                 }}
@@ -48,7 +50,7 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
 
             <Box
                 sx={{
-                    mt: -5,
+                    mt: -9,
                     position: "relative",
                     zIndex: 2,
                     padding: '24px 18px 24px 17px',
@@ -61,7 +63,7 @@ export function TopSection({ activeTab, onTabChange, onBack }: TopSectionProps) 
                 <Box sx={{ display: "flex", flexDirection: "column", gap: '4px', width: "100%" }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                         <Typography variant="t1_b" sx={{ color: "black" }}>
-                            FAUCET 포싵
+                            {name || "FAUCET 포싵"}
                         </Typography>
                     </Box>
                     <Box sx={{ display: "flex", gap: '4px', alignItems: "center", color: "#757575" }}>

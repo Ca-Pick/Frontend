@@ -4,7 +4,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import imgCake from '../../../assets/images/cake.svg';
 import imgLogo from '../../../assets/logos/logo_sm.svg';
 
-export function HeroSection() {
+interface HeroSectionProps {
+    onNavigateToOrder?: () => void;
+}
+
+export function HeroSection( {onNavigateToOrder }: HeroSectionProps) {
   return (
     <Box
       sx={{
@@ -66,7 +70,7 @@ export function HeroSection() {
             sx={{
               display: 'flex'
             }}>
-            <Button variant="contained" color="primary" endIcon={<ChevronRightIcon />}>케이크 주문하기</Button>
+            <Button variant="contained" color="primary" endIcon={<ChevronRightIcon />} onClick={onNavigateToOrder}>케이크 주문하기</Button>
           </Box>
         </Box>
       </Box>

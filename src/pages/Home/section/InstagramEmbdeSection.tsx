@@ -1,7 +1,7 @@
 import {
   Box,
   Typography,
-  Chip,
+  Button,
   IconButton
 } from '@mui/material';
 import { useState } from 'react';
@@ -12,26 +12,65 @@ import CarouselIndicators from '../../../components/CarouselIndicators'
 import { InstagramEmbed } from '../../../components/InstagramEmbed';
 import { HeartToggle } from '../../../components/HeartToggle';
 
-// 더미 데이터
-const INSTAGRAM_URLS = [
-  "https://www.instagram.com/p/DFxF4K8yG6D/",
-  "https://www.instagram.com/p/DaDC3ckTr7v/",
-  "https://www.instagram.com/p/Dasa2n6CYLA/",
-];
+interface InstagramEmbdeSectionProps {
+  category: 'birthday' | 'celebration' | 'academic';
+  onDetailClick?: () => void;
+}
 
-function InstagramEmbdeSection() {
+// 더미 데이터 - API 연동 시 이 부분만 교체하면 됨
+const DUMMY_CURATION_DATA = {
+  birthday: [
+    {
+      cakeId: 1,
+      instagramEmbed: "https://www.instagram.com/p/DFxF4K8yG6D/"
+    },
+    {
+      cakeId: 3,
+      instagramEmbed: "https://www.instagram.com/p/DaR64RlMKE1/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
+    }
+  ],
+  celebration: [
+    {
+      cakeId: 2,
+      instagramEmbed: "https://www.instagram.com/p/DaDC3ckTr7v/?utm_source=ig_web_copy_link"
+    },
+    {
+      cakeId: 4,
+      instagramEmbed: "https://www.instagram.com/p/DY1O9Vlsp1G/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
+    }
+  ],
+  academic: [
+    {
+      cakeId: 5,
+      instagramEmbed: "https://www.instagram.com/p/DY6Oq7evBJg/"
+    },
+    {
+      cakeId: 6,
+      instagramEmbed: "https://www.instagram.com/p/DVnW9tCkZHs/"
+    }
+  ],
+};
+
+function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const items = DUMMY_CURATION_DATA[category] || [];
 
   const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? INSTAGRAM_URLS.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev === INSTAGRAM_URLS.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
   };
 
   const handleCarouselChange = (index: number) => {
     setCurrentIndex(index);
+  };
+
+  const categoryLabel = {
+    birthday: '최고의 생일이 되기를 #생일 케이크',
+    celebration: '오늘 같은 날 필요한 건? #기념일 케이크',
+    academic: '새로운 페이지를 응원해! #입학 #졸업 케이크'
   };
 
   return (
@@ -47,10 +86,10 @@ function InstagramEmbdeSection() {
       }}
     >
       <Typography variant="t2_b" color={colors.common.black._states.main}>
-        추천 레퍼런스 큐레이션
+        {categoryLabel[category]}
       </Typography>
       <Box sx={{
-        width: '100%', display: 'flex', flexDirection: 'column', gap: '12px', border: '1px solid #eeeeee', borderRadius: '16px', boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.04), 0 0 4px 3px rgba(51, 51, 51, 0.02)', position: 'relative', pb: '12px', overflow: 'hidden'
+        width: '100%', display: 'flex', flexDirection: 'column', gap: 1, border: '1px solid #E0E0E0', borderRadius: '16px', boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.04), 0 0 4px 3px rgba(51, 51, 51, 0.02)', position: 'relative', pb: 1, overflow: 'hidden'
       }}>
         <Box sx={{
           width: '100%',
@@ -58,19 +97,25 @@ function InstagramEmbdeSection() {
           transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
           transform: `translateX(-${currentIndex * 100}%)`,
         }}>
-          {INSTAGRAM_URLS.map((url) => (
-            <Box key={url} sx={{ minWidth: '100%' }}>
-              <InstagramEmbed url={url} />
+          {items.map((item) => (
+            <Box key={item.cakeId} sx={{ minWidth: '100%' }}>
+              <InstagramEmbed url={item.instagramEmbed} />
             </Box>
           ))}
         </Box>
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', px:1 }}>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center',}}>
-            <Chip label="#인기" variant="static" />
-            <Chip label="#인기" variant="static" />
-            <Chip label="#인기" variant="static" />
+        <Box sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          width: '100%',
+          px: 2,
+        }}>
+          <Box sx={{ width: '41px', height: '37px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: `1px solid ${colors.divider}`, borderRadius: '6px' }} >
+            <HeartToggle />
           </Box>
-          <HeartToggle onClick={(isFilled) => console.log(isFilled)} />
+          <Button size="large" variant="contained" color="secondary" fullWidth onClick={onDetailClick} sx={{ flex: 1 }}>
+            상세보기
+          </Button>
           <IconButton
             onClick={handlePrevious}
             sx={{
@@ -107,7 +152,7 @@ function InstagramEmbdeSection() {
           </IconButton>
         </Box>
       </Box>
-      <CarouselIndicators current={currentIndex} total={INSTAGRAM_URLS.length} onChange={handleCarouselChange} />
+      <CarouselIndicators current={currentIndex} total={items.length} onChange={handleCarouselChange} />
     </Box>
   );
 }

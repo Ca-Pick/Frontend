@@ -83,7 +83,8 @@ export const titleStyles = {
   t2_b: {
     fontSize: 20,
     lineHeight: 1.4,
-    fontWeight: fontWeights.bold,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: '-0.5px'
   },
   t2_r: {
     fontSize: 20,

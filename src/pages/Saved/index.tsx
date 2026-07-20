@@ -1,6 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import { colors } from '../../theme/colors';
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSavedItems, toggleLike } from '../../api/saved';
 import { SavedHeader } from './section/SavedHeader';
@@ -12,6 +13,7 @@ interface SavedProps {
 }
 
 export function Saved({ onTabChange }: SavedProps) {
+  const navigate = useNavigate();
   const [selectedTags, setSelectedTags] = useState<string[]>(['생일', '생일']);
   const [sortBy, setSortBy] = useState<'popular' | 'recent'>('popular');
   const [localLikeState, setLocalLikeState] = useState<Record<string, boolean>>({});
@@ -56,22 +58,22 @@ export function Saved({ onTabChange }: SavedProps) {
     // TODO: Navigate to detail page
   };
 
-  const savedCount = EMBED_COUNT; // 테스트할 때 이 값을 변경하면 됨
+  const savedCount = items.length;
 
-  if (savedCount > 0) {
-    return (
-      <Box sx={{ width: '100%', backgroundColor: colors.background }}>
-        <SavedHeader count={savedCount} />
-        <Box sx={{ px: 4}}>
-        <SavedInstagramEmbed /></Box>
-      </Box>
-    );
-  }
+  // if (savedCount > 0) {
+  //   return (
+  //     <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: 'calc(100vh - 72px)' }}>
+  //       <SavedHeader count={savedCount} />
+  //       <Box sx={{ px: 4}}>
+  //       <SavedInstagramEmbed cakes={items} /></Box>
+  //     </Box>
+  //   );
+  // }
 
   return (
-    <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: '100vh', pt: 1 }}>
+    <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: 'calc(100vh - 72px)', pt: 1 }}>
       <SavedHeader count={savedCount} />
-      <NoSaved onNavigateToOrder={() => onTabChange?.('order')} />
+      <NoSaved onNavigateToOrder={() => navigate('/order')} />
     </Box>
   );
 }

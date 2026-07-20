@@ -5,6 +5,7 @@ import { useState } from 'react';
 import CarouselIndicators from '../../../components/CarouselIndicators';
 import { StepNavigation } from '../../../components/StepNavigation';
 import { TagSearch } from '../../../components/TagSearch';
+import { totalTagDummyData } from '../../../constants/totalTagDummyData';
 
 interface OrderStep2Props {
   currentStep?: number;
@@ -28,7 +29,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedChips, setSelectedChips] = useState<string[]>(selectedTags);
-    const allAvailableChips = ['달항아리', '전통', '꽃', '벚꽃', '나비', '보라', '화이트', '라벤더', '플라워', '오브제', '도자기', '한식디저트', '고급스러운', '단아한', '봄', '생화', '화병', '청자', '돌띠', '개성있는', '귀여운', '모던', '감성', '우아한', '장난스러운', '화이트1', '화이트2', '화이트3', '화이트4', '화이트5', '화이트6','화이트7','화이트8','화이트9','화이트10',];
+    const allAvailableChips = totalTagDummyData.data.decorations;
 
     const handleChipSelect = (chip: string) => {
         console.log('선택된 칩:', chip);
@@ -147,7 +148,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                         <QuestionChips
                             number={3}
                             title="원하는 색감이 있나요?"
-                            chips={['파스텔', '비비드', '모노톤', '상관없음']}
+                            chips={['파스텔', '비비드', '모노톤']}
                             selectedValue={selectedColor}
                             onChipSelect={(chip) => {
                                 handleChipSelect(chip);
