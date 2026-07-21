@@ -2,58 +2,48 @@ import {
   Box,
   Typography,
   Button,
-  IconButton
+  IconButton,
+  CircularProgress
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { colors } from '../../../theme/colors';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CarouselIndicators from '../../../components/CarouselIndicators'
 import { InstagramEmbed } from '../../../components/InstagramEmbed';
 import { HeartToggle } from '../../../components/HeartToggle';
+import { getCurationByCategory } from '../../../api/services/homeService';
+import type { RecommendedDessert } from '../../../types/api';
 
 interface InstagramEmbdeSectionProps {
   category: 'birthday' | 'celebration' | 'academic';
   onDetailClick?: () => void;
 }
 
-// 더미 데이터 - API 연동 시 이 부분만 교체하면 됨
-const DUMMY_CURATION_DATA = {
-  birthday: [
-    {
-      cakeId: 1,
-      instagramEmbed: "https://www.instagram.com/p/DFxF4K8yG6D/"
-    },
-    {
-      cakeId: 3,
-      instagramEmbed: "https://www.instagram.com/p/DaR64RlMKE1/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
-    }
-  ],
-  celebration: [
-    {
-      cakeId: 2,
-      instagramEmbed: "https://www.instagram.com/p/DaDC3ckTr7v/?utm_source=ig_web_copy_link"
-    },
-    {
-      cakeId: 4,
-      instagramEmbed: "https://www.instagram.com/p/DY1O9Vlsp1G/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
-    }
-  ],
-  academic: [
-    {
-      cakeId: 5,
-      instagramEmbed: "https://www.instagram.com/p/DY6Oq7evBJg/"
-    },
-    {
-      cakeId: 6,
-      instagramEmbed: "https://www.instagram.com/p/DVnW9tCkZHs/"
-    }
-  ],
-};
-
 function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const items = DUMMY_CURATION_DATA[category] || [];
+  const [items, setItems] = useState<RecommendedDessert[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCurations = async () => {
+      try {
+        setLoading(true);
+        const data = await getCurationByCategory(category);
+        setItems(data);
+        setError(null);
+      } catch (err) {
+        console.error('홈 큐레이션 데이터 로드 실패:', err);
+        setError('데이터를 불러올 수 없습니다');
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurations();
+  }, [category]);
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
@@ -89,72 +79,98 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
         {categoryLabel[category]}
       </Typography>
       <Box sx={{
-        width: '100%', display: 'flex', flexDirection: 'column', gap: 1, border: '1px solid #E0E0E0', borderRadius: '16px', boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.04), 0 0 4px 3px rgba(51, 51, 51, 0.02)', position: 'relative', pb: 1, overflow: 'hidden'
+        width: '100%', display: 'flex', flexDirection: 'column', gap: 1, border: '1px solid #E0E0E0', borderRadius: '16px', boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.04), 0 0 4px 3px rgba(51, 51, 51, 0.02)', position: 'relative', pb: 1, overflow: 'hidden', minHeight: '400px'
       }}>
-        <Box sx={{
-          width: '100%',
-          display: 'flex',
-          transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-          transform: `translateX(-${currentIndex * 100}%)`,
-        }}>
-          {items.map((item) => (
-            <Box key={item.cakeId} sx={{ minWidth: '100%' }}>
-              <InstagramEmbed url={item.instagramEmbed} />
-            </Box>
-          ))}
-        </Box>
-        <Box sx={{
-          display: 'flex',
-          gap: 1,
-          alignItems: 'center',
-          width: '100%',
-          px: 2,
-        }}>
-          <Box sx={{ width: '41px', height: '37px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: `1px solid ${colors.divider}`, borderRadius: '6px' }} >
-            <HeartToggle />
+        {loading ? (
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '400px'
+          }}>
+            <CircularProgress />
           </Box>
-          <Button size="large" variant="contained" color="secondary" fullWidth onClick={onDetailClick} sx={{ flex: 1 }}>
-            상세보기
-          </Button>
-          <IconButton
-            onClick={handlePrevious}
-            sx={{
-              position: 'absolute',
-              left: 3.789,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              backgroundColor: 'rgba(255, 255, 255, 0.60)',
-              borderRadius: '50%',
-              padding: '5px',
-              color: colors.secondary.main,
-              '&:hover': {
-                backgroundColor: 'rgba(125, 125, 125, 0.60)',
-              },
-            }}
-          >
-            <ChevronLeftIcon sx={{ color: `${colors.secondary.main} !important` }}/>
-          </IconButton>
-          <IconButton
-            onClick={handleNext}
-            sx={{
-              position: 'absolute',
-              right: 4.211,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              backgroundColor: 'rgba(255, 255, 255, 0.60)',
-              borderRadius: '50%',
-              padding: '5px',
-              color: colors.secondary.main,
-              '&:hover': {
-                backgroundColor: 'rgba(125, 125, 125, 0.60)',
-              },
-            }}
-          >
-            <ChevronRightIcon sx={{ color: `${colors.secondary.main} !important` }}/>
-          </IconButton>
-        </Box>
+        ) : error || items.length === 0 ? (
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '400px'
+          }}>
+            <Typography color="error">{error || '이용 가능한 데이터가 없습니다'}</Typography>
+          </Box>
+        ) : (
+          <>
+            <Box sx={{
+              width: '100%',
+              display: 'flex',
+              transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              transform: `translateX(-${currentIndex * 100}%)`,
+            }}>
+              {items.map((item) => (
+                <Box key={item.cakeId} sx={{ minWidth: '100%' }}>
+                  <InstagramEmbed url={item.instagramEmbed} />
+                </Box>
+              ))}
+            </Box>
+            <Box sx={{
+              display: 'flex',
+              gap: 1,
+              alignItems: 'center',
+              width: '100%',
+              px: 2,
+            }}>
+              <Box sx={{ width: '41px', height: '37px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: `1px solid ${colors.divider}`, borderRadius: '6px' }} >
+                <HeartToggle />
+              </Box>
+              <Button size="large" variant="contained" color="secondary" fullWidth onClick={onDetailClick} sx={{ flex: 1 }}>
+                상세보기
+              </Button>
+              {items.length > 1 && (
+                <>
+                  <IconButton
+                    onClick={handlePrevious}
+                    sx={{
+                      position: 'absolute',
+                      left: 3.789,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.60)',
+                      borderRadius: '50%',
+                      padding: '5px',
+                      color: colors.secondary.main,
+                      '&:hover': {
+                        backgroundColor: 'rgba(125, 125, 125, 0.60)',
+                      },
+                    }}
+                  >
+                    <ChevronLeftIcon sx={{ color: `${colors.secondary.main} !important` }}/>
+                  </IconButton>
+                  <IconButton
+                    onClick={handleNext}
+                    sx={{
+                      position: 'absolute',
+                      right: 4.211,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.60)',
+                      borderRadius: '50%',
+                      padding: '5px',
+                      color: colors.secondary.main,
+                      '&:hover': {
+                        backgroundColor: 'rgba(125, 125, 125, 0.60)',
+                      },
+                    }}
+                  >
+                    <ChevronRightIcon sx={{ color: `${colors.secondary.main} !important` }}/>
+                  </IconButton>
+                </>
+              )}
+            </Box>
+          </>
+        )}
       </Box>
-      <CarouselIndicators current={currentIndex} total={items.length} onChange={handleCarouselChange} />
+      {!loading && items.length > 0 && <CarouselIndicators current={currentIndex} total={items.length} onChange={handleCarouselChange} />}
     </Box>
   );
 }
