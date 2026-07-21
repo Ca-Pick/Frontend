@@ -15,7 +15,7 @@ interface BottomSectionProps {
     cakeType?: string;
     color?: string;
     mood?: string;
-    cakelists?: Array<{ cakeId: number; instagramEmbed: string }>;
+    cakelists?: Array<{ cakeId: number; instagramEmbed: string; saved: boolean }>;
     instagramEmbed?: string;
     instagramUrl?: string;
     price?: string;
@@ -208,7 +208,7 @@ function LocationSection({ location }: LocationSectionProps) {
 }
 
 interface OtherSectionProps {
-    cakelists?: Array<{ cakeId: number; instagramEmbed: string }>;
+    cakelists?: Array<{ cakeId: number; instagramEmbed: string; saved: boolean }>;
 }
 
 function OtherSection({ cakelists }: OtherSectionProps) {
@@ -216,8 +216,9 @@ function OtherSection({ cakelists }: OtherSectionProps) {
         ? cakelists.map(cake => ({
             cakeId: cake.cakeId,
             instagramEmbed: cake.instagramEmbed,
-            saved: false,
-            cakedetailtags: []
+            saved: cake.saved,
+            cakeDetailTags: [],
+            cakeDetailCount: 0,
           }))
         : undefined;
 
@@ -226,7 +227,7 @@ function OtherSection({ cakelists }: OtherSectionProps) {
             <Typography variant="t2_b" sx={{ color: "black" }}>
                 이 가게의 다른 케이크
             </Typography>
-            <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} />
+            {formattedCakes && <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} />}
         </Box>
     );
 }
