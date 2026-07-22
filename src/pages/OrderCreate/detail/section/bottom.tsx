@@ -20,9 +20,12 @@ interface BottomSectionProps {
     instagramUrl?: string;
     price?: string;
     schedule?: string;
+    cakeId?: number;
+    saved?: boolean;
+    onCakeSelect?: (cakeId?: number) => void;
 }
 
-export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, cakelists, instagramEmbed, instagramUrl, price, schedule }: BottomSectionProps) {
+export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, cakelists, instagramEmbed, instagramUrl, price, schedule, cakeId, saved, onCakeSelect }: BottomSectionProps) {
     const handleInstagramClick = () => {
         if (instagramUrl) {
             window.open(instagramUrl, '_blank');
@@ -58,17 +61,17 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                 ))}
             </Box>
             <Box>
-                {activeTab === "info" && <InfoSection tags={selectedTags} location={location} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} />}
+                {activeTab === "info" && <InfoSection tags={selectedTags} location={location} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} onCakeSelect={onCakeSelect} />}
                 {activeTab === "location" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
                         <LocationSection location={location} />
                         <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} onCakeSelect={onCakeSelect} />
                     </Box>
                 }
                 {activeTab === "other" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
-                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} onCakeSelect={onCakeSelect} />
                     </Box>}
             </Box>
 
@@ -95,7 +98,12 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                         borderRadius: '14px',
                     }}
                 >
-                    <HeartToggle />
+                    {cakeId !== undefined && (
+                        <HeartToggle
+                            referenceId={cakeId}
+                            initialSaved={saved}
+                        />
+                    )}
                 </Box>
 
                 <Button
@@ -122,9 +130,10 @@ interface InfoSectionProps {
     location?: string;
     instagramUrl?: string;
     cakelists?: Array<{ cakeId: number; instagramEmbed: string }>;
+    onCakeSelect?: (cakeId?: number) => void;
 }
 
-function InfoSection({ tags = [], orderInfo = [], location, instagramUrl, cakelists }: InfoSectionProps) {
+function InfoSection({ tags = [], orderInfo = [], location, instagramUrl, cakelists, onCakeSelect }: InfoSectionProps) {
     const allTags = [...orderInfo, ...tags];
     const [showMoreTags, setShowMoreTags] = useState(false);
     const displayedTags = showMoreTags ? allTags : allTags.slice(0, 5);
@@ -169,7 +178,7 @@ function InfoSection({ tags = [], orderInfo = [], location, instagramUrl, cakeli
             <LocationSection location={location} />
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
 
-            <OtherSection cakelists={cakelists} />
+            <OtherSection cakelists={cakelists} onCakeSelect={onCakeSelect} />
         </Box>
     );
 }
@@ -209,9 +218,10 @@ function LocationSection({ location }: LocationSectionProps) {
 
 interface OtherSectionProps {
     cakelists?: Array<{ cakeId: number; instagramEmbed: string; saved: boolean }>;
+    onCakeSelect?: (cakeId?: number) => void;
 }
 
-function OtherSection({ cakelists }: OtherSectionProps) {
+function OtherSection({ cakelists, onCakeSelect }: OtherSectionProps) {
     const formattedCakes = cakelists && cakelists.length > 0
         ? cakelists.map(cake => ({
             cakeId: cake.cakeId,
@@ -227,7 +237,7 @@ function OtherSection({ cakelists }: OtherSectionProps) {
             <Typography variant="t2_b" sx={{ color: "black" }}>
                 이 가게의 다른 케이크
             </Typography>
-            {formattedCakes && <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} />}
+            {formattedCakes && <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} />}
         </Box>
     );
 }

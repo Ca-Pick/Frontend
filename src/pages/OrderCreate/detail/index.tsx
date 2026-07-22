@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Alert } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { TopSection } from './section/top';
 import { BottomSection } from './section/bottom';
@@ -9,6 +9,7 @@ interface ProductDetailProps {
   productId?: string;
   cakeId?: number;
   onBack?: () => void;
+  onCakeSelect?: (cakeId?: number) => void;
   selectedTags?: string[];
   location?: string;
   recipient?: string;
@@ -21,6 +22,7 @@ export function ProductDetail({
   productId,
   cakeId,
   onBack,
+  onCakeSelect,
   selectedTags,
   location,
   recipient,
@@ -29,14 +31,28 @@ export function ProductDetail({
   mood,
 }: ProductDetailProps) {
   const [activeTab, setActiveTab] = useState<'info' | 'location' | 'other'>('info');
+  const [currentCakeId, setCurrentCakeId] = useState<number>();
 
   // URL 파라미터에서 cakeId 추출 (라우터를 통해 들어온 경우)
   const params = useParams<{ cakeId: string }>();
   const id = cakeId || (params.cakeId ? parseInt(params.cakeId) : undefined);
 
+  useEffect(() => {
+    if (id) {
+      setCurrentCakeId(id);
+    }
+  }, [id]);
+
   // 실제 API 데이터 가져오기
-  const { data, isLoading, error } = useDessertDetail(id || 0);
+  const { data, isLoading, error } = useDessertDetail(currentCakeId || 0);
   const detailData = data?.data;
+
+  const handleCakeSelect = (selectedCakeId?: number) => {
+    onCakeSelect?.(selectedCakeId);
+    if (selectedCakeId) {
+      setCurrentCakeId(selectedCakeId);
+    }
+  };
 
   if (!id) {
     return (
@@ -89,6 +105,7 @@ export function ProductDetail({
         onBack={onBack}
         name={detailData.name}
         instagramEmbed={detailData.instagramEmbed}
+        location={detailData.address}
       />
       <BottomSection
         activeTab={activeTab}
@@ -101,6 +118,9 @@ export function ProductDetail({
         mood={mood}
         cakelists={detailData.cakelists}
         instagramUrl={detailData.instagramUrl}
+        cakeId={detailData.cakeId}
+        saved={detailData.saved}
+        onCakeSelect={handleCakeSelect}
       />
     </Box>
   );
