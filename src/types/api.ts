@@ -5,7 +5,7 @@ export type SearchRequest = {
   shape?: string;
   color?: string;
   mood?: string;
-  detailtags?: string[];
+  detailTags?: string[];
 };
 
 // 검색 관련 타입
@@ -80,3 +80,38 @@ export type DetailTagsResponse = {
 
 // 기존 호환성을 위한 별칭
 export type ApiResponse = SearchResponse;
+
+// 저장함 관련 타입
+export type SavedCake = {
+  cakeId: number;
+  instagramEmbed: string;
+  cakedetailtags: string[];
+};
+
+export type SavedCakesResponse = {
+  success: boolean;
+  data: {
+    cakes: SavedCake[];
+  };
+  timestamp: string;
+};
+
+export type SaveCakeResponse = {
+  success: boolean;
+  data: {
+    cakes: SavedCake[];
+  };
+  timestamp: string;
+};
+
+export type DeleteCakeResponse = {
+  success: boolean;
+  timestamp: string;
+};
+
+export type SaveApiError = {
+  success: false;
+  code: 'UNAUTHENTICATED' | 'REFERENCE_NOT_FOUND' | 'INTERNAL_SERVER_ERROR';
+  message: string;
+  timestamp: string;
+};

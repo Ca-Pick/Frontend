@@ -22,6 +22,8 @@ interface SearchParams extends SearchRequest {
 export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
   const [view, setView] = useState<OrderView>('steps');
   const [currentStep, setCurrentStep] = useState(1);
+  const [selectedCakeId, setSelectedCakeId] = useState<number>();
+  const [detailStack, setDetailStack] = useState<number[]>([]);
 
   const [searchParams, setSearchParams] = useState<SearchParams>({
     place: '',
@@ -29,7 +31,7 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
     shape: '',
     color: '',
     mood: '',
-    detailtags: [],
+    detailTags: [],
     recipient: '',
   });
 
@@ -66,20 +68,29 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
   };
 
   const handleBackFromDetail = () => {
-    setView('saved');
-    onDetailViewChange?.(false);
+    if (detailStack.length > 0) {
+      // 스택에 이전 케이크가 있으면 복원
+      const newStack = [...detailStack];
+      const previousCakeId = newStack.pop();
+      setDetailStack(newStack);
+      setSelectedCakeId(previousCakeId);
+    } else {
+      // 스택이 비어있으면 검색 결과로 돌아가기
+      setView('saved');
+      onDetailViewChange?.(false);
+    }
   };
 
   const handleBackFromSaved = () => {
     setView('steps');
-    setCurrentStep(1);
+    setCurrentStep(4);
     onDetailViewChange?.(false);
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
     handleSearchParamChange(
-      'detailtags',
-      searchParams.detailtags.filter(tag => tag !== tagToRemove)
+      'detailTags',
+      searchParams.detailTags.filter(tag => tag !== tagToRemove)
     );
   };
 
@@ -88,9 +99,19 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
     setCurrentStep(1);
   };
 
-  const handleDetailFromSaved = () => {
+  const handleDetailFromSaved = (cakeId?: number) => {
+    setSelectedCakeId(cakeId);
+    setDetailStack([]); // 검색 결과에서 시작하므로 스택 초기화
     setView('detail');
     onDetailViewChange?.(true);
+  };
+
+  const handleCakeSelectInDetail = (cakeId?: number) => {
+    if (cakeId && selectedCakeId) {
+      // 현재 보고 있는 케이크를 스택에 추가
+      setDetailStack(prev => [...prev, selectedCakeId]);
+    }
+    setSelectedCakeId(cakeId);
   };
 
   const handleStepNext = () => {
@@ -109,7 +130,9 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
     return (
       <ProductDetail
         onBack={handleBackFromDetail}
-        selectedTags={searchParams.detailtags}
+        cakeId={selectedCakeId}
+        onCakeSelect={handleCakeSelectInDetail}
+        selectedTags={searchParams.detailTags}
         location={searchParams.place || ''}
         recipient={searchParams.recipient || ''}
         cakeType={searchParams.shape || ''}
@@ -187,8 +210,8 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
           onPrev={handleStepPrev}
           onComplete={handleSearch}
           onCarouselChange={handleCarouselChange}
-          selectedTags={searchParams.detailtags}
-          onTagsChange={(tags) => handleSearchParamChange('detailtags', tags)}
+          selectedTags={searchParams.detailTags}
+          onTagsChange={(tags) => handleSearchParamChange('detailTags', tags)}
           onRecipientChange={(recipient) => handleSearchParamChange('recipient', recipient)}
           onCakeTypeChange={(cakeType) => handleSearchParamChange('shape', cakeType)}
           onColorChange={(color) => handleSearchParamChange('color', color)}
