@@ -7,6 +7,6 @@ export const useDessertDetail = (cakeId: number) => {
     queryFn: () => getDessertDetail(cakeId),
     staleTime: 1000 * 60 * 10, // 10분
     gcTime: 1000 * 60 * 30, // 30분
-    enabled: !!cakeId, // cakeId가 있을 때만 요청
+    enabled: cakeId > 0, // 0보다 큰 cakeId일 때만 요청
   });
 };
