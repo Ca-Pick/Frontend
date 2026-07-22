@@ -8,7 +8,8 @@ export const SEARCH_DUMMY_DATA = {
         "saved": false,
          "cakeDetailTags": [
           "리본",
-          "블랙리본"
+          "블랙리본",
+          "화이트"
         ],
         "cakeDetailCount": 2,
       },

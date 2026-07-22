@@ -9,7 +9,6 @@ export default defineConfig({
       '/api': {
         target: 'https://api.ca-pick.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
       }
     }
   }

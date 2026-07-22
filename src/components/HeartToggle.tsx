@@ -1,25 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IconButton, Snackbar, Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useSaveCakeMutation, useUnsaveCakeMutation } from '../hooks';
 import filledHeartSvg from '../assets/images/fiiledheart.svg';
 import cherrySvg from '../assets/images/cherry.svg';
 
 interface HeartToggleProps {
-  onClick?: (isFilled: boolean) => void;
+  referenceId: number;
+  initialSaved?: boolean;
+  onClick?: (isSaved: boolean) => void;
 }
 
-export function HeartToggle({ onClick }: HeartToggleProps) {
-  const [isFilled, setIsFilled] = useState(false);
+export function HeartToggle({ referenceId, initialSaved = false, onClick }: HeartToggleProps) {
+  const [isSaved, setIsSaved] = useState(initialSaved);
   const [openToast, setOpenToast] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    const newState = !isFilled;
-    setIsFilled(newState);
+  const saveMutation = useSaveCakeMutation();
+  const unsaveMutation = useUnsaveCakeMutation();
+
+  useEffect(() => {
+    setIsSaved(initialSaved);
+  }, [initialSaved]);
+
+  const handleClick = async () => {
+    const newState = !isSaved;
+    const previousState = isSaved;
+
+    // 즉시 UI 업데이트 (Optimistic Update)
+    setIsSaved(newState);
     if (newState) {
       setOpenToast(true);
     }
-    onClick?.(newState);
+
+    try {
+      if (newState) {
+        await saveMutation.mutateAsync(referenceId);
+      } else {
+        await unsaveMutation.mutateAsync(referenceId);
+      }
+      onClick?.(newState);
+    } catch (error: any) {
+      // 에러가 발생하면 이전 상태로 복구
+      setIsSaved(previousState);
+
+      if (error.response?.status === 404) {
+        console.error('케이크를 찾을 수 없습니다');
+      }
+      // 401은 이제 Interceptor에서 자동 처리됨
+    }
   };
 
   const handleCloseToast = () => {
@@ -30,20 +59,26 @@ export function HeartToggle({ onClick }: HeartToggleProps) {
     navigate('/saved');
   };
 
+  const isLoading = saveMutation.isPending || unsaveMutation.isPending;
+
   return (
     <>
       <IconButton
         onClick={handleClick}
+        disabled={isLoading}
         sx={{
           padding: 0,
           minWidth: 'auto',
           '&:hover': {
             backgroundColor: 'transparent',
           },
+          '&.Mui-disabled': {
+            opacity: 0.6,
+          },
         }}
       >
         <img
-          src={isFilled ? filledHeartSvg : cherrySvg}
+          src={isSaved ? filledHeartSvg : cherrySvg}
           alt="heart toggle"
           style={{ width: 24, height: 24 }}
         />

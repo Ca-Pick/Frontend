@@ -21,12 +21,12 @@ export const getRecommendedDesserts = async (): Promise<RecommendedResponse> => 
 
 // 3️⃣ 상세정보 조회
 export const getDessertDetail = async (cakeId: number): Promise<DetailResponse> => {
-  const response = await publicClient.get(`/api/reference/${cakeId}`);
+  const response = await publicClient.get(`/reference/${cakeId}`);
   return response.data;
 };
 
 // 4️⃣ 디테일 태그 조회 (필터링용)
 export const getDetailTags = async (): Promise<DetailTagsResponse> => {
-  const response = await publicClient.get('/api/reference/detailtags');
+  const response = await publicClient.get('/reference/detailtags');
   return response.data;
 };

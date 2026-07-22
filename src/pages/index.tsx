@@ -1,10 +1,11 @@
 import { Stack } from '@mui/material';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Home } from './Home';
 import { OrderCreate } from './OrderCreate';
 import { Saved } from './Saved';
 import { MyPage } from './MyPage';
+import { Login } from './Login';
 import { BottomTabNavigation } from '../components/BottomTabNavigation';
 
 type TabType = 'home' | 'order' | 'saved' | 'mypage';
@@ -30,9 +31,12 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
         <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
         <Route path="/saved" element={<Saved onTabChange={() => {}} />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/login" element={<Login />} />
+        {/* 기타 경로는 홈으로 리다이렉트 */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {!isDetailView && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
+      {!isDetailView && location.pathname !== '/login' && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
     </>
   );
 }

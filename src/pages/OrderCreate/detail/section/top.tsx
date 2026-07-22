@@ -9,10 +9,11 @@ interface TopSectionProps {
     onTabChange: (tab: "info" | "location" | "other") => void;
     onBack?: () => void;
     name?: string;
+    location?: string;
     instagramEmbed?: string;
 }
 
-export function TopSection({ activeTab, onTabChange, onBack, name, instagramEmbed }: TopSectionProps) {
+export function TopSection({ activeTab, onTabChange, onBack, name, instagramEmbed, location }: TopSectionProps) {
     return (
         <>
             <Box
@@ -68,8 +69,8 @@ export function TopSection({ activeTab, onTabChange, onBack, name, instagramEmbe
                     </Box>
                     <Box sx={{ display: "flex", gap: '4px', alignItems: "center", color: "#757575" }}>
                         <LocationOnIcon fontSize="15" />
-                        <Typography variant="bm_3">
-                            서울 서대문구 연희로12길 10-4 1층 FAUCET
+                        <Typography variant="bm_3" sx={{textAlign: 'left'}}>
+                            {location || "서울 서대문구 연희로12길 10-4 1층 FAUCET"}
                         </Typography>
                     </Box>
                 </Box>

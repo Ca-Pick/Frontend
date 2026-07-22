@@ -129,7 +129,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                         <QuestionChips
                             number={2}
                             title="어떤 형태의 케이크를 원하시나요?"
-                            chips={['기본', '도시락', '입체형']}
+                            chips={['기본형', '도시락', '입체형']}
                             selectedValue={selectedCakeType}
                             onChipSelect={(chip) => {
                                 handleChipSelect(chip);

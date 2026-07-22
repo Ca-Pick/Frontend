@@ -12,7 +12,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CarouselIndicators from '../../../components/CarouselIndicators'
 import { InstagramEmbed } from '../../../components/InstagramEmbed';
 import { HeartToggle } from '../../../components/HeartToggle';
-import { getCurationByCategory } from '../../../api/services/homeService';
+import { getRecommendedDesserts } from '../../../api/services/referenceService';
 import type { RecommendedDessert } from '../../../types/api';
 
 interface InstagramEmbdeSectionProps {
@@ -30,8 +30,9 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
     const fetchCurations = async () => {
       try {
         setLoading(true);
-        const data = await getCurationByCategory(category);
-        setItems(data);
+        const data = await getRecommendedDesserts();
+        const categoryItems = data.data[category] || [];
+        setItems(categoryItems);
         setError(null);
       } catch (err) {
         console.error('홈 큐레이션 데이터 로드 실패:', err);
@@ -57,11 +58,22 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
     setCurrentIndex(index);
   };
 
+  const handleHeartToggle = (isSaved: boolean) => {
+    // 저장 상태 업데이트 (선택사항)
+    if (items[currentIndex]) {
+      const updatedItems = [...items];
+      updatedItems[currentIndex].saved = isSaved;
+      setItems(updatedItems);
+    }
+  };
+
   const categoryLabel = {
     birthday: '최고의 생일이 되기를 #생일 케이크',
     celebration: '오늘 같은 날 필요한 건? #기념일 케이크',
     academic: '새로운 페이지를 응원해! #입학 #졸업 케이크'
   };
+
+  const currentItem = items[currentIndex];
 
   return (
     <Box
@@ -121,7 +133,13 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
               px: 2,
             }}>
               <Box sx={{ width: '41px', height: '37px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: `1px solid ${colors.divider}`, borderRadius: '6px' }} >
-                <HeartToggle />
+                {currentItem && (
+                  <HeartToggle
+                    referenceId={currentItem.cakeId}
+                    initialSaved={currentItem.saved}
+                    onClick={handleHeartToggle}
+                  />
+                )}
               </Box>
               <Button size="large" variant="contained" color="secondary" fullWidth onClick={onDetailClick} sx={{ flex: 1 }}>
                 상세보기
