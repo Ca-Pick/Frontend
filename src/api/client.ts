@@ -17,6 +17,12 @@ export const authClient = axios.create({
   withCredentials: true,
 });
 
+// 토큰 재발급용 (Interceptor 없음 - 무한 루프 방지)
+const refreshClient = axios.create({
+  ...baseConfig,
+  withCredentials: true,
+});
+
 // 토큰 재발급 관련 상태
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
@@ -33,14 +39,20 @@ const addRefreshSubscriber = (callback: (token: string) => void) => {
 // 토큰 재발급 요청
 const refreshToken = async () => {
   try {
+    const startTime = performance.now();
     console.log('🔄 토큰 재발급 요청 중...');
-    const response = await authClient.post('/auth/reissue', {});
-    console.log('✅ 토큰 재발급 성공');
+    // ✅ refreshClient 사용 (Interceptor 없음)
+    const response = await refreshClient.post('/auth/reissue', {});
+    const endTime = performance.now();
+    const duration = (endTime - startTime).toFixed(2);
+    console.log(`✅ 토큰 재발급 성공 (${duration}ms)`);
     return true;
   } catch (error: any) {
+    const endTime = performance.now();
     console.error('❌ 토큰 재발급 실패:', error.response?.data?.code);
-    // 토큰 재발급 실패 → 로그인 페이지로
-    window.location.href = '/login';
+    // 토큰 재발급 실패 → 로그인 페이지로 이동 (redirect URL 포함)
+    const currentPath = window.location.pathname + window.location.search;
+    window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
     return false;
   }
 };
@@ -103,11 +115,8 @@ authClient.interceptors.response.use(
           onRefreshed('');
           // 원래 요청 재시도
           return authClient(originalRequest);
-        } else {
-          // 토큰 재발급 실패 → 로그인 페이지로 이동 (현재 경로 저장)
-          const currentPath = window.location.pathname + window.location.search;
-          window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
         }
+        // 토큰 재발급 실패는 refreshToken()에서 처리
       } else {
         // 재발급 중인 경우 대기
         return new Promise((resolve) => {

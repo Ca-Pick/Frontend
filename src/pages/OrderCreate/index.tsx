@@ -107,8 +107,8 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
   };
 
   const handleCakeSelectInDetail = (cakeId?: number) => {
-    if (cakeId && selectedCakeId) {
-      // 현재 보고 있는 케이크를 스택에 추가
+    if (cakeId && selectedCakeId && cakeId !== selectedCakeId) {
+      // 다른 케이크일 때만 현재 케이크를 스택에 추가
       setDetailStack(prev => [...prev, selectedCakeId]);
     }
     setSelectedCakeId(cakeId);

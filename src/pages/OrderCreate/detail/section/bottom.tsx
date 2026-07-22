@@ -235,7 +235,7 @@ function OtherSection({ cakelists, onCakeSelect }: OtherSectionProps) {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: 'flex-start' }}>
             <Typography variant="t2_b" sx={{ color: "black" }}>
-                이 가게의 다른 케이크
+                이 가게의 모든 케이크
             </Typography>
             {formattedCakes && <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} />}
         </Box>
