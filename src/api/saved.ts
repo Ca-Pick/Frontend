@@ -16,7 +16,7 @@ interface SavedItemsResponse {
 }
 
 // API 엔드포인트 (MVP 서버 URL 설정 필요)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.ca-pick.com/api';
 
 // Mock data for development
 const MOCK_ITEMS: SavedItem[] = [
