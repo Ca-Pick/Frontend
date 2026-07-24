@@ -58,44 +58,40 @@ export async function fetchSavedItems(
   sortBy: string = 'popular',
   tags?: string[]
 ): Promise<SavedItemsResponse> {
-  // Mock API response - replace with real API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        items: MOCK_ITEMS,
-        total: MOCK_ITEMS.length,
-        sortBy,
-        selectedTags: tags,
-      });
-    }, 500);
-  });
-
-  // Uncomment below when real API is ready
-  /*
   try {
-    const params = new URLSearchParams();
-    params.append('sort', sortBy);
-    if (tags && tags.length > 0) {
-      params.append('tags', tags.join(','));
-    }
-
-    const response = await fetch(`${API_BASE_URL}/saved?${params}`, {
+    const response = await fetch(`${API_BASE_URL}/save`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
     });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch saved items: ${response.statusText}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+
+    // API 응답을 SavedItemsResponse 형식으로 변환
+    return {
+      items: data.data.cakes.map((cake: any) => ({
+        id: cake.cakeId.toString(),
+        title: cake.cakedetailtags?.[0] || 'Saved Cake',
+        image: '', // API에서 이미지 제공 안 함
+        storeInfo: undefined,
+        price: undefined,
+        liked: true, // 저장함에 있는 것들은 모두 liked=true
+        tags: cake.cakedetailtags || [],
+      })),
+      total: data.data.cakes.length,
+      sortBy,
+      selectedTags: tags,
+    };
   } catch (error) {
     console.error('Error fetching saved items:', error);
     throw error;
   }
-  */
 }
 
 export async function toggleLike(itemId: string): Promise<void> {
