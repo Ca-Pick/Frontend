@@ -5,6 +5,6 @@ export function getCookie(name: string): string | null {
 }
 
 export function isLoggedIn(): boolean {
-  const token = getCookie('access_token');
+  const token = getCookie('accessToken');
   return !!token;
 }
