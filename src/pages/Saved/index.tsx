@@ -60,15 +60,16 @@ export function Saved({ onTabChange }: SavedProps) {
 
   const savedCount = items.length;
 
-  // if (savedCount > 0) {
-  //   return (
-  //     <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: 'calc(100vh - 72px)' }}>
-  //       <SavedHeader count={savedCount} />
-  //       <Box sx={{ px: 4}}>
-  //       <SavedInstagramEmbed cakes={items} /></Box>
-  //     </Box>
-  //   );
-  // }
+  if (savedCount > 0) {
+    return (
+      <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: 'calc(100vh - 72px)' }}>
+        <SavedHeader count={savedCount} />
+        <Box sx={{ px: 4 }}>
+          <SavedInstagramEmbed cakes={items} />
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: 'calc(100vh - 72px)', pt: 1 }}>
