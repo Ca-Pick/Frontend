@@ -17,7 +17,7 @@ import type { RecommendedDessert } from '../../../types/api';
 
 interface InstagramEmbdeSectionProps {
   category: 'birthday' | 'celebration' | 'academic';
-  onDetailClick?: () => void;
+  onDetailClick?: (cakeId?: number) => void;
 }
 
 function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectionProps) {
@@ -141,7 +141,7 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
                   />
                 )}
               </Box>
-              <Button size="large" variant="contained" color="secondary" fullWidth onClick={onDetailClick} sx={{ flex: 1 }}>
+              <Button size="large" variant="contained" color="secondary" fullWidth onClick={() => onDetailClick?.(currentItem?.cakeId)} sx={{ flex: 1 }}>
                 상세보기
               </Button>
               {items.length > 1 && (

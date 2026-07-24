@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { IconButton, Snackbar, Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSaveCakeMutation, useUnsaveCakeMutation } from '../hooks';
+import { setPendingHeartAction, consumePendingHeartToast } from '../utils/pendingHeartAction';
 import filledHeartSvg from '../assets/images/fiiledheart.svg';
 import cherrySvg from '../assets/images/cherry.svg';
 
@@ -23,15 +24,28 @@ export function HeartToggle({ referenceId, initialSaved = false, onClick }: Hear
     setIsSaved(initialSaved);
   }, [initialSaved]);
 
+  useEffect(() => {
+    if (consumePendingHeartToast(referenceId)) {
+      setOpenToast(true);
+    }
+  }, [referenceId]);
+
   const handleClick = async () => {
     const newState = !isSaved;
     const previousState = isSaved;
 
+    // 로그인 상태 확인
+    const isLoggedIn = document.cookie.includes('access_token');
+
+    if (!isLoggedIn) {
+      // 로그인 안 되어 있으면 pending action 저장 후 로그인 페이지로
+      setPendingHeartAction(referenceId, newState ? 'save' : 'unsave');
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
+
     // 즉시 UI 업데이트 (Optimistic Update)
     setIsSaved(newState);
-    if (newState) {
-      setOpenToast(true);
-    }
 
     try {
       if (newState) {
@@ -43,11 +57,7 @@ export function HeartToggle({ referenceId, initialSaved = false, onClick }: Hear
     } catch (error: any) {
       // 에러가 발생하면 이전 상태로 복구
       setIsSaved(previousState);
-
-      if (error.response?.status === 404) {
-        console.error('케이크를 찾을 수 없습니다');
-      }
-      // 401은 이제 Interceptor에서 자동 처리됨
+      console.error('API 호출 실패:', error);
     }
   };
 

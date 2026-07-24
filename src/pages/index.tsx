@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Home } from './Home';
 import { OrderCreate } from './OrderCreate';
@@ -7,11 +7,13 @@ import { Saved } from './Saved';
 import { MyPage } from './MyPage';
 import { Login } from './Login';
 import { BottomTabNavigation } from '../components/BottomTabNavigation';
+import { ProductDetail } from './OrderCreate/detail';
 
 type TabType = 'home' | 'order' | 'saved' | 'mypage';
 
 function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boolean; onDetailViewChange: (isDetail: boolean) => void }) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const getActiveTabFromPath = (): TabType => {
     const path = location.pathname;
@@ -28,6 +30,7 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />
         <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
         <Route path="/saved" element={<Saved onTabChange={() => {}} />} />
         <Route path="/mypage" element={<MyPage />} />

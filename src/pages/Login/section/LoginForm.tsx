@@ -1,13 +1,28 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 import imglogoText from '../../../assets/logos/logo_text.svg';
 
 export function LoginForm() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const oauthBaseUrl = import.meta.env.VITE_OAUTH_BASE_URL || 'http://localhost:8080';
+  const fromPage = location.state?.from || '/';
+
   const handleKakaoLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+    window.location.href = `${oauthBaseUrl}/oauth2/authorization/kakao`;
   };
 
   const handleNaverLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+    window.location.href = `${oauthBaseUrl}/oauth2/authorization/naver`;
+  };
+
+  const handleBack = () => {
+    navigate(fromPage, { replace: true });
+  };
+
+  const handleTestLogin = () => {
+    document.cookie = 'access_token=test-token-local; path=/';
+    navigate(fromPage, { replace: true });
   };
 
   return (
@@ -19,9 +34,24 @@ export function LoginForm() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '143px'
+        gap: '143px',
+        position: 'relative',
       }}
     >
+      {/* 뒤로가기 버튼 - 원래 페이지가 있을 때만 표시 */}
+      {fromPage !== '/' && (
+        <IconButton
+          onClick={handleBack}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            left: 16,
+            color: '#333',
+          }}
+        >
+          ←
+        </IconButton>
+      )}
       <Box
         component="img"
         src={imglogoText}
@@ -80,6 +110,34 @@ export function LoginForm() {
         >
           네이버로 계속하기
         </Button>
+
+        {/* 로컬 개발 환경 테스트 로그인 버튼 */}
+        {import.meta.env.DEV && (
+          <Button
+            variant="contained"
+            size="large"
+            fullWidth
+            onClick={handleTestLogin}
+            sx={{
+              backgroundColor: '#999',
+              color: '#FFFFFF',
+              fontWeight: 600,
+              fontSize: '14px',
+              height: '48px',
+              borderRadius: '8px',
+              textTransform: 'none',
+              marginTop: '8px',
+              '&:hover': {
+                backgroundColor: '#777',
+              },
+              '&:active': {
+                backgroundColor: '#555',
+              },
+            }}
+          >
+            [로컬] 테스트 로그인
+          </Button>
+        )}
       </Box>
     </Box>
   );
