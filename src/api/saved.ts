@@ -1,11 +1,15 @@
 export interface SavedItem {
   id: string;
+  cakeId?: number;
   title: string;
   image: string;
   storeInfo?: string;
   price?: string;
   liked?: boolean;
+  saved?: boolean;
   tags?: string[];
+  cakeDetailTags?: string[];
+  instagramEmbed?: string;
 }
 
 interface SavedItemsResponse {
