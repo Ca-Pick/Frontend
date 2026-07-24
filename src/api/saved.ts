@@ -77,12 +77,16 @@ export async function fetchSavedItems(
     return {
       items: data.data.cakes.map((cake: any) => ({
         id: cake.cakeId.toString(),
+        cakeId: cake.cakeId,
         title: cake.cakedetailtags?.[0] || 'Saved Cake',
         image: '', // API에서 이미지 제공 안 함
         storeInfo: undefined,
         price: undefined,
         liked: true, // 저장함에 있는 것들은 모두 liked=true
+        saved: true,
         tags: cake.cakedetailtags || [],
+        cakeDetailTags: cake.cakedetailtags || [],
+        instagramEmbed: cake.instagramEmbed,
       })),
       total: data.data.cakes.length,
       sortBy,
