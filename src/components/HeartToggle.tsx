@@ -3,6 +3,7 @@ import { IconButton, Snackbar, Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSaveCakeMutation, useUnsaveCakeMutation } from '../hooks';
 import { setPendingHeartAction, consumePendingHeartToast } from '../utils/pendingHeartAction';
+import { isLoggedIn } from '../utils/cookieUtils';
 import filledHeartSvg from '../assets/images/fiiledheart.svg';
 import cherrySvg from '../assets/images/cherry.svg';
 
@@ -35,9 +36,7 @@ export function HeartToggle({ referenceId, initialSaved = false, onClick }: Hear
     const previousState = isSaved;
 
     // 로그인 상태 확인
-    const isLoggedIn = document.cookie.includes('access_token');
-
-    if (!isLoggedIn) {
+    if (!isLoggedIn()) {
       // 로그인 안 되어 있으면 pending action 저장 후 로그인 페이지로
       setPendingHeartAction(referenceId, newState ? 'save' : 'unsave');
       navigate('/login', { state: { from: window.location.pathname } });
@@ -50,6 +49,7 @@ export function HeartToggle({ referenceId, initialSaved = false, onClick }: Hear
     try {
       if (newState) {
         await saveMutation.mutateAsync(referenceId);
+        setOpenToast(true);
       } else {
         await unsaveMutation.mutateAsync(referenceId);
       }

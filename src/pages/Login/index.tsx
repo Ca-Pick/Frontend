@@ -2,6 +2,7 @@ import { Box, Alert } from '@mui/material';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { LoginForm } from './section/LoginForm';
+import { isLoggedIn } from '../../utils/cookieUtils';
 
 export function Login() {
   const [searchParams] = useSearchParams();
@@ -13,7 +14,7 @@ export function Login() {
 
   useEffect(() => {
     // 이미 로그인되어 있으면 저장된 redirect URL로 이동, 없으면 홈으로
-    if (document.cookie.includes('access_token')) {
+    if (isLoggedIn()) {
       const finalRedirect = redirect || fromState || '/';
       navigate(finalRedirect, { replace: true });
     }

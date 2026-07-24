@@ -20,10 +20,6 @@ export function LoginForm() {
     navigate(fromPage, { replace: true });
   };
 
-  const handleTestLogin = () => {
-    document.cookie = 'access_token=test-token-local; path=/';
-    navigate(fromPage, { replace: true });
-  };
 
   return (
     <Box
@@ -111,33 +107,6 @@ export function LoginForm() {
           네이버로 계속하기
         </Button>
 
-        {/* 로컬 개발 환경 테스트 로그인 버튼 */}
-        {import.meta.env.DEV && (
-          <Button
-            variant="contained"
-            size="large"
-            fullWidth
-            onClick={handleTestLogin}
-            sx={{
-              backgroundColor: '#999',
-              color: '#FFFFFF',
-              fontWeight: 600,
-              fontSize: '14px',
-              height: '48px',
-              borderRadius: '8px',
-              textTransform: 'none',
-              marginTop: '8px',
-              '&:hover': {
-                backgroundColor: '#777',
-              },
-              '&:active': {
-                backgroundColor: '#555',
-              },
-            }}
-          >
-            [로컬] 테스트 로그인
-          </Button>
-        )}
       </Box>
     </Box>
   );
