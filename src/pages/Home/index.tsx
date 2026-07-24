@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { HeroSection } from './section/HeroSection';
 import InstagramEmbdeSection from './section/InstagramEmbdeSection';
 import { HomeDetail } from './section/HomeDetail';
@@ -11,6 +12,7 @@ type HomeView = 'home' | 'detail';
 
 export function Home() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
   const [view, setView] = useState<HomeView>('home');
@@ -61,8 +63,12 @@ export function Home() {
             if (pendingHeartAction.action === 'save') {
               await saveCake(pendingHeartAction.referenceId);
               setPendingHeartToast(pendingHeartAction.referenceId);
+              // 저장된 케이크 캐시 갱신
+              queryClient.invalidateQueries({ queryKey: ['savedCakes'] });
             } else {
               await unsaveCake(pendingHeartAction.referenceId);
+              // 저장된 케이크 캐시 갱신
+              queryClient.invalidateQueries({ queryKey: ['savedCakes'] });
             }
           } catch (error) {
             console.error('로그인 후 찜 상태 복원 실패:', error);

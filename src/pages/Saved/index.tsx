@@ -53,9 +53,10 @@ export function Saved({ onTabChange }: SavedProps) {
     setSelectedTags(newTags);
   };
 
-  const handleDetailClick = (id: string) => {
-    console.log('Detail click:', id);
-    // TODO: Navigate to detail page
+  const handleDetailClick = (cakeId?: number) => {
+    if (cakeId) {
+      navigate(`/order/${cakeId}`);
+    }
   };
 
   const savedCount = items.length;
@@ -65,7 +66,7 @@ export function Saved({ onTabChange }: SavedProps) {
       <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: 'calc(100vh - 72px)' }}>
         <SavedHeader count={savedCount} />
         <Box sx={{ px: 4 }}>
-          <SavedInstagramEmbed cakes={items} />
+          <SavedInstagramEmbed cakes={items} onDetailClick={handleDetailClick} />
         </Box>
       </Box>
     );
