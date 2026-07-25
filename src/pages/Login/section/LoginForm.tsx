@@ -9,11 +9,11 @@ export function LoginForm() {
   const fromPage = location.state?.from || '/';
 
   const handleKakaoLogin = () => {
-    window.location.href = `${oauthBaseUrl}/oauth2/authorization/kakao`;
+    window.location.href = `${oauthBaseUrl}/oauth2/authorization/kakao?redirect_uri=${encodeURIComponent(window.location.origin)}`;
   };
 
   const handleNaverLogin = () => {
-    window.location.href = `${oauthBaseUrl}/oauth2/authorization/naver`;
+    window.location.href = `${oauthBaseUrl}/oauth2/authorization/naver?redirect_uri=${encodeURIComponent(window.location.origin)}`;
   };
 
   const handleBack = () => {
