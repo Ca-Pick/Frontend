@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { getAuthenticated, setAuthenticated } from '../utils/authState';
 
 const baseConfig = {
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  timeout: import.meta.env.VITE_API_TIMEOUT || 10000,
+  timeout: import.meta.env.VITE_API_TIMEOUT || 600000,
 };
 
 // 공개 API (로그인 불필요) - 주문서, 검색 등
@@ -46,10 +47,12 @@ const refreshToken = async () => {
     const endTime = performance.now();
     const duration = (endTime - startTime).toFixed(2);
     console.log(`✅ 토큰 재발급 성공 (${duration}ms)`);
+    setAuthenticated(true);
     return true;
   } catch (error: any) {
     const endTime = performance.now();
     console.error('❌ 토큰 재발급 실패:', error.response?.data?.code);
+    setAuthenticated(false);
     // 토큰 재발급 실패 → 로그인 페이지로 이동 (redirect URL 포함)
     const currentPath = window.location.pathname + window.location.search;
     window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
@@ -99,6 +102,12 @@ authClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+
+    // 명시적으로 로그아웃된 상태 (직전에 logout() 호출됨) - 재발급 시도 없이 바로 에러 처리
+    if (error.response?.status === 401 && getAuthenticated() === false) {
+      console.error(`❌ [AUTH] 응답 에러:`, error.response?.status, error.message);
+      return Promise.reject(error);
+    }
 
     // 401 에러이고 이미 재시도하지 않은 경우
     if (error.response?.status === 401 && !originalRequest._retry) {

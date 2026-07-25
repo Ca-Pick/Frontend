@@ -1,8 +1,42 @@
-import { Box } from '@mui/material';
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Snackbar,
+  Alert,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ProfileSection } from './section/ProfileSection';
 import { MenuSection } from './section/MenuSection';
+import { getMyInfo } from '../../api/services/memberService';
+import { logout, withdraw } from '../../api/services/authService';
+import type { UserInfo } from '../../types/api';
 
 export function MyPage() {
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [withdrawError, setWithdrawError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMyInfo = async () => {
+      try {
+        const response = await getMyInfo();
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error('마이페이지 조회 실패:', error);
+      }
+    };
+
+    fetchMyInfo();
+  }, []);
+
   const handleTermsClick = () => {
     console.log('이용약관 클릭');
   };
@@ -11,36 +45,95 @@ export function MyPage() {
     console.log('개인정보처리방침 클릭');
   };
 
-  const handleLogoutClick = () => {
-    console.log('로그아웃 클릭');
+  const handleLogoutClick = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+    } finally {
+      localStorage.removeItem('loginRedirectUrl');
+      navigate('/', { replace: true });
+    }
   };
 
   const handleWithdrawClick = () => {
-    console.log('회원탈퇴 클릭');
+    setWithdrawDialogOpen(true);
+  };
+
+  const handleWithdrawCancel = () => {
+    setWithdrawDialogOpen(false);
+  };
+
+  const handleWithdrawConfirm = async () => {
+    setWithdrawing(true);
+    try {
+      await withdraw();
+      navigate('/', { replace: true, state: { withdrawSuccess: true } });
+    } catch (error) {
+      console.error('회원탈퇴 실패:', error);
+      setWithdrawDialogOpen(false);
+      setWithdrawError('탈퇴 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setWithdrawing(false);
+    }
   };
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        height: 'calc(100vh - 72px)',
-        gap: '24px',
-        display: 'flex',
-        flexDirection: 'column',
-        paddingTop: 2
-      }}
-    >
-      <ProfileSection
-        nickname="닉네임"
-        email="sample@naver.com"
-      />
-      <Box sx={{height: '1px', backgroundColor: '#eee'}}></Box>
-      <MenuSection
-        onTermsClick={handleTermsClick}
-        onPrivacyClick={handlePrivacyClick}
-        onLogoutClick={handleLogoutClick}
-        onWithdrawClick={handleWithdrawClick}
-      />
-    </Box>
+    <>
+      <Box
+        sx={{
+          width: '100%',
+          height: 'calc(100vh - 72px)',
+          gap: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          paddingTop: 2
+        }}
+      >
+        <ProfileSection
+          nickname={userInfo?.nickname}
+          provider={userInfo?.provider}
+        />
+        <Box sx={{height: '1px', backgroundColor: '#eee'}}></Box>
+        <MenuSection
+          onTermsClick={handleTermsClick}
+          onPrivacyClick={handlePrivacyClick}
+          onLogoutClick={handleLogoutClick}
+          onWithdrawClick={handleWithdrawClick}
+        />
+      </Box>
+
+      <Dialog open={withdrawDialogOpen} onClose={handleWithdrawCancel}>
+        <DialogTitle>회원탈퇴</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            탈퇴하시면 저장된 정보가 모두 삭제되며 되돌릴 수 없습니다. 정말 탈퇴하시겠습니까?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleWithdrawCancel} disabled={withdrawing}>
+            취소
+          </Button>
+          <Button
+            onClick={handleWithdrawConfirm}
+            disabled={withdrawing}
+            color="error"
+          >
+            탈퇴하기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={!!withdrawError}
+        autoHideDuration={4000}
+        onClose={() => setWithdrawError(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="error" onClose={() => setWithdrawError(null)}>
+          {withdrawError}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

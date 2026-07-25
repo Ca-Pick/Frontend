@@ -26,6 +26,8 @@ export const useSaveCakeMutation = () => {
     onSuccess: () => {
       // 저장된 케이크 목록 갱신
       queryClient.invalidateQueries({ queryKey: SAVED_CAKES_KEY });
+      // 저장함 탭이 구독하는 쿼리도 함께 갱신
+      queryClient.invalidateQueries({ queryKey: ['savedItems'] });
     },
     onError: (error: any) => {
       if (error.response?.status === 401) {
@@ -46,6 +48,8 @@ export const useUnsaveCakeMutation = () => {
     onSuccess: () => {
       // 저장된 케이크 목록 갱신
       queryClient.invalidateQueries({ queryKey: SAVED_CAKES_KEY });
+      // 저장함 탭이 구독하는 쿼리도 함께 갱신
+      queryClient.invalidateQueries({ queryKey: ['savedItems'] });
     },
     onError: (error: any) => {
       if (error.response?.status === 401) {

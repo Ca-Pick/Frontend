@@ -1,15 +1,20 @@
 import { Box, Stack, Typography, Avatar } from '@mui/material';
 import { colors } from '../../../theme/colors';
 
+const PROVIDER_LABELS: Record<string, string> = {
+  kakao: '카카오 계정',
+  naver: '네이버 계정',
+};
+
 interface ProfileSectionProps {
   nickname?: string;
-  email?: string;
+  provider?: string;
   profileImage?: string;
 }
 
 export function ProfileSection({
   nickname = '닉네임',
-  email = 'sample@naver.com',
+  provider,
   profileImage,
 }: ProfileSectionProps) {
   return (
@@ -51,7 +56,7 @@ export function ProfileSection({
           {nickname}
         </Typography>
 
-        {/* Email */}
+        {/* Provider */}
         <Typography
           variant="t4_r"
           sx={{
@@ -59,7 +64,7 @@ export function ProfileSection({
             textAlign: 'center',
           }}
         >
-          {email}
+          {provider ? PROVIDER_LABELS[provider] ?? provider : ''}
         </Typography>
       </Box>
     </Box>

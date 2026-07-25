@@ -7,6 +7,7 @@ import { Saved } from './Saved';
 import { MyPage } from './MyPage';
 import { Login } from './Login';
 import { BottomTabNavigation } from '../components/BottomTabNavigation';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 import { ProductDetail } from './OrderCreate/detail';
 
 type TabType = 'home' | 'order' | 'saved' | 'mypage';
@@ -32,8 +33,8 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
         <Route path="/" element={<Home />} />
         <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />
         <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
-        <Route path="/saved" element={<Saved onTabChange={() => {}} />} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/saved" element={<ProtectedRoute><Saved onTabChange={() => {}} /></ProtectedRoute>} />
+        <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         {/* 기타 경로는 홈으로 리다이렉트 */}
         <Route path="*" element={<Navigate to="/" replace />} />

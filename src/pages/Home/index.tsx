@@ -1,10 +1,10 @@
-import { Box } from '@mui/material';
+import { Box, Snackbar, Alert } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { HeroSection } from './section/HeroSection';
 import InstagramEmbdeSection from './section/InstagramEmbdeSection';
 import { HomeDetail } from './section/HomeDetail';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { consumePendingHeartAction, setPendingHeartToast } from '../../utils/pendingHeartAction';
 import { saveCake, unsaveCake } from '../../api/services/saveService';
 
@@ -12,11 +12,22 @@ type HomeView = 'home' | 'detail';
 
 export function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
   const [view, setView] = useState<HomeView>('home');
   const [selectedCakeId, setSelectedCakeId] = useState<number>();
+  const [withdrawSuccessOpen, setWithdrawSuccessOpen] = useState(
+    Boolean((location.state as { withdrawSuccess?: boolean } | null)?.withdrawSuccess)
+  );
+
+  // 탈퇴 완료 안내를 한 번만 표시하고 history state에서 제거
+  useEffect(() => {
+    if ((location.state as { withdrawSuccess?: boolean } | null)?.withdrawSuccess) {
+      navigate('.', { replace: true, state: null });
+    }
+  }, []);
 
   // 스크롤 위치 복원
   useEffect(() => {
@@ -113,6 +124,17 @@ export function Home() {
       <InstagramEmbdeSection category="birthday" onDetailClick={handleDetailClick} />
       <InstagramEmbdeSection category="celebration" onDetailClick={handleDetailClick} />
       <InstagramEmbdeSection category="academic" onDetailClick={handleDetailClick} />
+
+      <Snackbar
+        open={withdrawSuccessOpen}
+        autoHideDuration={3000}
+        onClose={() => setWithdrawSuccessOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" onClose={() => setWithdrawSuccessOpen(false)}>
+          탈퇴가 완료되었습니다.
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

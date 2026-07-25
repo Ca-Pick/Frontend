@@ -115,3 +115,17 @@ export type SaveApiError = {
   message: string;
   timestamp: string;
 };
+
+// 마이페이지 조회
+export type UserInfo = {
+  id: number;
+  nickname: string;
+  provider: string;
+  role: string;
+};
+
+export type UserInfoResponse = {
+  success: boolean;
+  data: UserInfo;
+  timestamp: string;
+};

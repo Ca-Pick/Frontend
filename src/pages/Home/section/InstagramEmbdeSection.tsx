@@ -5,15 +5,14 @@ import {
   IconButton,
   CircularProgress
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { colors } from '../../../theme/colors';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CarouselIndicators from '../../../components/CarouselIndicators'
 import { InstagramEmbed } from '../../../components/InstagramEmbed';
 import { HeartToggle } from '../../../components/HeartToggle';
-import { getRecommendedDesserts } from '../../../api/services/referenceService';
-import type { RecommendedDessert } from '../../../types/api';
+import { useRecommendedDesserts } from '../../../hooks';
 
 interface InstagramEmbdeSectionProps {
   category: 'birthday' | 'celebration' | 'academic';
@@ -22,29 +21,12 @@ interface InstagramEmbdeSectionProps {
 
 function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [items, setItems] = useState<RecommendedDessert[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchCurations = async () => {
-      try {
-        setLoading(true);
-        const data = await getRecommendedDesserts();
-        const categoryItems = data.data[category] || [];
-        setItems(categoryItems);
-        setError(null);
-      } catch (err) {
-        console.error('홈 큐레이션 데이터 로드 실패:', err);
-        setError('데이터를 불러올 수 없습니다');
-        setItems([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // 3개 카테고리 섹션이 동일한 쿼리 키를 공유 → 요청이 1번으로 합쳐지고(dedupe)
+  const { data, isLoading: loading, error: queryError } = useRecommendedDesserts();
 
-    fetchCurations();
-  }, [category]);
+  const items = data?.data[category] || [];
+  const error = queryError ? '데이터를 불러올 수 없습니다' : null;
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
@@ -56,15 +38,6 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
 
   const handleCarouselChange = (index: number) => {
     setCurrentIndex(index);
-  };
-
-  const handleHeartToggle = (isSaved: boolean) => {
-    // 저장 상태 업데이트 (선택사항)
-    if (items[currentIndex]) {
-      const updatedItems = [...items];
-      updatedItems[currentIndex].saved = isSaved;
-      setItems(updatedItems);
-    }
   };
 
   const categoryLabel = {
@@ -137,7 +110,6 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
                   <HeartToggle
                     referenceId={currentItem.cakeId}
                     initialSaved={currentItem.saved}
-                    onClick={handleHeartToggle}
                   />
                 )}
               </Box>
