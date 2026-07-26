@@ -1,12 +1,11 @@
 import { Box, Button, IconButton } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
 import imglogoText from '../../../assets/logos/logo_text.svg';
 
 export function LoginForm() {
   const navigate = useNavigate();
-  const location = useLocation();
   const oauthBaseUrl = import.meta.env.VITE_OAUTH_BASE_URL || 'http://localhost:8080';
-  const fromPage = location.state?.from || '/';
 
   const handleKakaoLogin = () => {
     window.location.href = `${oauthBaseUrl}/oauth2/authorization/kakao?redirect_uri=${encodeURIComponent(window.location.origin)}`;
@@ -16,8 +15,11 @@ export function LoginForm() {
     window.location.href = `${oauthBaseUrl}/oauth2/authorization/naver?redirect_uri=${encodeURIComponent(window.location.origin)}`;
   };
 
-  const handleBack = () => {
-    navigate(fromPage, { replace: true });
+  const handleGoHome = () => {
+    // 로그인을 포기하고 홈으로 가는 것이므로, 남아있으면 홈 진입 시 저장함/마이페이지로
+    // 자동 리다이렉트되어 다시 401 로그인 화면으로 튕기는 루프가 생기는 값을 지워준다
+    localStorage.removeItem('loginRedirectUrl');
+    navigate('/', { replace: true });
   };
 
 
@@ -34,20 +36,18 @@ export function LoginForm() {
         position: 'relative',
       }}
     >
-      {/* 뒤로가기 버튼 - 원래 페이지가 있을 때만 표시 */}
-      {fromPage !== '/' && (
-        <IconButton
-          onClick={handleBack}
-          sx={{
-            position: 'absolute',
-            top: 16,
-            left: 16,
-            color: '#333',
-          }}
-        >
-          ←
-        </IconButton>
-      )}
+      {/* 홈으로 이동 버튼 */}
+      <IconButton
+        onClick={handleGoHome}
+        sx={{
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          color: '#333',
+        }}
+      >
+        <ArrowBackIcon />
+      </IconButton>
       <Box
         component="img"
         src={imglogoText}

@@ -1,5 +1,5 @@
-import { Box, CircularProgress, Alert } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { Box, CircularProgress, Alert, Drawer } from '@mui/material';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { TopSection } from './section/top';
 import { BottomSection } from './section/bottom';
@@ -22,7 +22,6 @@ export function ProductDetail({
   productId,
   cakeId,
   onBack,
-  onCakeSelect,
   selectedTags,
   location,
   recipient,
@@ -32,6 +31,10 @@ export function ProductDetail({
 }: ProductDetailProps) {
   const [activeTab, setActiveTab] = useState<'info' | 'location' | 'other'>('info');
   const [currentCakeId, setCurrentCakeId] = useState<number>();
+  const [previewCakeId, setPreviewCakeId] = useState<number>();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [sheetRect, setSheetRect] = useState({ left: 0, width: 0 });
 
   // URL 파라미터에서 cakeId 추출 (라우터를 통해 들어온 경우)
   const params = useParams<{ cakeId: string }>();
@@ -47,11 +50,34 @@ export function ProductDetail({
   const { data, isLoading, error } = useDessertDetail(currentCakeId || 0);
   const detailData = data?.data;
 
+  // 데스크탑 등 넓은 화면에서도 앱은 375px 고정 폭으로 가운데 정렬돼 있으므로,
+  // 시트를 뷰포트 기준 50% 가운데 정렬하면 실제 앱 영역과 어긋난다.
+  // 대신 현재 페이지 컨테이너의 실제 화면상 좌표(left, width)를 측정해서 그대로 시트에 적용한다.
+  // detailData가 로드되어야 containerRef가 실제 DOM(성공 렌더링 분기)에 붙으므로 deps에 포함한다.
+  useLayoutEffect(() => {
+    const updateRect = () => {
+      const el = containerRef.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        setSheetRect({ left: rect.left, width: rect.width });
+      }
+    };
+    updateRect();
+    window.addEventListener('resize', updateRect);
+    return () => window.removeEventListener('resize', updateRect);
+  }, [detailData]);
+
+  // 다른 케이크 선택 시 실제로 페이지를 전환하지 않고, 아래에서 위로 올라오는
+  // 바텀시트로 미리보기만 보여준다. 시트를 닫으면 원래 케이크로 그대로 복귀.
   const handleCakeSelect = (selectedCakeId?: number) => {
-    onCakeSelect?.(selectedCakeId);
     if (selectedCakeId) {
-      setCurrentCakeId(selectedCakeId);
+      setPreviewCakeId(selectedCakeId);
+      setSheetOpen(true);
     }
+  };
+
+  const handleSheetClose = () => {
+    setSheetOpen(false);
   };
 
   if (!id) {
@@ -98,30 +124,70 @@ export function ProductDetail({
   }
 
   return (
-    <Box sx={{ width: '100%', bgcolor: '#fbf8f3' }}>
-      <TopSection
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        onBack={onBack}
-        name={detailData.name}
-        instagramEmbed={detailData.instagramEmbed}
-        location={detailData.address}
-      />
-      <BottomSection
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        selectedTags={detailData.tags}
-        location={detailData.address}
-        recipient={recipient}
-        cakeType={cakeType}
-        color={color}
-        mood={mood}
-        cakelists={detailData.cakelists}
-        instagramUrl={detailData.instagramUrl}
-        cakeId={detailData.cakeId}
-        saved={detailData.saved}
-        onCakeSelect={handleCakeSelect}
-      />
+    <Box ref={containerRef} sx={{ width: '100%', bgcolor: '#fbf8f3' }}>
+      <Box
+        sx={{
+          opacity: sheetOpen ? 0.3 : 1,
+          transition: 'opacity 320ms ease',
+        }}
+      >
+        <TopSection
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onBack={onBack}
+          name={detailData.name}
+          instagramEmbed={detailData.instagramEmbed}
+          location={detailData.address}
+        />
+        <BottomSection
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          selectedTags={detailData.tags}
+          location={detailData.address}
+          recipient={recipient}
+          cakeType={cakeType}
+          color={color}
+          mood={mood}
+          cakelists={detailData.cakelists}
+          instagramUrl={detailData.instagramUrl}
+          cakeId={detailData.cakeId}
+          saved={detailData.saved}
+          latitude={detailData.latitude}
+          longitude={detailData.longitude}
+          name={detailData.name}
+          onCakeSelect={handleCakeSelect}
+        />
+      </Box>
+
+      <Drawer
+        anchor="bottom"
+        open={sheetOpen}
+        onClose={handleSheetClose}
+        transitionDuration={320}
+        slotProps={{
+          paper: {
+            sx: {
+              left: `${sheetRect.left}px`,
+              width: `${sheetRect.width}px`,
+              height: '100%',
+              borderTopLeftRadius: '12px',
+              borderTopRightRadius: '12px',
+              overflowY: 'auto',
+            },
+          },
+        }}
+      >
+        {previewCakeId && (
+          <ProductDetail
+            cakeId={previewCakeId}
+            onBack={handleSheetClose}
+            recipient={recipient}
+            cakeType={cakeType}
+            color={color}
+            mood={mood}
+          />
+        )}
+      </Drawer>
     </Box>
   );
 }

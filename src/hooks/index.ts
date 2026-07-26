@@ -3,4 +3,4 @@ export { useSearchDesserts, useSearchDessertsMutation } from './queries/useSearc
 export { useRecommendedDesserts } from './queries/useRecommendedDesserts';
 export { useDessertDetail } from './queries/useDessertDetail';
 export { useDetailTags } from './queries/useDetailTags';
-export { useSavedCakes, useSaveCakeMutation, useUnsaveCakeMutation } from './queries/useSavedCakes';
+export { useSavedCakes, useSavedCakeIds, useSaveCakeMutation, useUnsaveCakeMutation } from './queries/useSavedCakes';

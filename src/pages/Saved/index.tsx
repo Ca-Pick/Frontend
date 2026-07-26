@@ -55,7 +55,7 @@ export function Saved({ onTabChange }: SavedProps) {
 
   const handleDetailClick = (cakeId?: number) => {
     if (cakeId) {
-      navigate(`/order/${cakeId}`);
+      navigate(`/desserts/${cakeId}`);
     }
   };
 

@@ -7,10 +7,11 @@ import {
   DialogActions,
   Button,
   Snackbar,
-  Alert,
+  Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { ProfileSection } from './section/ProfileSection';
 import { MenuSection } from './section/MenuSection';
 import { getMyInfo } from '../../api/services/memberService';
@@ -19,6 +20,7 @@ import type { UserInfo } from '../../types/api';
 
 export function MyPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
   const [withdrawing, setWithdrawing] = useState(false);
@@ -52,6 +54,9 @@ export function MyPage() {
       console.error('로그아웃 실패:', error);
     } finally {
       localStorage.removeItem('loginRedirectUrl');
+      // 로그인 상태에서 받아온 저장 목록 캐시가 남아있으면 로그아웃 후에도
+      // 하트가 채워진 채로 보이므로 로그아웃과 동시에 비워준다
+      queryClient.removeQueries({ queryKey: ['savedCakes'] });
       navigate('/', { replace: true });
     }
   };
@@ -68,6 +73,7 @@ export function MyPage() {
     setWithdrawing(true);
     try {
       await withdraw();
+      queryClient.removeQueries({ queryKey: ['savedCakes'] });
       navigate('/', { replace: true, state: { withdrawSuccess: true } });
     } catch (error) {
       console.error('회원탈퇴 실패:', error);
@@ -94,7 +100,7 @@ export function MyPage() {
           nickname={userInfo?.nickname}
           provider={userInfo?.provider}
         />
-        <Box sx={{height: '1px', backgroundColor: '#eee'}}></Box>
+        <Box sx={{ height: '1px', backgroundColor: '#eee' }}></Box>
         <MenuSection
           onTermsClick={handleTermsClick}
           onPrivacyClick={handlePrivacyClick}
@@ -111,13 +117,15 @@ export function MyPage() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleWithdrawCancel} disabled={withdrawing}>
+          <Button onClick={handleWithdrawCancel} disabled={withdrawing} color="secondary"
+            variant='text'>
             취소
           </Button>
           <Button
             onClick={handleWithdrawConfirm}
             disabled={withdrawing}
-            color="error"
+            color="primary"
+            variant='text'
           >
             탈퇴하기
           </Button>
@@ -130,9 +138,19 @@ export function MyPage() {
         onClose={() => setWithdrawError(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert severity="error" onClose={() => setWithdrawError(null)}>
-          {withdrawError}
-        </Alert>
+        <Box
+          sx={{
+            backgroundColor: 'rgba(0, 0, 0, 0.80)',
+            color: '#fff',
+            padding: '4px 16px',
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '94px',
+          }}
+        >
+          <Typography variant="label_4">{withdrawError}</Typography>
+        </Box>
       </Snackbar>
     </>
   );

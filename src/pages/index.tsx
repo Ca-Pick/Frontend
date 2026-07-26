@@ -26,11 +26,12 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
   };
 
   const activeTab = getActiveTabFromPath();
+  const isDessertDetailRoute = location.pathname.startsWith('/desserts/');
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home onDetailViewChange={onDetailViewChange} />} />
         <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />
         <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
         <Route path="/saved" element={<ProtectedRoute><Saved onTabChange={() => {}} /></ProtectedRoute>} />
@@ -40,7 +41,7 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {!isDetailView && location.pathname !== '/login' && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
+      {!isDetailView && !isDessertDetailRoute && location.pathname !== '/login' && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
     </>
   );
 }

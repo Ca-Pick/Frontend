@@ -54,8 +54,10 @@ const refreshToken = async () => {
     console.error('❌ 토큰 재발급 실패:', error.response?.data?.code);
     setAuthenticated(false);
     // 토큰 재발급 실패 → 로그인 페이지로 이동 (redirect URL 포함)
+    // replace 사용: href로 이동하면 현재 페이지(보호된 라우트)가 히스토리에 남아
+    // 로그인 화면에서 뒤로가기 시 그 페이지로 되돌아갔다가 다시 401로 튕겨나오는 루프가 생김
     const currentPath = window.location.pathname + window.location.search;
-    window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+    window.location.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
     return false;
   }
 };
@@ -102,6 +104,11 @@ authClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+
+    // 로그인 여부가 확실치 않은 상태에서 "혹시 저장되어있나" 확인만 하는 요청 - 실패해도 재발급/리다이렉트 없이 조용히 실패 처리 (콘솔 로그도 생략)
+    if (error.response?.status === 401 && originalRequest?.skipAuthRedirect) {
+      return Promise.reject(error);
+    }
 
     // 명시적으로 로그아웃된 상태 (직전에 logout() 호출됨) - 재발급 시도 없이 바로 에러 처리
     if (error.response?.status === 401 && getAuthenticated() === false) {

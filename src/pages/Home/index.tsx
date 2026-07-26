@@ -7,10 +7,15 @@ import { HomeDetail } from './section/HomeDetail';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { consumePendingHeartAction, setPendingHeartToast } from '../../utils/pendingHeartAction';
 import { saveCake, unsaveCake } from '../../api/services/saveService';
+import { getMyInfo } from '../../api/services/memberService';
 
 type HomeView = 'home' | 'detail';
 
-export function Home() {
+interface HomeProps {
+  onDetailViewChange?: (isDetail: boolean) => void;
+}
+
+export function Home({ onDetailViewChange }: HomeProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -59,8 +64,14 @@ export function Home() {
     };
   }, []);
 
+  const redirectCheckStartedRef = useRef(false);
+
   useEffect(() => {
-    let cancelled = false;
+    // StrictMode 개발 모드에서 effect가 두 번 실행되는데, localStorage 읽기+삭제가
+    // 파괴적(destructive)이라 ref 가드 없이 두 번 돌면 첫 실행이 지운 값을 두 번째 실행이
+    // 못 보게 되어 로그인 성공 후에도 리다이렉트가 누락됨 - 실제 실행은 한 번만 타도록 막는다
+    if (redirectCheckStartedRef.current) return;
+    redirectCheckStartedRef.current = true;
 
     const restorePendingStateAndRedirect = async () => {
       // 로그인 후 redirect URL 체크
@@ -68,8 +79,19 @@ export function Home() {
 
       // redirectUrl이 있을 때만 pending action 처리 (로그인 직후만)
       if (redirectUrl) {
+        // 값이 남아있다고 무조건 되돌려보내지 않는다 - 로그인 없이 뒤로가기 등으로 홈에
+        // 도착한 경우까지 다시 저장함/마이페이지로 보내면 401 → 로그인 루프가 재현됨.
+        // 실제로 로그인됐는지 서버로 확인한 뒤에만 리다이렉트한다.
+        localStorage.removeItem('loginRedirectUrl');
+
+        const loggedIn = await getMyInfo(true)
+          .then(() => true)
+          .catch(() => false);
+
+        if (!loggedIn) return;
+
         const pendingHeartAction = consumePendingHeartAction();
-        if (pendingHeartAction && !cancelled) {
+        if (pendingHeartAction) {
           try {
             if (pendingHeartAction.action === 'save') {
               await saveCake(pendingHeartAction.referenceId);
@@ -86,27 +108,22 @@ export function Home() {
           }
         }
 
-        if (cancelled) return;
-
-        localStorage.removeItem('loginRedirectUrl');
         navigate(redirectUrl);
       }
     };
 
     restorePendingStateAndRedirect();
-
-    return () => {
-      cancelled = true;
-    };
   }, [navigate]);
 
   const handleDetailClick = (cakeId?: number) => {
     setSelectedCakeId(cakeId);
     setView('detail');
+    onDetailViewChange?.(true);
   };
 
   const handleBackFromDetail = () => {
     setView('home');
+    onDetailViewChange?.(false);
   };
 
   if (view === 'detail') {

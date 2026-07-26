@@ -17,7 +17,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     let cancelled = false;
     setStatus('loading');
 
-    getMyInfo()
+    getMyInfo(true)
       .then(() => {
         if (cancelled) return;
         setAuthenticated(true);

@@ -4,6 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import SavedInstagramEmbed from "../../../../components/SavedInstagramEmbed";
 import { HeartToggle } from "../../../../components/HeartToggle";
+import { KakaoMap } from "../../../../components/KakaoMap";
 import { useState } from "react";
 
 interface BottomSectionProps {
@@ -11,6 +12,9 @@ interface BottomSectionProps {
     onTabChange: (tab: "info" | "location" | "other") => void;
     selectedTags?: string[];
     location?: string;
+    latitude?: number;
+    longitude?: number;
+    name?: string;
     recipient?: string;
     cakeType?: string;
     color?: string;
@@ -25,7 +29,7 @@ interface BottomSectionProps {
     onCakeSelect?: (cakeId?: number) => void;
 }
 
-export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, cakelists, instagramEmbed, instagramUrl, price, schedule, cakeId, saved, onCakeSelect }: BottomSectionProps) {
+export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, latitude, longitude, name, cakelists, instagramEmbed, instagramUrl, price, schedule, cakeId, saved, onCakeSelect }: BottomSectionProps) {
     const handleInstagramClick = () => {
         if (instagramUrl) {
             window.open(instagramUrl, '_blank');
@@ -61,17 +65,17 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                 ))}
             </Box>
             <Box>
-                {activeTab === "info" && <InfoSection tags={selectedTags} location={location} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} onCakeSelect={onCakeSelect} />}
+                {activeTab === "info" && <InfoSection tags={selectedTags} location={location} latitude={latitude} longitude={longitude} name={name} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} />}
                 {activeTab === "location" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
-                        <LocationSection location={location} />
+                        <LocationSection location={location} latitude={latitude} longitude={longitude} name={name} />
                         <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} onCakeSelect={onCakeSelect} />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} />
                     </Box>
                 }
                 {activeTab === "other" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
-                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} onCakeSelect={onCakeSelect} />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} />
                     </Box>}
             </Box>
 
@@ -128,12 +132,16 @@ interface InfoSectionProps {
     price?: string;
     schedule?: string;
     location?: string;
+    latitude?: number;
+    longitude?: number;
+    name?: string;
     instagramUrl?: string;
     cakelists?: Array<{ cakeId: number; instagramEmbed: string }>;
+    cakeId?: number;
     onCakeSelect?: (cakeId?: number) => void;
 }
 
-function InfoSection({ tags = [], orderInfo = [], location, instagramUrl, cakelists, onCakeSelect }: InfoSectionProps) {
+function InfoSection({ tags = [], orderInfo = [], location, latitude, longitude, name, instagramUrl, cakelists, cakeId, onCakeSelect }: InfoSectionProps) {
     const allTags = [...orderInfo, ...tags];
     const [showMoreTags, setShowMoreTags] = useState(false);
     const displayedTags = showMoreTags ? allTags : allTags.slice(0, 5);
@@ -175,42 +183,50 @@ function InfoSection({ tags = [], orderInfo = [], location, instagramUrl, cakeli
                 )}
             </Box>
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
-            <LocationSection location={location} />
+            <LocationSection location={location} latitude={latitude} longitude={longitude} name={name} />
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
 
-            <OtherSection cakelists={cakelists} onCakeSelect={onCakeSelect} />
+            <OtherSection cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} />
         </Box>
     );
 }
 
 interface LocationSectionProps {
     location?: string;
+    latitude?: number;
+    longitude?: number;
+    name?: string;
 }
 
-function LocationSection({ location }: LocationSectionProps) {
+function LocationSection({ location, latitude, longitude, name }: LocationSectionProps) {
     const imgMap = "https://www.figma.com/api/mcp/asset/71f041b9-f48e-4b06-9b62-3fa074e58e4d";
+    const hasCoordinates = latitude != null && longitude != null;
 
     return (
         <Box sx={{ display: "flex", gap: 4, alignItems: 'flex-start' }}>
             <Typography variant="t2_b" sx={{ color: "black", whiteSpace: 'nowrap', textAlign: 'left' }}>
                 위치
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: 'column', gap: 2, alignItems: "flex-start" }}>
+            <Box sx={{ display: "flex", flexDirection: 'column', gap: 2, alignItems: "flex-start", width: "100%" }}>
 
                 <Typography variant="b2_r" sx={{ color: "black", textAlign: 'left' }}>
                     {location || "서울 서대문구 연희로12길 10-4 1층 FAUCET"}
                 </Typography>
 
-                <Box
-                    component="img"
-                    src={imgMap}
-                    alt="map"
-                    sx={{
-                        width: "100%",
-                        height: "180px",
-                        objectFit: "cover",
-                    }}
-                />
+                {hasCoordinates ? (
+                    <KakaoMap latitude={latitude} longitude={longitude} name={name} />
+                ) : (
+                    <Box
+                        component="img"
+                        src={imgMap}
+                        alt="map"
+                        sx={{
+                            width: "100%",
+                            height: "180px",
+                            objectFit: "cover",
+                        }}
+                    />
+                )}
             </Box>
         </Box>
     );
@@ -218,12 +234,14 @@ function LocationSection({ location }: LocationSectionProps) {
 
 interface OtherSectionProps {
     cakelists?: Array<{ cakeId: number; instagramEmbed: string; saved: boolean }>;
+    cakeId?: number;
     onCakeSelect?: (cakeId?: number) => void;
 }
 
-function OtherSection({ cakelists, onCakeSelect }: OtherSectionProps) {
-    const formattedCakes = cakelists && cakelists.length > 0
-        ? cakelists.map(cake => ({
+function OtherSection({ cakelists, cakeId, onCakeSelect }: OtherSectionProps) {
+    const otherCakes = cakelists?.filter(cake => cake.cakeId !== cakeId);
+    const formattedCakes = otherCakes && otherCakes.length > 0
+        ? otherCakes.map(cake => ({
             cakeId: cake.cakeId,
             instagramEmbed: cake.instagramEmbed,
             saved: cake.saved,
@@ -235,7 +253,7 @@ function OtherSection({ cakelists, onCakeSelect }: OtherSectionProps) {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: 'flex-start' }}>
             <Typography variant="t2_b" sx={{ color: "black" }}>
-                이 가게의 모든 케이크
+                이 가게의 다른 케이크
             </Typography>
             {formattedCakes && <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} />}
         </Box>
