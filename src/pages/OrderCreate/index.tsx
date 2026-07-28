@@ -1,12 +1,13 @@
 import { Box, CircularProgress, Alert } from '@mui/material';
-import { useState, useMemo } from 'react';
-import { useSearchParams as useUrlSearchParams } from 'react-router-dom';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useSearchParams as useUrlSearchParams, useLocation } from 'react-router-dom';
 import { OrderStep1 } from './section/OrderStep1';
 import { OrderStep2 } from './section/OrderStep2';
 import { ProductDetail } from './detail/index';
 import { SavedFilteredHeader } from '../Saved/section/SavedFilteredHeader';
 import SavedInstagramEmbed from '../../components/SavedInstagramEmbed';
 import { colors } from '../../theme/colors';
+import { BOTTOM_TAB_HEIGHT } from '../../components/BottomTabNavigation';
 import { useSearchDesserts } from '../../hooks';
 import type { SearchRequest } from '../../types/api';
 
@@ -63,20 +64,28 @@ function toApiParams(params: SearchParams): SearchRequest {
 }
 
 export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
+  const location = useLocation();
   const [urlQuery, setUrlQuery] = useUrlSearchParams();
   const initialView = urlQuery.get('view');
   const initialCakeId = urlQuery.get('cakeId');
+  const initialStep = urlQuery.get('step');
   const isInitiallyRestoring = initialView === 'saved' || initialView === 'detail';
+  // steps 단계에서 이동했다가 돌아온 경우 - view는 없지만 step/검색조건이 URL에 남아있음
+  const isRestoringSteps = !isInitiallyRestoring && urlQuery.toString().length > 0;
+  const shouldRestoreFromQuery = isInitiallyRestoring || isRestoringSteps;
 
   const [view, setView] = useState<OrderView>(isInitiallyRestoring ? (initialView as OrderView) : 'steps');
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(
+    isRestoringSteps && initialStep ? Number(initialStep) : 1
+  );
   const [selectedCakeId, setSelectedCakeId] = useState<number | undefined>(
     initialCakeId ? Number(initialCakeId) : undefined
   );
   const [detailStack, setDetailStack] = useState<number[]>([]);
+  const scrollBeforeDetailRef = useRef(0);
 
   const [searchParams, setSearchParams] = useState<SearchParams>(() =>
-    isInitiallyRestoring ? queryToSearchParams(urlQuery) : { ...EMPTY_SEARCH_PARAMS }
+    shouldRestoreFromQuery ? queryToSearchParams(urlQuery) : { ...EMPTY_SEARCH_PARAMS }
   );
 
   // 실행된 검색의 파라미터 - useQuery를 쓰므로 마운트 시(로그인 리다이렉트 등으로
@@ -96,6 +105,24 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
       (a, b) => (b.cakeDetailCount || 0) - (a.cakeDetailCount || 0)
     );
   }, [searchQuery.data]);
+
+  // steps 단계 진행 상태를 URL에 반영 - 다른 탭으로 이동했다가 돌아와도
+  // 작성 중이던 스텝/입력값을 잃지 않도록 하기 위함
+  useEffect(() => {
+    if (view === 'steps') {
+      setUrlQuery(
+        { step: String(currentStep), ...searchParamsToQuery(searchParams) },
+        { replace: true }
+      );
+    }
+  }, [view, currentStep, searchParams]);
+
+  // 지금 보고 있는 화면이 steps든 saved든 detail이든 상관없이, 현재 URL을 그대로
+  // 기억해둔다 - 하단탭 "검색"을 다시 눌렀을 때 이 경로로 되돌아오기 위함
+  // (BottomTabNavigation은 항상 '/order'로만 navigate하므로 쿼리를 스스로 기억 못 함)
+  useEffect(() => {
+    sessionStorage.setItem('orderLastPath', location.pathname + location.search);
+  }, [location.pathname, location.search]);
 
   const handleSearchParamChange = (key: keyof SearchParams, value: any) => {
     setSearchParams(prev => ({
@@ -157,14 +184,23 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
   };
 
   const handleDetailFromSaved = (cakeId?: number) => {
+    scrollBeforeDetailRef.current = window.scrollY;
     setSelectedCakeId(cakeId);
     setDetailStack([]); // 검색 결과에서 시작하므로 스택 초기화
     setView('detail');
     onDetailViewChange?.(true);
+    window.scrollTo(0, 0);
     if (cakeId) {
       setUrlQuery({ view: 'detail', cakeId: String(cakeId), ...searchParamsToQuery(searchParams) }, { replace: true });
     }
   };
+
+  // 상세페이지에서 검색 결과로 돌아왔을 때, 상세 진입 전 스크롤 위치로 복원
+  useEffect(() => {
+    if (view === 'saved') {
+      window.scrollTo(0, scrollBeforeDetailRef.current);
+    }
+  }, [view]);
 
   const handleCakeSelectInDetail = (cakeId?: number) => {
     if (cakeId && selectedCakeId && cakeId !== selectedCakeId) {
@@ -210,6 +246,7 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
       <Box
         sx={{
           width: '100%',
+          minHeight: `calc(100vh - ${BOTTOM_TAB_HEIGHT}px)`,
           display: 'flex',
           flexDirection: 'column',
           gap: 2,

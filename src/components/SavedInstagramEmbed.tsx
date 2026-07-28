@@ -145,36 +145,38 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLB
       position: 'relative',
     }}>
       {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} showChips={showChips} />}
-      <Box sx={{
-        height: '40px',
-        display: 'flex',
-        gap: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        px: 2
-      }}>
-        <IconButton
-          onClick={handlePrev}
-          disabled={currentIndex === 0}
-          sx={{
-            backgroundColor: 'transparent',
-            opacity: currentIndex === 0 ? 0.5 : 1,
-          }}
-        >
-          <ChevronLeftIcon />
-        </IconButton>
-        <CarouselIndicators current={currentIndex} total={dotCount} onChange={handleCarouselChange} />
-        <IconButton
-          onClick={handleNext}
-          disabled={currentIndex === dotCount - 1}
-          sx={{
-            backgroundColor: 'transparent',
-            opacity: currentIndex === dotCount - 1 ? 0.5 : 1,
-          }}
-        >
-          <ChevronRightIcon />
-        </IconButton>
-      </Box>
+      {cakes.length > 0 && (
+        <Box sx={{
+          height: '40px',
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          px: 2
+        }}>
+          <IconButton
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
+            sx={{
+              backgroundColor: 'transparent',
+              opacity: currentIndex === 0 ? 0.5 : 1,
+            }}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+          <CarouselIndicators current={currentIndex} total={dotCount} onChange={handleCarouselChange} />
+          <IconButton
+            onClick={handleNext}
+            disabled={currentIndex === dotCount - 1}
+            sx={{
+              backgroundColor: 'transparent',
+              opacity: currentIndex === dotCount - 1 ? 0.5 : 1,
+            }}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+        </Box>
+      )}
       {showCarousel && bottomCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={bottomCake} showChips={showChips} />}
     </Box>
   );

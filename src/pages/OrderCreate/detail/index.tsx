@@ -29,17 +29,21 @@ export function ProductDetail({
   color,
   mood,
 }: ProductDetailProps) {
+  // URL 파라미터에서 cakeId 추출 (라우터를 통해 들어온 경우)
+  const params = useParams<{ cakeId: string }>();
+  const id = cakeId || (params.cakeId ? parseInt(params.cakeId) : undefined);
+
   const [activeTab, setActiveTab] = useState<'info' | 'location' | 'other'>('info');
-  const [currentCakeId, setCurrentCakeId] = useState<number>();
+  // 초기값을 id로 바로 세팅해야 첫 렌더부터 쿼리가 활성화되어, "상세정보 없음"이
+  // 한 프레임 잘못 보였다가 사라지는 깜빡임이 생기지 않는다.
+  const [currentCakeId, setCurrentCakeId] = useState<number | undefined>(id);
   const [previewCakeId, setPreviewCakeId] = useState<number>();
   const [sheetOpen, setSheetOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [sheetRect, setSheetRect] = useState({ left: 0, width: 0 });
 
-  // URL 파라미터에서 cakeId 추출 (라우터를 통해 들어온 경우)
-  const params = useParams<{ cakeId: string }>();
-  const id = cakeId || (params.cakeId ? parseInt(params.cakeId) : undefined);
-
+  // cakeId prop이 마운트 이후에 바뀌는 경우("다른 케이크" 선택 등, 리마운트 없이
+  // 같은 인스턴스가 재사용됨)를 반영하기 위해 계속 유지
   useEffect(() => {
     if (id) {
       setCurrentCakeId(id);

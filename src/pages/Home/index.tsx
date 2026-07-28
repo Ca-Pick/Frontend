@@ -23,6 +23,7 @@ export function Home({ onDetailViewChange }: HomeProps) {
 
   const [view, setView] = useState<HomeView>('home');
   const [selectedCakeId, setSelectedCakeId] = useState<number>();
+  const scrollBeforeDetailRef = useRef(0);
   const [withdrawSuccessOpen, setWithdrawSuccessOpen] = useState(
     Boolean((location.state as { withdrawSuccess?: boolean } | null)?.withdrawSuccess)
   );
@@ -116,15 +117,24 @@ export function Home({ onDetailViewChange }: HomeProps) {
   }, [navigate]);
 
   const handleDetailClick = (cakeId?: number) => {
+    scrollBeforeDetailRef.current = window.scrollY;
     setSelectedCakeId(cakeId);
     setView('detail');
     onDetailViewChange?.(true);
+    window.scrollTo(0, 0);
   };
 
   const handleBackFromDetail = () => {
     setView('home');
     onDetailViewChange?.(false);
   };
+
+  // 상세페이지에서 홈으로 돌아왔을 때, 상세 진입 전 스크롤 위치로 복원
+  useEffect(() => {
+    if (view === 'home') {
+      window.scrollTo(0, scrollBeforeDetailRef.current);
+    }
+  }, [view]);
 
   if (view === 'detail') {
     return (
