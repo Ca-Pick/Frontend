@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Home } from './Home';
@@ -6,7 +6,7 @@ import { OrderCreate } from './OrderCreate';
 import { Saved } from './Saved';
 import { MyPage } from './MyPage';
 import { Login } from './Login';
-import { BottomTabNavigation } from '../components/BottomTabNavigation';
+import { BottomTabNavigation, BOTTOM_TAB_HEIGHT } from '../components/BottomTabNavigation';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { ProductDetail } from './OrderCreate/detail';
 
@@ -27,21 +27,29 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
 
   const activeTab = getActiveTabFromPath();
   const isDessertDetailRoute = location.pathname.startsWith('/desserts/');
+  const showBottomTab = !isDetailView && !isDessertDetailRoute && location.pathname !== '/login';
 
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home onDetailViewChange={onDetailViewChange} />} />
-        <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />
-        <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
-        <Route path="/saved" element={<ProtectedRoute><Saved onTabChange={() => {}} /></ProtectedRoute>} />
-        <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
-        <Route path="/login" element={<Login />} />
-        {/* 기타 경로는 홈으로 리다이렉트 */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <Box
+        sx={{
+          flex: 1,
+          minHeight: showBottomTab ? `calc(100vh - ${BOTTOM_TAB_HEIGHT}px)` : '100vh',
+        }}
+      >
+        <Routes>
+          <Route path="/" element={<Home onDetailViewChange={onDetailViewChange} />} />
+          <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />
+          <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
+          <Route path="/saved" element={<ProtectedRoute><Saved onTabChange={() => {}} /></ProtectedRoute>} />
+          <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
+          <Route path="/login" element={<Login />} />
+          {/* 기타 경로는 홈으로 리다이렉트 */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Box>
 
-      {!isDetailView && !isDessertDetailRoute && location.pathname !== '/login' && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
+      {showBottomTab && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
     </>
   );
 }
@@ -53,6 +61,7 @@ export default function MainPage() {
     <Stack
       sx={{
         width: 375,
+        minHeight: '100vh',
         backgroundColor: 'white',
         margin: '0 auto',
       }}

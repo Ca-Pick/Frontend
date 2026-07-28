@@ -44,6 +44,8 @@ function TabItem({ icon, label, isActive = false, onClick }: TabItemProps) {
   );
 }
 
+export const BOTTOM_TAB_HEIGHT = 72;
+
 type TabType = 'home' | 'order' | 'saved' | 'mypage';
 
 interface BottomTabNavigationProps {
@@ -61,7 +63,7 @@ export function BottomTabNavigation({ activeTab = 'home', onTabChange }: BottomT
         navigate('/');
         break;
       case 'order':
-        navigate('/order');
+        navigate(sessionStorage.getItem('orderLastPath') || '/order');
         break;
       case 'saved':
         navigate('/saved');
@@ -84,7 +86,8 @@ export function BottomTabNavigation({ activeTab = 'home', onTabChange }: BottomT
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 72,
+        height: BOTTOM_TAB_HEIGHT,
+        flexShrink: 0,
       }}
     >
       <TabItem icon={<HomeIcon />} label="홈" isActive={activeTab === 'home'} onClick={() => handleTabClick('home')} />

@@ -5,7 +5,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import SavedInstagramEmbed from "../../../../components/SavedInstagramEmbed";
 import { HeartToggle } from "../../../../components/HeartToggle";
 import { KakaoMap } from "../../../../components/KakaoMap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface BottomSectionProps {
     activeTab: "info" | "location" | "other";
@@ -30,6 +30,14 @@ interface BottomSectionProps {
 }
 
 export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, latitude, longitude, name, cakelists, instagramEmbed, instagramUrl, price, schedule, cakeId, saved, onCakeSelect }: BottomSectionProps) {
+    const hasOtherCakes = (cakelists?.filter(cake => cake.cakeId !== cakeId).length ?? 0) > 0;
+
+    useEffect(() => {
+        if (!hasOtherCakes && activeTab === "other") {
+            onTabChange("info");
+        }
+    }, [hasOtherCakes, activeTab, onTabChange]);
+
     const handleInstagramClick = () => {
         if (instagramUrl) {
             window.open(instagramUrl, '_blank');
@@ -46,34 +54,37 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                     py: 2
                 }}
             >
-                {(["info", "location", "other"] as const).map((tab) => (
-                    <Typography
-                        key={tab}
-                        variant="b2_b"
-                        onClick={() => onTabChange(tab)}
-                        sx={{
-                            cursor: "pointer",
-                            color: activeTab === tab ? colors.text.primary : "#757575",
-                            transition: "all 0.2s ease",
-                            pb: 1,
-                            borderBottom: activeTab === tab ? `3px solid ${colors.primary.main}` : "none",
-                            px: '6px'
-                        }}
-                    >
-                        {tab === "info" ? "상세정보" : tab === "location" ? "위치" : "다른 케이크"}
-                    </Typography>
-                ))}
+                {(["info", "location", "other"] as const).map((tab) => {
+                    const disabled = tab === "other" && !hasOtherCakes;
+                    return (
+                        <Typography
+                            key={tab}
+                            variant="b2_b"
+                            onClick={() => !disabled && onTabChange(tab)}
+                            sx={{
+                                cursor: disabled ? "not-allowed" : "pointer",
+                                color: disabled ? "#bdbdbd" : activeTab === tab ? colors.text.primary : "#757575",
+                                transition: "all 0.2s ease",
+                                pb: 1,
+                                borderBottom: activeTab === tab ? `3px solid ${colors.primary.main}` : "none",
+                                px: '6px'
+                            }}
+                        >
+                            {tab === "info" ? "상세정보" : tab === "location" ? "위치" : "다른 케이크"}
+                        </Typography>
+                    );
+                })}
             </Box>
             <Box>
                 {activeTab === "info" && <InfoSection tags={selectedTags} location={location} latitude={latitude} longitude={longitude} name={name} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} />}
                 {activeTab === "location" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
                         <LocationSection location={location} latitude={latitude} longitude={longitude} name={name} />
-                        <Box sx={{ height: "1px", bgcolor: colors.divider }} />
+                        {hasOtherCakes && <Box sx={{ height: "1px", bgcolor: colors.divider }} />}
                         <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} />
                     </Box>
                 }
-                {activeTab === "other" &&
+                {activeTab === "other" && hasOtherCakes &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
                         <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} />
                     </Box>}
@@ -145,6 +156,7 @@ function InfoSection({ tags = [], orderInfo = [], location, latitude, longitude,
     const allTags = [...orderInfo, ...tags];
     const [showMoreTags, setShowMoreTags] = useState(false);
     const displayedTags = showMoreTags ? allTags : allTags.slice(0, 5);
+    const hasOtherCakes = (cakelists?.filter(cake => cake.cakeId !== cakeId).length ?? 0) > 0;
     const handleInstagramClick = () => {
         if (instagramUrl) {
             window.open(instagramUrl, '_blank');
@@ -184,7 +196,7 @@ function InfoSection({ tags = [], orderInfo = [], location, latitude, longitude,
             </Box>
             <Box sx={{ height: "1px", bgcolor: colors.divider }} />
             <LocationSection location={location} latitude={latitude} longitude={longitude} name={name} />
-            <Box sx={{ height: "1px", bgcolor: colors.divider }} />
+            {hasOtherCakes && <Box sx={{ height: "1px", bgcolor: colors.divider }} />}
 
             <OtherSection cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} />
         </Box>
@@ -240,22 +252,25 @@ interface OtherSectionProps {
 
 function OtherSection({ cakelists, cakeId, onCakeSelect }: OtherSectionProps) {
     const otherCakes = cakelists?.filter(cake => cake.cakeId !== cakeId);
-    const formattedCakes = otherCakes && otherCakes.length > 0
-        ? otherCakes.map(cake => ({
-            cakeId: cake.cakeId,
-            instagramEmbed: cake.instagramEmbed,
-            saved: cake.saved,
-            cakeDetailTags: [],
-            cakeDetailCount: 0,
-          }))
-        : undefined;
+
+    if (!otherCakes || otherCakes.length === 0) {
+        return null;
+    }
+
+    const formattedCakes = otherCakes.map(cake => ({
+        cakeId: cake.cakeId,
+        instagramEmbed: cake.instagramEmbed,
+        saved: cake.saved,
+        cakeDetailTags: [],
+        cakeDetailCount: 0,
+    }));
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: 'flex-start' }}>
             <Typography variant="t2_b" sx={{ color: "black" }}>
                 이 가게의 다른 케이크
             </Typography>
-            {formattedCakes && <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} />}
+            <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} />
         </Box>
     );
 }
