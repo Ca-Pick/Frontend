@@ -12,14 +12,15 @@ export const getSavedCakes = async (): Promise<SavedCakesResponse> => {
   return response.data;
 };
 
-// 케이크 저장 (좋아요)
+// 케이크 저장 (좋아요) - 401은 HeartToggle이 자체 처리(로그인 이동 + pendingHeartAction 기록)하므로
+// 인터셉터의 자동 재발급/리다이렉트는 꺼서 중복 이동을 막는다
 export const saveCake = async (referenceId: number): Promise<SaveCakeResponse> => {
-  const response = await authClient.post(`/save/${referenceId}/like`, {});
+  const response = await authClient.post(`/save/${referenceId}/like`, {}, { skipAuthRedirect: true } as any);
   return response.data;
 };
 
-// 케이크 저장 취소 (좋아요 취소)
+// 케이크 저장 취소 (좋아요 취소) - 이유는 saveCake 참고
 export const unsaveCake = async (referenceId: number): Promise<DeleteCakeResponse> => {
-  const response = await authClient.delete(`/save/${referenceId}/like`);
+  const response = await authClient.delete(`/save/${referenceId}/like`, { skipAuthRedirect: true } as any);
   return response.data;
 };

@@ -1,11 +1,16 @@
 import { Box, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import imglogoText from '../../../assets/logos/logo_text.svg';
 
 export function LoginForm() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const oauthBaseUrl = import.meta.env.VITE_OAUTH_BASE_URL || 'http://localhost:8080';
+  // 로그인 성공 시 돌아갈 곳과 동일한 출처 - 검색/상세(주문서)에서 왔으면 그 화면으로,
+  // 큐레이션/저장함/마이페이지에서 왔으면(from이 있어도) 그냥 홈으로 보낸다
+  const redirectTarget = searchParams.get('redirect') || location.state?.from;
 
   const handleKakaoLogin = () => {
     window.location.href = `${oauthBaseUrl}/oauth2/authorization/kakao?redirect_uri=${encodeURIComponent(window.location.origin)}`;
@@ -16,10 +21,16 @@ export function LoginForm() {
   };
 
   const handleGoHome = () => {
-    // 로그인을 포기하고 홈으로 가는 것이므로, 남아있으면 홈 진입 시 저장함/마이페이지로
-    // 자동 리다이렉트되어 다시 401 로그인 화면으로 튕기는 루프가 생기는 값을 지워준다
+    // 남아있으면 홈 진입 시 저장함/마이페이지로 자동 리다이렉트되어 다시 401 로그인
+    // 화면으로 튕기는 루프가 생기는 값을 지워준다
     localStorage.removeItem('loginRedirectUrl');
-    navigate('/', { replace: true });
+    // 검색/상세(주문서 흐름)에서 온 경우만 그 화면으로 복귀 - 큐레이션/저장함/
+    // 마이페이지에서 온 경우는 로그인 포기 시 그냥 홈으로 보낸다
+    if (redirectTarget && redirectTarget.startsWith('/order')) {
+      navigate(redirectTarget, { replace: true });
+    } else {
+      navigate('/', { replace: true });
+    }
   };
 
 

@@ -1,4 +1,4 @@
-import { Box, Typography, Button, CircularProgress, Alert } from '@mui/material';
+import { Box, Typography, CircularProgress, Alert } from '@mui/material';
 import { colors } from '../../../theme/colors';
 import { QuestionChips } from '../../../components/QuestionChips';
 import { useState, useEffect } from 'react';
@@ -269,15 +269,12 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                                     gap: 4
                                 }}>
                                 <CarouselIndicators current={3} total={4} onChange={onCarouselChange} />
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    size="xlarge"
-                                    onClick={onComplete}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? '검색 중...' : '완료'}
-                                </Button>
+                                <StepNavigation
+                                    onNext={() => onComplete?.()}
+                                    onPrev={() => onPrev?.()}
+                                    nextLabel={isLoading ? '검색 중...' : '완료'}
+                                    nextDisabled={isLoading}
+                                />
                             </Box>
                         </>
                     )}

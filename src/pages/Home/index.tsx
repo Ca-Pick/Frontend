@@ -1,4 +1,4 @@
-import { Box, Snackbar, Alert } from '@mui/material';
+import { Box, Snackbar, Alert, CircularProgress } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { HeroSection } from './section/HeroSection';
@@ -8,6 +8,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { consumePendingHeartAction, setPendingHeartToast } from '../../utils/pendingHeartAction';
 import { saveCake, unsaveCake } from '../../api/services/saveService';
 import { getMyInfo } from '../../api/services/memberService';
+import { setSavedCakeInCache } from '../../hooks/queries/useSavedCakes';
 
 type HomeView = 'home' | 'detail';
 
@@ -26,6 +27,11 @@ export function Home({ onDetailViewChange }: HomeProps) {
   const scrollBeforeDetailRef = useRef(0);
   const [withdrawSuccessOpen, setWithdrawSuccessOpen] = useState(
     Boolean((location.state as { withdrawSuccess?: boolean } | null)?.withdrawSuccess)
+  );
+  // 로그인 리다이렉트로 홈에 도착한 경우, 목적지로 이동시키기 전까지는 실제 홈 콘텐츠 대신
+  // 스피너만 보여준다 - 로그인 성공 화면에 홈이 잠깐 스쳐 보이는 걸 막기 위함
+  const [isCheckingRedirect, setIsCheckingRedirect] = useState(
+    () => !!localStorage.getItem('loginRedirectUrl')
   );
 
   // 탈퇴 완료 안내를 한 번만 표시하고 history state에서 제거
@@ -89,7 +95,10 @@ export function Home({ onDetailViewChange }: HomeProps) {
           .then(() => true)
           .catch(() => false);
 
-        if (!loggedIn) return;
+        if (!loggedIn) {
+          setIsCheckingRedirect(false);
+          return;
+        }
 
         const pendingHeartAction = consumePendingHeartAction();
         if (pendingHeartAction) {
@@ -97,12 +106,11 @@ export function Home({ onDetailViewChange }: HomeProps) {
             if (pendingHeartAction.action === 'save') {
               await saveCake(pendingHeartAction.referenceId);
               setPendingHeartToast(pendingHeartAction.referenceId);
-              // 저장된 케이크 캐시 갱신
-              queryClient.invalidateQueries({ queryKey: ['savedCakes'] });
+              // 저장된 케이크 캐시에 직접 반영 (mutation 훅을 거치지 않으므로 여기서 캐시를 채워야 함)
+              setSavedCakeInCache(queryClient, pendingHeartAction.referenceId, true);
             } else {
               await unsaveCake(pendingHeartAction.referenceId);
-              // 저장된 케이크 캐시 갱신
-              queryClient.invalidateQueries({ queryKey: ['savedCakes'] });
+              setSavedCakeInCache(queryClient, pendingHeartAction.referenceId, false);
             }
           } catch (error) {
             console.error('로그인 후 찜 상태 복원 실패:', error);
@@ -135,6 +143,14 @@ export function Home({ onDetailViewChange }: HomeProps) {
       window.scrollTo(0, scrollBeforeDetailRef.current);
     }
   }, [view]);
+
+  if (isCheckingRedirect) {
+    return (
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', py: 8 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (view === 'detail') {
     return (
