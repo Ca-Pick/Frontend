@@ -117,6 +117,13 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
     }
   }, [view, currentStep, searchParams]);
 
+  // view가 바뀔 때마다(로그인 리다이렉트로 URL에서 곧바로 'detail'로 복원되는 경우 포함)
+  // 상위(MainPage)의 하단탭 표시 여부를 항상 동기화한다. 각 핸들러에서 개별적으로
+  // onDetailViewChange를 호출하면 이렇게 상태로 직접 복원되는 경로를 놓치기 쉽다.
+  useEffect(() => {
+    onDetailViewChange?.(view === 'detail');
+  }, [view]);
+
   // 지금 보고 있는 화면이 steps든 saved든 detail이든 상관없이, 현재 URL을 그대로
   // 기억해둔다 - 하단탭 "검색"을 다시 눌렀을 때 이 경로로 되돌아오기 위함
   // (BottomTabNavigation은 항상 '/order'로만 navigate하므로 쿼리를 스스로 기억 못 함)
