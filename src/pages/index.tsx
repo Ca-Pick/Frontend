@@ -8,6 +8,7 @@ import { MyPage } from './MyPage';
 import { Login } from './Login';
 import { BottomTabNavigation, BOTTOM_TAB_HEIGHT } from '../components/BottomTabNavigation';
 import { ProtectedRoute } from '../components/ProtectedRoute';
+import { LoginRedirectGate } from '../components/LoginRedirectGate';
 import { ProductDetail } from './OrderCreate/detail';
 
 type TabType = 'home' | 'order' | 'saved' | 'mypage';
@@ -37,16 +38,18 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
           minHeight: showBottomTab ? `calc(100vh - ${BOTTOM_TAB_HEIGHT}px)` : '100vh',
         }}
       >
-        <Routes>
-          <Route path="/" element={<Home onDetailViewChange={onDetailViewChange} />} />
-          <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />
-          <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
-          <Route path="/saved" element={<ProtectedRoute><Saved onTabChange={() => {}} /></ProtectedRoute>} />
-          <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
-          <Route path="/login" element={<Login />} />
-          {/* 기타 경로는 홈으로 리다이렉트 */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <LoginRedirectGate>
+          <Routes>
+            <Route path="/" element={<Home onDetailViewChange={onDetailViewChange} />} />
+            <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />
+            <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
+            <Route path="/saved" element={<ProtectedRoute><Saved onTabChange={() => {}} /></ProtectedRoute>} />
+            <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
+            <Route path="/login" element={<Login />} />
+            {/* 기타 경로는 홈으로 리다이렉트 */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </LoginRedirectGate>
       </Box>
 
       {showBottomTab && <BottomTabNavigation activeTab={activeTab} onTabChange={() => {}} />}
