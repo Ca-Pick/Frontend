@@ -5,6 +5,7 @@ import {
   saveCake,
   unsaveCake,
 } from '../../api/services/saveService';
+import { isLoggedIn } from '../../utils/cookieUtils';
 import type { SavedCakesResponse } from '../../types/api';
 
 export const SAVED_CAKES_KEY = ['savedCakes'];
@@ -30,13 +31,16 @@ export function setSavedCakeInCache(queryClient: QueryClient, referenceId: numbe
   });
 }
 
-// 저장한 케이크 목록 조회. 마운트 시 자동으로 호출하지 않음 - 좋아요 클릭(mutation)이 캐시를 직접 채우므로,
-// 클릭 전까지는 각 화면이 넘겨준 initialSaved로 하트를 표시하고 불필요한(비회원 401) 요청을 만들지 않음
+// 저장한 케이크 목록 조회. 로그인 상태일 때만 자동 조회한다.
+// 비회원이면 쿼리를 안 돌려서(isFetched=false) 각 화면이 넘겨준 initialSaved(=항상 false)로 대체되고,
+// 불필요한 401 요청도 만들지 않는다.
+// 회원이면 실제로 전체 목록을 한 번 정확히 받아와야, save/unsave로 부분 갱신되는 캐시(setSavedCakeInCache)가
+// 아무 화면에서도 "일부만 채워진 캐시"로 오판되지 않고 화면 간 좋아요 상태가 정확히 동기화된다.
 export const useSavedCakes = () => {
   return useQuery({
     queryKey: SAVED_CAKES_KEY,
     queryFn: () => getSavedCakes(),
-    enabled: false,
+    enabled: isLoggedIn(),
     retry: false,
     staleTime: 1000 * 60 * 5, // 5분
     gcTime: 1000 * 60 * 30, // 30분

@@ -54,9 +54,13 @@ export function MyPage() {
       console.error('로그아웃 실패:', error);
     } finally {
       localStorage.removeItem('loginRedirectUrl');
-      // 로그인 상태에서 받아온 저장 목록 캐시가 남아있으면 로그아웃 후에도
-      // 하트가 채워진 채로 보이므로 로그아웃과 동시에 비워준다
+      // 로그인 상태에서 받아온 saved 필드가 캐시에 남아있으면 로그아웃 후에도
+      // 하트가 채워진 채로 보이므로, saved 필드를 포함하는 쿼리를 모두 비운다
+      // (savedCakes 외에 큐레이션/검색/상세도 initialSaved로 같은 값을 쓰고 있음)
       queryClient.removeQueries({ queryKey: ['savedCakes'] });
+      queryClient.removeQueries({ queryKey: ['recommended'] });
+      queryClient.removeQueries({ queryKey: ['search'] });
+      queryClient.removeQueries({ queryKey: ['dessert-detail'] });
       // 주문서 탭에 남아있던 이전 세션의 작성 상태(스텝/검색조건 등)를
       // 로그아웃 후에도 그대로 복원하면 안 되므로 함께 비운다
       sessionStorage.removeItem('orderLastPath');
@@ -77,6 +81,9 @@ export function MyPage() {
     try {
       await withdraw();
       queryClient.removeQueries({ queryKey: ['savedCakes'] });
+      queryClient.removeQueries({ queryKey: ['recommended'] });
+      queryClient.removeQueries({ queryKey: ['search'] });
+      queryClient.removeQueries({ queryKey: ['dessert-detail'] });
       sessionStorage.removeItem('orderLastPath');
       navigate('/', { replace: true, state: { withdrawSuccess: true } });
     } catch (error) {
