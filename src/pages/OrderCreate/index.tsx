@@ -220,6 +220,24 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
     }
   };
 
+  const handleReset = () => {
+    setCurrentStep(1);
+    setSearchParams({ ...EMPTY_SEARCH_PARAMS });
+    setSelectedCakeId(undefined);
+    setDetailStack([]);
+    setActiveSearchParams(null);
+    setUrlQuery({}, { replace: true });
+  };
+
+  const hasStepInput =
+    currentStep > 1 ||
+    !!searchParams.place ||
+    !!searchParams.recipient ||
+    !!searchParams.shape ||
+    !!searchParams.color ||
+    !!searchParams.mood ||
+    searchParams.detailTags.length > 0;
+
   const handleStepNext = () => {
     setCurrentStep(prev => prev + 1);
   };
@@ -308,6 +326,8 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
           onCarouselChange={handleCarouselChange}
           selectedLocation={searchParams.place || ''}
           onLocationChange={(location) => handleSearchParamChange('place', location)}
+          onReset={handleReset}
+          showReset={hasStepInput}
         />
       )}
       {currentStep >= 2 && (

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { colors } from '../../../theme/colors';
 import CarouselIndicators from '../../../components/CarouselIndicators';
 import { StepNavigation } from '../../../components/StepNavigation';
@@ -46,9 +46,11 @@ interface OrderStep1Props {
   onCarouselChange?: (index: number) => void;
   selectedLocation?: string;
   onLocationChange?: (location: string) => void;
+  onReset?: () => void;
+  showReset?: boolean;
 }
 
-export function OrderStep1({ onNext, onCarouselChange, selectedLocation = '', onLocationChange }: OrderStep1Props) {
+export function OrderStep1({ onNext, onCarouselChange, selectedLocation = '', onLocationChange, onReset, showReset = false }: OrderStep1Props) {
   return (
     <Box
       sx={{
@@ -91,6 +93,22 @@ export function OrderStep1({ onNext, onCarouselChange, selectedLocation = '', on
           >
             위치를 선택하면 추천을 시작해요.
           </Typography>
+          <Box sx={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            visibility: showReset ? 'visible' : 'hidden'
+          }}>
+            <Button
+              variant="text"
+              color="secondary"
+              size="small"
+              onClick={onReset}
+              tabIndex={showReset ? 0 : -1}
+            >
+              초기화
+            </Button>
+          </Box>
         </Box>
       </Box>
       <Box

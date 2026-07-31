@@ -119,7 +119,7 @@ export function OrderStep2({ currentStep = 2, onNext, onPrev, onComplete, onCaro
                         <QuestionChips
                             number={1}
                             title="누구를 위한 케이크인가요?"
-                            chips={['친구', '가족', '동료', '연인']}
+                            chips={['친구', '가족', '동료', '연인', '서포트']}
                             selectedValue={selectedRecipient}
                             onChipSelect={(chip) => {
                                 handleChipSelect(chip);
