@@ -5,7 +5,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import SavedInstagramEmbed from "../../../../components/SavedInstagramEmbed";
 import { HeartToggle } from "../../../../components/HeartToggle";
 import { KakaoMap } from "../../../../components/KakaoMap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 interface BottomSectionProps {
     activeTab: "info" | "location" | "other";
@@ -251,19 +251,23 @@ interface OtherSectionProps {
 }
 
 function OtherSection({ cakelists, cakeId, onCakeSelect }: OtherSectionProps) {
-    const otherCakes = cakelists?.filter(cake => cake.cakeId !== cakeId);
+    // cakelists/cakeId가 실제로 바뀌지 않았는데도 매 렌더링마다 filter/map으로 새
+    // 배열을 만들면, 참조가 매번 달라져 SavedInstagramEmbed의 cakes 변경 감지
+    // useEffect가 오작동해 캐러셀 위치(currentIndex)가 계속 첫 번째로 리셋된다.
+    const formattedCakes = useMemo(() => {
+        const otherCakes = cakelists?.filter(cake => cake.cakeId !== cakeId) ?? [];
+        return otherCakes.map(cake => ({
+            cakeId: cake.cakeId,
+            instagramEmbed: cake.instagramEmbed,
+            saved: cake.saved,
+            cakeDetailTags: [],
+            cakeDetailCount: 0,
+        }));
+    }, [cakelists, cakeId]);
 
-    if (!otherCakes || otherCakes.length === 0) {
+    if (formattedCakes.length === 0) {
         return null;
     }
-
-    const formattedCakes = otherCakes.map(cake => ({
-        cakeId: cake.cakeId,
-        instagramEmbed: cake.instagramEmbed,
-        saved: cake.saved,
-        cakeDetailTags: [],
-        cakeDetailCount: 0,
-    }));
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: 'flex-start' }}>

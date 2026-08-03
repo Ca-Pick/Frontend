@@ -1,4 +1,4 @@
-import { Box, Snackbar, Alert } from '@mui/material';
+import { Box, Snackbar, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { HeroSection } from './section/HeroSection';
 import InstagramEmbdeSection from './section/InstagramEmbdeSection';
@@ -102,9 +102,19 @@ export function Home({ onDetailViewChange }: HomeProps) {
         onClose={() => setWithdrawSuccessOpen(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert severity="success" onClose={() => setWithdrawSuccessOpen(false)}>
-          탈퇴가 완료되었습니다.
-        </Alert>
+        <Box
+          sx={{
+            backgroundColor: 'rgba(0, 0, 0, 0.80)',
+            color: '#fff',
+            padding: '4px 16px',
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '94px',
+          }}
+        >
+          <Typography variant="label_4">탈퇴가 완료되었습니다.</Typography>
+        </Box>
       </Snackbar>
     </Box>
   );

@@ -87,8 +87,12 @@ export function TagSearch({
                   label={chip}
                   variant="outlined"
                   color="primary"
-                  onClick={() => onResultChipClick(chip)}
-                  sx={{ cursor: 'pointer' }}
+                  disabled={selectedChips.length >= 10}
+                  onClick={() => {
+                    if (selectedChips.length >= 10) return;
+                    onResultChipClick(chip);
+                  }}
+                  sx={{ cursor: selectedChips.length >= 10 ? 'not-allowed' : 'pointer' }}
                 />
               ))}
             </Box>

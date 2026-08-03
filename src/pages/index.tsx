@@ -28,7 +28,11 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
 
   const activeTab = getActiveTabFromPath();
   const isDessertDetailRoute = location.pathname.startsWith('/desserts/');
-  const showBottomTab = !isDetailView && !isDessertDetailRoute && location.pathname !== '/login';
+  // isDetailView는 홈('/')과 주문서('/order')만 갱신하는 값이라, 저장함/마이페이지 등
+  // 다른 화면으로 이동해도 리셋되지 않고 남아있을 수 있다(로그인 리다이렉트 후 좋아요 →
+  // 저장함으로 바로 이동하는 흐름 등). 그 값을 실제로 소유한 화면에 있을 때만 반영한다.
+  const ownsDetailView = location.pathname === '/' || location.pathname.startsWith('/order');
+  const showBottomTab = (!ownsDetailView || !isDetailView) && !isDessertDetailRoute && location.pathname !== '/login';
 
   return (
     <>

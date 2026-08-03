@@ -6,6 +6,7 @@ import { OrderStep2 } from './section/OrderStep2';
 import { ProductDetail } from './detail/index';
 import { SavedFilteredHeader } from '../Saved/section/SavedFilteredHeader';
 import SavedInstagramEmbed from '../../components/SavedInstagramEmbed';
+import { NoSearchResult } from './section/NoSearchResult';
 import { colors } from '../../theme/colors';
 import { BOTTOM_TAB_HEIGHT } from '../../components/BottomTabNavigation';
 import { useSearchDesserts } from '../../hooks';
@@ -221,11 +222,13 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
   };
 
   const handleReset = () => {
+    setView('steps');
     setCurrentStep(1);
     setSearchParams({ ...EMPTY_SEARCH_PARAMS });
     setSelectedCakeId(undefined);
     setDetailStack([]);
     setActiveSearchParams(null);
+    onDetailViewChange?.(false);
     setUrlQuery({}, { replace: true });
   };
 
@@ -291,7 +294,11 @@ export function OrderCreate({ onDetailViewChange }: OrderCreateProps) {
           </Alert>
         )}
 
-        {searchQuery.data && (
+        {searchQuery.data && sortedCakes.length === 0 && (
+          <NoSearchResult onNavigateToOrder={handleReset} />
+        )}
+
+        {searchQuery.data && sortedCakes.length > 0 && (
           <>
             <SavedFilteredHeader
               onBack={handleBackFromSaved}

@@ -3,11 +3,13 @@ import { colors } from '../../theme/colors';
 import { BOTTOM_TAB_HEIGHT } from '../../components/BottomTabNavigation';
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useNavigationType } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchSavedItems, toggleLike } from '../../api/saved';
 import { SavedHeader } from './section/SavedHeader';
 import SavedInstagramEmbed, { EMBED_COUNT } from '../../components/SavedInstagramEmbed';
 import { NoSaved } from './section/NoSaved';
+import { SAVED_CAKES_KEY } from '../../hooks/queries/useSavedCakes';
+import type { SavedCakesResponse } from '../../types/api';
 
 interface SavedProps {
   onTabChange?: (tab: 'order') => void;
@@ -20,11 +22,33 @@ export function Saved({ onTabChange }: SavedProps) {
   const [sortBy, setSortBy] = useState<'popular' | 'recent'>('popular');
   const [localLikeState, setLocalLikeState] = useState<Record<string, boolean>>({});
 
+  const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ['savedItems', sortBy, selectedTags],
     queryFn: () => fetchSavedItems(sortBy, selectedTags),
     staleTime: 1000 * 60 * 5,
   });
+
+  // 저장함 목록은 서버가 내려주는 실제 저장 상태 그 자체이므로, 다른 화면(홈/검색/상세)이
+  // 공유하는 하트 캐시(savedCakes)가 낙관적 업데이트 타이밍 차이로 어긋나 있더라도
+  // 저장함에 들어올 때마다 이 목록을 정답으로 삼아 강제로 동기화한다.
+  useEffect(() => {
+    if (!data?.items) return;
+    queryClient.setQueryData<SavedCakesResponse>(SAVED_CAKES_KEY, {
+      success: true,
+      timestamp: new Date().toISOString(),
+      data: {
+        cakes: data.items
+          .filter((item): item is typeof item & { cakeId: number } => item.cakeId !== undefined)
+          .map((item) => ({
+            cakeId: item.cakeId,
+            instagramEmbed: item.instagramEmbed ?? '',
+            cakedetailtags: item.cakeDetailTags ?? [],
+          })),
+      },
+    });
+  }, [data, queryClient]);
 
   const items = useMemo(() => {
     if (!data?.items) return [];
@@ -103,7 +127,7 @@ export function Saved({ onTabChange }: SavedProps) {
     return (
       <Box sx={{ width: '100%', backgroundColor: colors.background, minHeight: 'calc(100vh - 72px)' }}>
         <SavedHeader count={savedCount} />
-        <Box sx={{ px: 4 }}>
+        <Box sx={{ px: 4, pb: 2 }}>
           <SavedInstagramEmbed cakes={items} onDetailClick={handleDetailClick} />
         </Box>
       </Box>
