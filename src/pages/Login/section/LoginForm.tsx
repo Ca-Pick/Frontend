@@ -1,7 +1,9 @@
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import imglogoText from '../../../assets/logos/logo_text.svg';
+import imgNaverLogin from '../../../assets/button/naver_login.svg';
+import imgKakaoLogin from '../../../assets/button/kakao_login.svg';
 import { clearPendingHeartAction } from '../../../utils/pendingHeartAction';
 
 export function LoginForm() {
@@ -73,54 +75,60 @@ export function LoginForm() {
       />
       <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
         {/* 카카오톡 로그인 버튼 */}
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
+        <Box
+          component="button"
           onClick={handleKakaoLogin}
           sx={{
-            backgroundColor: '#FEE500',
-            color: '#000000',
-            fontWeight: 600,
-            fontSize: '16px',
+            width: '100%',
             height: '48px',
+            padding: 0,
+            border: 'none',
             borderRadius: '8px',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#E6CC00',
-            },
-            '&:active': {
-              backgroundColor: '#D9B800',
-            },
+            overflow: 'hidden',
+            cursor: 'pointer',
+            backgroundColor: 'transparent',
           }}
         >
-          카카오톡으로 계속하기
-        </Button>
+          <Box
+            component="img"
+            src={imgKakaoLogin}
+            alt="카카오 로그인"
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+          />
+        </Box>
 
         {/* 네이버 로그인 버튼 */}
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
+        <Box
+          component="button"
           onClick={handleNaverLogin}
           sx={{
-            backgroundColor: '#03C75A',
-            color: '#FFFFFF',
-            fontWeight: 600,
-            fontSize: '16px',
+            width: '100%',
             height: '48px',
+            padding: 0,
+            border: 'none',
             borderRadius: '8px',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#02A84E',
-            },
-            '&:active': {
-              backgroundColor: '#017E3F',
-            },
+            overflow: 'hidden',
+            cursor: 'pointer',
+            backgroundColor: 'transparent',
           }}
         >
-          네이버로 계속하기
-        </Button>
+          <Box
+            component="img"
+            src={imgNaverLogin}
+            alt="네이버 아이디로 로그인"
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+          />
+        </Box>
 
       </Box>
     </Box>
