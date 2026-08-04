@@ -12,6 +12,11 @@ export function setPendingHeartAction(referenceId: number, action: HeartActionTy
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ referenceId, action }));
 }
 
+// 로그인을 취소(뒤로가기 등)했을 때 대기 중인 하트 액션을 폐기하기 위한 함수
+export function clearPendingHeartAction() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
 export function consumePendingHeartAction(): PendingHeartAction | null {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return null;

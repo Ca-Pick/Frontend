@@ -43,16 +43,22 @@ export function MenuSection({
         </Typography>
         <Typography
           variant="t3_b"
+          onClick={onTermsClick}
           sx={{
             color: '#000',
+            cursor: 'pointer',
+            width: 'fit-content',
           }}
         >
           이용약관
         </Typography>
         <Typography
           variant="t3_b"
+          onClick={onPrivacyClick}
           sx={{
             color: '#000',
+            cursor: 'pointer',
+            width: 'fit-content',
           }}
         >
           개인정보처리방침

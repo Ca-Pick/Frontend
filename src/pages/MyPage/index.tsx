@@ -40,11 +40,11 @@ export function MyPage() {
   }, []);
 
   const handleTermsClick = () => {
-    console.log('이용약관 클릭');
+    navigate('/mypage/terms');
   };
 
   const handlePrivacyClick = () => {
-    console.log('개인정보처리방침 클릭');
+    navigate('/mypage/privacy');
   };
 
   const handleLogoutClick = async () => {

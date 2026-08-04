@@ -2,6 +2,7 @@ import { Box, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import imglogoText from '../../../assets/logos/logo_text.svg';
+import { clearPendingHeartAction } from '../../../utils/pendingHeartAction';
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ export function LoginForm() {
     // 남아있으면 홈 진입 시 저장함/마이페이지로 자동 리다이렉트되어 다시 401 로그인
     // 화면으로 튕기는 루프가 생기는 값을 지워준다
     localStorage.removeItem('loginRedirectUrl');
+    // 로그인을 취소하는 것이므로, 대기 중이던 좋아요 액션도 함께 폐기한다 -
+    // 지우지 않으면 나중에 전혀 다른 화면에서 로그인했을 때 이 액션이 그대로 재실행되는 버그가 생김
+    clearPendingHeartAction();
     // 검색/상세(주문서 흐름)에서 온 경우만 그 화면으로 복귀 - 큐레이션/저장함/
     // 마이페이지에서 온 경우는 로그인 포기 시 그냥 홈으로 보낸다
     if (redirectTarget && redirectTarget.startsWith('/order')) {

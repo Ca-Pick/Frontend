@@ -5,6 +5,8 @@ import { Home } from './Home';
 import { OrderCreate } from './OrderCreate';
 import { Saved } from './Saved';
 import { MyPage } from './MyPage';
+import { Terms } from './MyPage/Terms';
+import { Privacy } from './MyPage/Privacy';
 import { Login } from './Login';
 import { BottomTabNavigation, BOTTOM_TAB_HEIGHT } from '../components/BottomTabNavigation';
 import { ProtectedRoute } from '../components/ProtectedRoute';
@@ -28,11 +30,12 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
 
   const activeTab = getActiveTabFromPath();
   const isDessertDetailRoute = location.pathname.startsWith('/desserts/');
+  const isMypageLegalRoute = location.pathname === '/mypage/terms' || location.pathname === '/mypage/privacy';
   // isDetailView는 홈('/')과 주문서('/order')만 갱신하는 값이라, 저장함/마이페이지 등
   // 다른 화면으로 이동해도 리셋되지 않고 남아있을 수 있다(로그인 리다이렉트 후 좋아요 →
   // 저장함으로 바로 이동하는 흐름 등). 그 값을 실제로 소유한 화면에 있을 때만 반영한다.
   const ownsDetailView = location.pathname === '/' || location.pathname.startsWith('/order');
-  const showBottomTab = (!ownsDetailView || !isDetailView) && !isDessertDetailRoute && location.pathname !== '/login';
+  const showBottomTab = (!ownsDetailView || !isDetailView) && !isDessertDetailRoute && !isMypageLegalRoute && location.pathname !== '/login';
 
   return (
     <>
@@ -49,6 +52,8 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
             <Route path="/order/*" element={<OrderCreate onDetailViewChange={onDetailViewChange} />} />
             <Route path="/saved" element={<ProtectedRoute><Saved onTabChange={() => {}} /></ProtectedRoute>} />
             <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
+            <Route path="/mypage/terms" element={<ProtectedRoute><Terms /></ProtectedRoute>} />
+            <Route path="/mypage/privacy" element={<ProtectedRoute><Privacy /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             {/* 기타 경로는 홈으로 리다이렉트 */}
             <Route path="*" element={<Navigate to="/" replace />} />
