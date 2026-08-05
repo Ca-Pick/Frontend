@@ -1,8 +1,8 @@
 import { Box, Typography, Button } from '@mui/material';
 import { colors } from '../../../theme/colors';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import imgCake from '../../../assets/images/cake.svg';
-import imgLogo from '../../../assets/logos/logo_sm.svg';
+import imgCake from '../../../assets/images/cake.png';
+import imgLogo from '../../../assets/logos/logo_sm.png';
 
 interface HeroSectionProps {
     onNavigateToOrder?: () => void;
@@ -27,6 +27,8 @@ export function HeroSection( {onNavigateToOrder }: HeroSectionProps) {
           position: 'absolute',
           right: '16px',
           bottom: '49px',
+          width: '140px',
+          height: '169px',
           objectFit: 'cover',
         }}
       />
@@ -42,8 +44,8 @@ export function HeroSection( {onNavigateToOrder }: HeroSectionProps) {
           component="img"
           src={imgLogo}
           sx={{
-            width: '53px',
-            height: '30px',
+            width: '60px',
+            height: '60px',
             objectFit: 'cover',
           }}
         />

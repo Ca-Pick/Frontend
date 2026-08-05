@@ -1,7 +1,7 @@
 import { Box, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import imglogoText from '../../../assets/logos/logo_text.svg';
+import imglogoText from '../../../assets/logos/logo_text.png';
 import imgNaverLogin from '../../../assets/button/naver_login.svg';
 import imgKakaoLogin from '../../../assets/button/kakao_login.svg';
 import { clearPendingHeartAction } from '../../../utils/pendingHeartAction';
@@ -70,6 +70,8 @@ export function LoginForm() {
         src={imglogoText}
         alt="Ca-Pick Logo"
         sx={{
+          width: '120px',
+          height: '120px',
           objectFit: 'cover',
         }}
       />

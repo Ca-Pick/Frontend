@@ -10,9 +10,12 @@ interface HeartToggleProps {
   referenceId: number;
   initialSaved?: boolean;
   onClick?: (isSaved: boolean) => void;
+  // 로그인 필요 시 되돌아올 경로. 홈 화면의 상세뷰처럼 URL이 바뀌지 않는 곳에서
+  // 쓰일 때는 location.pathname이 실제 상세 경로를 반영하지 못하므로 명시적으로 지정한다.
+  redirectPath?: string;
 }
 
-export function HeartToggle({ referenceId, initialSaved = false, onClick }: HeartToggleProps) {
+export function HeartToggle({ referenceId, initialSaved = false, onClick, redirectPath }: HeartToggleProps) {
   // 저장/취소 직후 서버 응답을 기다리는 동안 즉시 반영할 낙관적 업데이트 값
   const [optimisticSaved, setOptimisticSaved] = useState<boolean | null>(null);
   const [openToast, setOpenToast] = useState(false);
@@ -66,7 +69,7 @@ export function HeartToggle({ referenceId, initialSaved = false, onClick }: Hear
       if (error.response?.status === 401) {
         // 로그인이 필요한 경우 - 이어서 실행할 액션을 기록해두고 로그인 페이지로 이동
         setPendingHeartAction(referenceId, newState ? 'save' : 'unsave');
-        navigate('/login', { state: { from: location.pathname + location.search } });
+        navigate('/login', { state: { from: redirectPath ?? (location.pathname + location.search) } });
       } else {
         console.error('API 호출 실패:', error);
       }

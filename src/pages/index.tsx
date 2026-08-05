@@ -18,6 +18,11 @@ type TabType = 'home' | 'order' | 'saved' | 'mypage';
 function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boolean; onDetailViewChange: (isDetail: boolean) => void }) {
   const location = useLocation();
   const navigate = useNavigate();
+  // LoginRedirectGate가 컨텐츠를 가리는 것과 정확히 같은 렌더에서 하단 탭도 같이 숨기기 위해,
+  // 초기값도 LoginRedirectGate와 동일하게 localStorage를 동기적으로 읽어서 계산한다.
+  const [isCheckingRedirect, setIsCheckingRedirect] = useState(
+    () => !!localStorage.getItem('loginRedirectUrl')
+  );
 
   const getActiveTabFromPath = (): TabType => {
     const path = location.pathname;
@@ -35,7 +40,7 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
   // 다른 화면으로 이동해도 리셋되지 않고 남아있을 수 있다(로그인 리다이렉트 후 좋아요 →
   // 저장함으로 바로 이동하는 흐름 등). 그 값을 실제로 소유한 화면에 있을 때만 반영한다.
   const ownsDetailView = location.pathname === '/' || location.pathname.startsWith('/order');
-  const showBottomTab = (!ownsDetailView || !isDetailView) && !isDessertDetailRoute && !isMypageLegalRoute && location.pathname !== '/login';
+  const showBottomTab = (!ownsDetailView || !isDetailView) && !isDessertDetailRoute && !isMypageLegalRoute && location.pathname !== '/login' && !isCheckingRedirect;
 
   return (
     <>
@@ -45,7 +50,7 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
           minHeight: showBottomTab ? `calc(100vh - ${BOTTOM_TAB_HEIGHT}px)` : '100vh',
         }}
       >
-        <LoginRedirectGate>
+        <LoginRedirectGate isChecking={isCheckingRedirect} setIsChecking={setIsCheckingRedirect}>
           <Routes>
             <Route path="/" element={<Home onDetailViewChange={onDetailViewChange} />} />
             <Route path="/desserts/:cakeId" element={<ProductDetail onBack={() => navigate(-1)} />} />

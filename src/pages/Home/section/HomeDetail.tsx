@@ -33,6 +33,7 @@ export function HomeDetail({ cakeId, onBack }: HomeDetailProps) {
       onBack={handleBackFromDetail}
       cakeId={selectedCakeId}
       onCakeSelect={handleCakeSelectInDetail}
+      useDessertRedirect
     />
   );
 }

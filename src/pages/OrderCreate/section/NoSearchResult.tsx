@@ -1,6 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import imgSavedCake from '../../../assets/images/cake.svg';
+import imgSavedCake from '../../../assets/images/cake.png';
 
 interface NoSearchResultProps {
     onNavigateToOrder?: () => void;
@@ -23,6 +23,8 @@ export function NoSearchResult({ onNavigateToOrder }: NoSearchResultProps) {
                     component="img"
                     src={imgSavedCake}
                     sx={{
+                        width: '140px',
+                        height: '169px',
                         objectFit: 'cover',
                     }}
                 />

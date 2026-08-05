@@ -32,9 +32,12 @@ interface InstagramCarouselProps {
   onDetailClick?: (cakeId?: number) => void;
   cakes: typeof FALLBACK_CAKES | any[];
   showChips?: boolean;
+  // 홈처럼 URL이 상세뷰와 동기화되지 않는 곳에 임베드된 경우, 로그인 후 되돌아올 경로를
+  // 이 카드가 보여주는 케이크의 상세 라우트로 명시한다.
+  useDessertRedirect?: boolean;
 }
 
-const InstagramCarousel = React.memo(({ currentIndex, onDetailClick, cakes, showChips = false }: InstagramCarouselProps) => {
+const InstagramCarousel = React.memo(({ currentIndex, onDetailClick, cakes, showChips = false, useDessertRedirect }: InstagramCarouselProps) => {
   const currentCake = cakes.length > 0 ? cakes[0] : null;
 
   return (
@@ -87,6 +90,7 @@ const InstagramCarousel = React.memo(({ currentIndex, onDetailClick, cakes, show
             <HeartToggle
               referenceId={currentCake.cakeId}
               initialSaved={currentCake.saved}
+              redirectPath={useDessertRedirect ? `/desserts/${currentCake.cakeId}` : undefined}
             />
           )}
         </Box>
@@ -103,9 +107,10 @@ interface SavedInstagramEmbedProps {
   showCarousel?: boolean;
   cakes?: typeof FALLBACK_CAKES | any[];
   showChips?: boolean;
+  useDessertRedirect?: boolean;
 }
 
-function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLBACK_CAKES, showChips = false }: SavedInstagramEmbedProps) {
+function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLBACK_CAKES, showChips = false, useDessertRedirect }: SavedInstagramEmbedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dotCount = showCarousel ? Math.ceil(cakes.length / 2) : cakes.length;
 
@@ -144,7 +149,7 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLB
       flexDirection: 'column',
       position: 'relative',
     }}>
-      {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} showChips={showChips} />}
+      {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} showChips={showChips} useDessertRedirect={useDessertRedirect} />}
       {cakes.length > 0 && (
         <Box sx={{
           height: '40px',

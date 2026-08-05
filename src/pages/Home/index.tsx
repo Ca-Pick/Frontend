@@ -64,14 +64,20 @@ export function Home({ onDetailViewChange }: HomeProps) {
     scrollBeforeDetailRef.current = window.scrollY;
     setSelectedCakeId(cakeId);
     setView('detail');
-    onDetailViewChange?.(true);
     window.scrollTo(0, 0);
   };
 
   const handleBackFromDetail = () => {
     setView('home');
-    onDetailViewChange?.(false);
   };
+
+  // view가 바뀔 때마다(마운트 시 포함) 상위(MainPage)의 하단탭 표시 여부를 항상 동기화한다.
+  // 핸들러에서만 개별 호출하면, 로그인 화면 등으로 이동하며 Home이 언마운트될 때 상위의
+  // isDetailView가 true로 남아있다가 Home이 view='home'으로 다시 마운트돼도 리셋되지 않아
+  // 하단탭이 계속 숨겨진 채로 남는 버그가 생긴다.
+  useEffect(() => {
+    onDetailViewChange?.(view === 'detail');
+  }, [view]);
 
   // 상세페이지에서 홈으로 돌아왔을 때, 상세 진입 전 스크롤 위치로 복원
   useEffect(() => {

@@ -16,6 +16,9 @@ interface ProductDetailProps {
   cakeType?: string;
   color?: string;
   mood?: string;
+  // 홈처럼 URL이 상세뷰와 동기화되지 않는 곳에 임베드된 경우 전달. 미리보기 시트로 연 다른
+  // 케이크에도 그대로 이어져야 하므로 재귀적으로 전달한다.
+  useDessertRedirect?: boolean;
 }
 
 export function ProductDetail({
@@ -28,6 +31,7 @@ export function ProductDetail({
   cakeType,
   color,
   mood,
+  useDessertRedirect,
 }: ProductDetailProps) {
   // URL 파라미터에서 cakeId 추출 (라우터를 통해 들어온 경우)
   const params = useParams<{ cakeId: string }>();
@@ -160,6 +164,7 @@ export function ProductDetail({
           longitude={detailData.longitude}
           name={detailData.name}
           onCakeSelect={handleCakeSelect}
+          useDessertRedirect={useDessertRedirect}
         />
       </Box>
 
@@ -189,6 +194,7 @@ export function ProductDetail({
             cakeType={cakeType}
             color={color}
             mood={mood}
+            useDessertRedirect={useDessertRedirect}
           />
         )}
       </Drawer>

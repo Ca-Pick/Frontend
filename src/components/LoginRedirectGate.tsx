@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -9,18 +9,20 @@ import { setSavedCakeInCache } from '../hooks/queries/useSavedCakes';
 
 interface LoginRedirectGateProps {
   children: ReactNode;
+  // isChecking을 이 컴포넌트가 자체 state로 들고 useEffect로 상위에 알려주면, 상위가 그 값을
+  // (예: 하단 탭 숨김에) 같이 쓰려 할 때 useEffect는 커밋 이후에나 실행되므로 첫 렌더에는
+  // 상위가 아직 이전 값을 들고 있어 한 프레임 어긋난다 - 그래서 state 자체를 상위가 소유하고
+  // 여기서는 controlled로만 받아써서, 컨텐츠 가림과 하단 탭 숨김이 항상 같은 렌더에서 맞아떨어지게 한다.
+  isChecking: boolean;
+  setIsChecking: Dispatch<SetStateAction<boolean>>;
 }
 
 // 소셜 로그인은 항상 사이트 루트(origin)로만 돌아오고, 실제 목적지(마이페이지/저장함/검색·상세 등)는
 // 이 컴포넌트가 로그인 확인 후 client-side navigate로 다시 이동시킨다. 목적지로 이동하기 전까지는
-// 라우트 콘텐츠 영역만 로딩으로 가리고 하단 탭은 그대로 보이게 둔다(하단 탭까지 가리면 화면이
-// 통째로 비어 보여 더 어색함) - "로그인 성공 -> 콘텐츠 영역 로딩 -> 목적지 화면" 순서로 보이게 하기 위함
-export function LoginRedirectGate({ children }: LoginRedirectGateProps) {
+// 라우트 콘텐츠 영역만 로딩으로 가린다.
+export function LoginRedirectGate({ children, isChecking, setIsChecking }: LoginRedirectGateProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [isChecking, setIsChecking] = useState(
-    () => !!localStorage.getItem('loginRedirectUrl')
-  );
   const startedRef = useRef(false);
 
   useEffect(() => {
@@ -65,7 +67,12 @@ export function LoginRedirectGate({ children }: LoginRedirectGateProps) {
         }
       }
 
-      navigate(redirectUrl, { replace: true });
+      // 소셜 로그인 완료 후 이 페이지는 origin('/')이 방금 새로 로드된 것 - 목적지를
+      // replace로 덮어써버리면 뒤로가기 시 우리 앱이 아니라 OAuth 제공자의(이미 만료된)
+      // 인증 페이지로 튕긴다. 현재 항목을 먼저 '/'로 확정해두고 그 위에 목적지를 push해서
+      // 뒤로가기가 우리 앱의 홈으로 돌아오게 만든다.
+      window.history.replaceState(null, '', '/');
+      navigate(redirectUrl);
       setIsChecking(false);
     };
 
