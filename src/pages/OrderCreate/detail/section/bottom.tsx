@@ -30,9 +30,11 @@ interface BottomSectionProps {
     // 홈처럼 URL이 상세뷰와 동기화되지 않는 곳에 임베드된 경우, 로그인 후 되돌아올 경로를
     // location 대신 실제 상세 라우트로 강제하기 위한 플래그
     useDessertRedirect?: boolean;
+    // 로그인 후 되돌아올 케이크 ID(최초 진입한 상세 기준으로 고정). 지정 없으면 cakeId 사용
+    redirectCakeId?: number;
 }
 
-export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, latitude, longitude, name, cakelists, instagramEmbed, instagramUrl, price, schedule, cakeId, saved, onCakeSelect, useDessertRedirect }: BottomSectionProps) {
+export function BottomSection({ activeTab, onTabChange, selectedTags = [], location, latitude, longitude, name, cakelists, instagramEmbed, instagramUrl, price, schedule, cakeId, saved, onCakeSelect, useDessertRedirect, redirectCakeId }: BottomSectionProps) {
     const hasOtherCakes = (cakelists?.filter(cake => cake.cakeId !== cakeId).length ?? 0) > 0;
 
     useEffect(() => {
@@ -79,17 +81,17 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                 })}
             </Box>
             <Box>
-                {activeTab === "info" && <InfoSection tags={selectedTags} location={location} latitude={latitude} longitude={longitude} name={name} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} />}
+                {activeTab === "info" && <InfoSection tags={selectedTags} location={location} latitude={latitude} longitude={longitude} name={name} price={price} schedule={schedule} instagramUrl={instagramUrl} cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} redirectCakeId={redirectCakeId} />}
                 {activeTab === "location" &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
                         <LocationSection location={location} latitude={latitude} longitude={longitude} name={name} />
                         {hasOtherCakes && <Box sx={{ height: "1px", bgcolor: colors.divider }} />}
-                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} redirectCakeId={redirectCakeId} />
                     </Box>
                 }
                 {activeTab === "other" && hasOtherCakes &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: '28px 16px 16px 16px' }}>
-                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} />
+                        <OtherSection cakelists={cakelists} instagramEmbed={instagramEmbed} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} redirectCakeId={redirectCakeId} />
                     </Box>}
             </Box>
 
@@ -120,7 +122,7 @@ export function BottomSection({ activeTab, onTabChange, selectedTags = [], locat
                         <HeartToggle
                             referenceId={cakeId}
                             initialSaved={saved}
-                            redirectPath={useDessertRedirect ? `/desserts/${cakeId}` : undefined}
+                            redirectPath={useDessertRedirect ? `/desserts/${redirectCakeId ?? cakeId}` : undefined}
                         />
                     )}
                 </Box>
@@ -155,9 +157,10 @@ interface InfoSectionProps {
     cakeId?: number;
     onCakeSelect?: (cakeId?: number) => void;
     useDessertRedirect?: boolean;
+    redirectCakeId?: number;
 }
 
-function InfoSection({ tags = [], orderInfo = [], location, latitude, longitude, name, instagramUrl, cakelists, cakeId, onCakeSelect, useDessertRedirect }: InfoSectionProps) {
+function InfoSection({ tags = [], orderInfo = [], location, latitude, longitude, name, instagramUrl, cakelists, cakeId, onCakeSelect, useDessertRedirect, redirectCakeId }: InfoSectionProps) {
     const allTags = [...orderInfo, ...tags];
     const [showMoreTags, setShowMoreTags] = useState(false);
     const displayedTags = showMoreTags ? allTags : allTags.slice(0, 5);
@@ -203,7 +206,7 @@ function InfoSection({ tags = [], orderInfo = [], location, latitude, longitude,
             <LocationSection location={location} latitude={latitude} longitude={longitude} name={name} />
             {hasOtherCakes && <Box sx={{ height: "1px", bgcolor: colors.divider }} />}
 
-            <OtherSection cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} />
+            <OtherSection cakelists={cakelists} cakeId={cakeId} onCakeSelect={onCakeSelect} useDessertRedirect={useDessertRedirect} redirectCakeId={redirectCakeId} />
         </Box>
     );
 }
@@ -254,9 +257,10 @@ interface OtherSectionProps {
     cakeId?: number;
     onCakeSelect?: (cakeId?: number) => void;
     useDessertRedirect?: boolean;
+    redirectCakeId?: number;
 }
 
-function OtherSection({ cakelists, cakeId, onCakeSelect, useDessertRedirect }: OtherSectionProps) {
+function OtherSection({ cakelists, cakeId, onCakeSelect, useDessertRedirect, redirectCakeId }: OtherSectionProps) {
     // cakelists/cakeId가 실제로 바뀌지 않았는데도 매 렌더링마다 filter/map으로 새
     // 배열을 만들면, 참조가 매번 달라져 SavedInstagramEmbed의 cakes 변경 감지
     // useEffect가 오작동해 캐러셀 위치(currentIndex)가 계속 첫 번째로 리셋된다.
@@ -280,7 +284,7 @@ function OtherSection({ cakelists, cakeId, onCakeSelect, useDessertRedirect }: O
             <Typography variant="t2_b" sx={{ color: "black" }}>
                 이 가게의 다른 케이크
             </Typography>
-            <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} useDessertRedirect={useDessertRedirect} redirectCakeId={cakeId} />
+            <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} useDessertRedirect={useDessertRedirect} redirectCakeId={redirectCakeId ?? cakeId} />
         </Box>
     );
 }

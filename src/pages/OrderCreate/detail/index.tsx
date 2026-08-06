@@ -19,6 +19,12 @@ interface ProductDetailProps {
   // 홈처럼 URL이 상세뷰와 동기화되지 않는 곳에 임베드된 경우 전달. 미리보기 시트로 연 다른
   // 케이크에도 그대로 이어져야 하므로 재귀적으로 전달한다.
   useDessertRedirect?: boolean;
+  // 로그인 후 되돌아올 케이크 ID. 지정하지 않으면 이 인스턴스 자신의 id를 사용한다.
+  // 미리보기 시트로 연 다른 케이크에도 항상 최초 진입한 케이크로 고정 전달해서, 시트
+  // 안에서 좋아요를 누르든 시트를 또 열어 더 깊이 들어가든 로그인 후에는 항상 맨 처음
+  // 보고 있던 상세로 돌아오게 한다 (주문서 화면의 바텀시트가 URL을 바꾸지 않아 항상
+  // 원래 상세 URL로 돌아오는 것과 동일한 동작).
+  redirectCakeId?: number;
 }
 
 export function ProductDetail({
@@ -32,10 +38,12 @@ export function ProductDetail({
   color,
   mood,
   useDessertRedirect,
+  redirectCakeId,
 }: ProductDetailProps) {
   // URL 파라미터에서 cakeId 추출 (라우터를 통해 들어온 경우)
   const params = useParams<{ cakeId: string }>();
   const id = cakeId || (params.cakeId ? parseInt(params.cakeId) : undefined);
+  const effectiveRedirectCakeId = redirectCakeId ?? id;
 
   const [activeTab, setActiveTab] = useState<'info' | 'location' | 'other'>('info');
   // 초기값을 id로 바로 세팅해야 첫 렌더부터 쿼리가 활성화되어, "상세정보 없음"이
@@ -165,6 +173,7 @@ export function ProductDetail({
           name={detailData.name}
           onCakeSelect={handleCakeSelect}
           useDessertRedirect={useDessertRedirect}
+          redirectCakeId={effectiveRedirectCakeId}
         />
       </Box>
 
@@ -195,6 +204,7 @@ export function ProductDetail({
             color={color}
             mood={mood}
             useDessertRedirect={useDessertRedirect}
+            redirectCakeId={effectiveRedirectCakeId}
           />
         )}
       </Drawer>
