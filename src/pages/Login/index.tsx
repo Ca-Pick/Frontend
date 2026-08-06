@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { LoginForm } from './section/LoginForm';
 import { isLoggedIn } from '../../utils/cookieUtils';
 import { clearPendingHeartAction } from '../../utils/pendingHeartAction';
+import { colors } from '../../theme/colors';
 
 export function Login() {
   const [searchParams] = useSearchParams();
@@ -55,7 +56,7 @@ export function Login() {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#fff',
+        backgroundColor: colors.background,
       }}
     >
       {/* 에러 메시지 */}

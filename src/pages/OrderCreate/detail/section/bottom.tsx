@@ -280,7 +280,7 @@ function OtherSection({ cakelists, cakeId, onCakeSelect, useDessertRedirect }: O
             <Typography variant="t2_b" sx={{ color: "black" }}>
                 이 가게의 다른 케이크
             </Typography>
-            <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} useDessertRedirect={useDessertRedirect} />
+            <SavedInstagramEmbed showCarousel={false} cakes={formattedCakes} showChips={true} onDetailClick={onCakeSelect} useDessertRedirect={useDessertRedirect} redirectCakeId={cakeId} />
         </Box>
     );
 }

@@ -116,51 +116,47 @@ function InstagramEmbdeSection({ onDetailClick, category }: InstagramEmbdeSectio
               <Button size="large" variant="contained" color="secondary" fullWidth onClick={() => onDetailClick?.(currentItem?.cakeId)} sx={{ flex: 1 }}>
                 상세보기
               </Button>
-              {items.length > 1 && (
-                <>
-                  <IconButton
-                    onClick={handlePrevious}
-                    sx={{
-                      position: 'absolute',
-                      left: 3.789,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.60)',
-                      borderRadius: '50%',
-                      padding: '5px',
-                      color: colors.secondary.main,
-                      '&:hover': {
-                        backgroundColor: 'rgba(125, 125, 125, 0.60)',
-                      },
-                    }}
-                  >
-                    <ChevronLeftIcon sx={{ color: `${colors.secondary.main} !important` }}/>
-                  </IconButton>
-                  <IconButton
-                    onClick={handleNext}
-                    sx={{
-                      position: 'absolute',
-                      right: 4.211,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.60)',
-                      borderRadius: '50%',
-                      padding: '5px',
-                      color: colors.secondary.main,
-                      '&:hover': {
-                        backgroundColor: 'rgba(125, 125, 125, 0.60)',
-                      },
-                    }}
-                  >
-                    <ChevronRightIcon sx={{ color: `${colors.secondary.main} !important` }}/>
-                  </IconButton>
-                </>
-              )}
             </Box>
           </>
         )}
       </Box>
-      {!loading && items.length > 0 && <CarouselIndicators current={currentIndex} total={items.length} onChange={handleCarouselChange} />}
+      {!loading && items.length > 0 && (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+          {items.length > 1 && (
+            <IconButton
+              onClick={handlePrevious}
+              sx={{
+                backgroundColor: 'rgba(0, 0, 0, 0.10)',
+                borderRadius: '50%',
+                padding: '5px',
+                color: colors.secondary.main,
+                '&:hover': {
+                  backgroundColor: 'rgba(125, 125, 125, 0.60)',
+                },
+              }}
+            >
+              <ChevronLeftIcon sx={{ color: `${colors.secondary.main} !important` }}/>
+            </IconButton>
+          )}
+          <CarouselIndicators current={currentIndex} total={items.length} onChange={handleCarouselChange} />
+          {items.length > 1 && (
+            <IconButton
+              onClick={handleNext}
+              sx={{
+                backgroundColor: 'rgba(0, 0, 0, 0.10)',
+                borderRadius: '50%',
+                padding: '5px',
+                color: colors.secondary.main,
+                '&:hover': {
+                  backgroundColor: 'rgba(125, 125, 125, 0.60)',
+                },
+              }}
+            >
+              <ChevronRightIcon sx={{ color: `${colors.secondary.main} !important` }}/>
+            </IconButton>
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

@@ -35,9 +35,13 @@ interface InstagramCarouselProps {
   // 홈처럼 URL이 상세뷰와 동기화되지 않는 곳에 임베드된 경우, 로그인 후 되돌아올 경로를
   // 이 카드가 보여주는 케이크의 상세 라우트로 명시한다.
   useDessertRedirect?: boolean;
+  // 로그인 후 되돌아올 케이크 ID. "이 가게의 다른 케이크"처럼 지금 보고 있는 상세와
+  // 캐러셀에 뜨는 케이크가 다른 경우, 좋아요는 캐러셀 케이크를 대상으로 하되 로그인
+  // 후에는 원래 보고 있던 상세(이 값)로 돌아가야 하므로 currentCake.cakeId와 분리한다.
+  redirectCakeId?: number;
 }
 
-const InstagramCarousel = React.memo(({ currentIndex, onDetailClick, cakes, showChips = false, useDessertRedirect }: InstagramCarouselProps) => {
+const InstagramCarousel = React.memo(({ currentIndex, onDetailClick, cakes, showChips = false, useDessertRedirect, redirectCakeId }: InstagramCarouselProps) => {
   const currentCake = cakes.length > 0 ? cakes[0] : null;
 
   return (
@@ -90,7 +94,7 @@ const InstagramCarousel = React.memo(({ currentIndex, onDetailClick, cakes, show
             <HeartToggle
               referenceId={currentCake.cakeId}
               initialSaved={currentCake.saved}
-              redirectPath={useDessertRedirect ? `/desserts/${currentCake.cakeId}` : undefined}
+              redirectPath={useDessertRedirect ? `/desserts/${redirectCakeId ?? currentCake.cakeId}` : undefined}
             />
           )}
         </Box>
@@ -108,9 +112,10 @@ interface SavedInstagramEmbedProps {
   cakes?: typeof FALLBACK_CAKES | any[];
   showChips?: boolean;
   useDessertRedirect?: boolean;
+  redirectCakeId?: number;
 }
 
-function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLBACK_CAKES, showChips = false, useDessertRedirect }: SavedInstagramEmbedProps) {
+function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLBACK_CAKES, showChips = false, useDessertRedirect, redirectCakeId }: SavedInstagramEmbedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dotCount = showCarousel ? Math.ceil(cakes.length / 2) : cakes.length;
 
@@ -149,7 +154,7 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLB
       flexDirection: 'column',
       position: 'relative',
     }}>
-      {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} showChips={showChips} useDessertRedirect={useDessertRedirect} />}
+      {topCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={topCake} showChips={showChips} useDessertRedirect={useDessertRedirect} redirectCakeId={redirectCakeId} />}
       {cakes.length > 0 && (
         <Box sx={{
           height: '40px',
@@ -182,7 +187,7 @@ function SavedInstagramEmbed({ onDetailClick, showCarousel = true, cakes = FALLB
           </IconButton>
         </Box>
       )}
-      {showCarousel && bottomCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={bottomCake} showChips={showChips} />}
+      {showCarousel && bottomCake.length > 0 && <InstagramCarousel currentIndex={0} onDetailClick={onDetailClick} cakes={bottomCake} showChips={showChips} useDessertRedirect={useDessertRedirect} redirectCakeId={redirectCakeId} />}
     </Box>
   );
 }

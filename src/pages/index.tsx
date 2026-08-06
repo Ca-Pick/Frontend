@@ -24,13 +24,13 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
     () => !!localStorage.getItem('loginRedirectUrl')
   );
 
-  const getActiveTabFromPath = (): TabType => {
+  const getActiveTabFromPath = (): TabType | undefined => {
     const path = location.pathname;
     if (path === '/') return 'home';
     if (path.startsWith('/order')) return 'order';
     if (path === '/saved') return 'saved';
     if (path === '/mypage') return 'mypage';
-    return 'home';
+    return undefined;
   };
 
   const activeTab = getActiveTabFromPath();
@@ -40,7 +40,7 @@ function LayoutWrapper({ isDetailView, onDetailViewChange }: { isDetailView: boo
   // 다른 화면으로 이동해도 리셋되지 않고 남아있을 수 있다(로그인 리다이렉트 후 좋아요 →
   // 저장함으로 바로 이동하는 흐름 등). 그 값을 실제로 소유한 화면에 있을 때만 반영한다.
   const ownsDetailView = location.pathname === '/' || location.pathname.startsWith('/order');
-  const showBottomTab = (!ownsDetailView || !isDetailView) && !isDessertDetailRoute && !isMypageLegalRoute && location.pathname !== '/login' && !isCheckingRedirect;
+  const showBottomTab = (!ownsDetailView || !isDetailView) && !isDessertDetailRoute && !isMypageLegalRoute && !isCheckingRedirect;
 
   return (
     <>

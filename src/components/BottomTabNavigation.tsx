@@ -53,7 +53,7 @@ interface BottomTabNavigationProps {
   onTabChange?: (tab: TabType) => void;
 }
 
-export function BottomTabNavigation({ activeTab = 'home', onTabChange }: BottomTabNavigationProps) {
+export function BottomTabNavigation({ activeTab, onTabChange }: BottomTabNavigationProps) {
   const navigate = useNavigate();
 
   const handleTabClick = (tab: TabType) => {

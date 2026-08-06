@@ -1,6 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import imgSavedCake from '../../../assets/images/cake.png';
+import imgSavedCake from '../../../assets/images/saved_cake.png';
 
 interface NoSearchResultProps {
     onNavigateToOrder?: () => void;

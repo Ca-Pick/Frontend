@@ -1,9 +1,9 @@
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import imglogoText from '../../../assets/logos/logo_text.png';
-import imgNaverLogin from '../../../assets/button/naver_login.svg';
-import imgKakaoLogin from '../../../assets/button/kakao_login.svg';
+import imgKakaoIcon from '../../../assets/button/figma/kakao_icon.svg';
+import imgNaverIcon from '../../../assets/button/figma/naver_icon.png';
 import { clearPendingHeartAction } from '../../../utils/pendingHeartAction';
 
 export function LoginForm() {
@@ -82,26 +82,30 @@ export function LoginForm() {
           onClick={handleKakaoLogin}
           sx={{
             width: '100%',
-            height: '48px',
-            padding: 0,
+            height: '56px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            pl: '60px',
+            pr: '40px',
             border: 'none',
-            borderRadius: '8px',
-            overflow: 'hidden',
+            borderRadius: '10px',
             cursor: 'pointer',
-            backgroundColor: 'transparent',
+            backgroundColor: '#FFE812',
           }}
         >
           <Box
             component="img"
-            src={imgKakaoLogin}
-            alt="카카오 로그인"
-            sx={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block',
-            }}
+            src={imgKakaoIcon}
+            alt=""
+            sx={{ width: '48px', height: '48px', flexShrink: 0 }}
           />
+          <Typography
+            variant="t2_m"
+            sx={{ color: '#000', whiteSpace: 'nowrap' }}
+          >
+            카카오톡으로 계속하기
+          </Typography>
         </Box>
 
         {/* 네이버 로그인 버튼 */}
@@ -110,26 +114,29 @@ export function LoginForm() {
           onClick={handleNaverLogin}
           sx={{
             width: '100%',
-            height: '48px',
-            padding: 0,
+            height: '56px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            px: '68px',
             border: 'none',
-            borderRadius: '8px',
-            overflow: 'hidden',
+            borderRadius: '10px',
             cursor: 'pointer',
-            backgroundColor: 'transparent',
+            backgroundColor: '#03C75B',
           }}
         >
           <Box
             component="img"
-            src={imgNaverLogin}
-            alt="네이버 아이디로 로그인"
-            sx={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block',
-            }}
+            src={imgNaverIcon}
+            alt=""
+            sx={{ width: '33px', height: '33px', flexShrink: 0, objectFit: 'cover' }}
           />
+          <Typography
+            variant="t2_m"
+            sx={{ color: '#fff', whiteSpace: 'nowrap' }}
+          >
+            네이버로 계속하기
+          </Typography>
         </Box>
 
       </Box>
